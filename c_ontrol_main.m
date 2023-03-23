@@ -71,8 +71,7 @@ for k=2:Nstep
     if doOptimization == false
     v_k = velocities(u_k);
     v_history(:,k) = v_k;
-    end
-    if doOptimization == true
+    else
     v_k = velocities_opt(u_k, params(:,k-1));
     v_history(:,k) = v_k;
     end

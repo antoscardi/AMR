@@ -20,7 +20,7 @@ setGlobal(3); kp = getGlobal;
 setGlobal(0); ki = getGlobal;
 
 % Generate perturbed values of the parameters, components of vector p
-percentage = 0.9;
+percentage = 0.3;
 min = r_n - r_n*percentage; max = r_n + r_n*percentage;
 a1 = b_n - b_n*percentage; b1 = b_n + b_n*percentage;
 params = zeros(2,Nstep);
