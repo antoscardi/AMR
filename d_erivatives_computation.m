@@ -1,6 +1,6 @@
 close all; clc;
 % Load from data
-file = 'data/controlwithnominalparams';
+file = 'data/controlwithnoise';
 params = load('data/params','params');
 u_history = load(file,'u_history');
 xhi_history = load(file,'xhi_history');

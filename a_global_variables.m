@@ -1,9 +1,9 @@
 close all; clear; clc;
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
-setGlobal(0.2); r_n = getGlobal;
+setGlobal(0.0993); r_n = getGlobal;
 % Distance between the wheels [m].
-setGlobal(0.8); b_n = getGlobal;
+setGlobal(0.29); b_n = getGlobal;
 % Simulation time [s]
 setGlobal(20); tsim = getGlobal;
 % Control frequency [Hz]
@@ -15,18 +15,22 @@ setGlobal(tsim*f+1); Nstep = getGlobal;
 % Time
 global time, time = 0:delta:tsim;
 % Controller gains
-setGlobal(2); kv = getGlobal;
-setGlobal(3); kp = getGlobal; 
-setGlobal(0); ki = getGlobal;
+setGlobal(3); kv = getGlobal;
+setGlobal(2); kp = getGlobal; 
+setGlobal(1); ki = getGlobal;
 
 % Generate perturbed values of the parameters, components of vector p
-percentage = 0.3;
-min = r_n - r_n*percentage; max = r_n + r_n*percentage;
-a1 = b_n - b_n*percentage; b1 = b_n + b_n*percentage;
+% percentage = 0.3;
+% min = r_n - r_n*percentage; max = r_n + r_n*percentage;
+% a1 = b_n - b_n*percentage; b1 = b_n + b_n*percentage;
 params = zeros(2,Nstep);
+% for k=1:Nstep
+%     params(:,k) = [unifrnd(min,max);
+%                    unifrnd(a1,b1)];
+% end
 for k=1:Nstep
-    params(:,k) = [unifrnd(min,max);
-                   unifrnd(a1,b1)];
+    params(:,k)= [r_n*(0.2 + 1.2 * rand());
+                  b_n*(0.2 + 1.2*rand())];
 end
 
 % Create data folder

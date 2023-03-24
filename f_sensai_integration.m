@@ -8,7 +8,7 @@ filelist = dir(folderpath);
 for i = 1:length(filelist)
     filename = filelist(i).name;
     % Skip directories
-    if filelist(i).isdir
+    if filelist(i).isdir || strcmp(filename, 'controlwithnominalparams.mat')
         continue;
     end
     % Load the file and get a struct

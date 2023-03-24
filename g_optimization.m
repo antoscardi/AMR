@@ -14,7 +14,7 @@ ax0 = ax. a_x;
 ay = load(file3,'a_y');
 ay0 = ay.a_y;
 %% Hyperparameters 
-k1 = 0.1; k2 = 0.1;
+k1 = 1e-6; k2 = 1e-6;
 
 %% Optimization
 dx = [2 0.1 0 0 0 0 10 0.1]';
@@ -52,8 +52,8 @@ ax_k = zeros(12,Nstep); ax_k(:,1)= ax0;
 ay_k = zeros(12,Nstep); ay_k(:,1)= ay0;
 
 for n = 2:Nstep
-ax_k(:,n) = ax_k(:,n-1) + delta/1000*(k1*pinv(M)*(dx-M*ax_k(:,n-1)) + k2*(I - pinv(M)*M)*vx);
-ay_k(:,n) = ay_k(:,n-1) + delta/1000*(k1*pinv(M)*(dx-M*ay_k(:,n-1)) + k2*(I - pinv(M)*M)*vy);
+ax_k(:,n) = ax_k(:,n-1) + delta*(k1*pinv(M)*(dx-M*ax_k(:,n-1)) + k2*(I - pinv(M)*M)*vx);
+ay_k(:,n) = ay_k(:,n-1) + delta*(k1*pinv(M)*(dx-M*ay_k(:,n-1)) + k2*(I - pinv(M)*M)*vy);
 end 
 
 ax_star = ax_k(:,Nstep);

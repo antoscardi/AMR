@@ -27,7 +27,7 @@ for k = 2:length(time)
     % Updating the title
     title(sprintf('Trajectory\nTime: %0.2f sec', time(k)));
     % Delay
-    drawnow
+    %drawnow
     if k<length(time)
     delete(robot);
     end

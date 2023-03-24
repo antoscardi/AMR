@@ -9,6 +9,7 @@ p_2 = [7 15];
 % Final position and velocity.
 p_f = [10 20];
 v_f = [0.1 0.1];
+
 %% Choose if you want to have the disturbance in the robot parameters
 doOptimization = true;
 
@@ -34,7 +35,13 @@ q_0 = [p_0(1);p_0(2);theta_0];
 [v_d(1), omega_d(1)] = flatness(dp,ddp);
 v_0 = [v_d(1); omega_d(1)]; 
 % u_k=[w_r; w_l]
-u_k = [(v_0(1)+v_0(2)*b_n/2)/r_n;(v_0(1)-v_0(2)*b_n/2)/r_n];
+if doOptimization == false
+    u_k = [(v_0(1)+v_0(2)*b_n/2)/r_n;
+           (v_0(1)-v_0(2)*b_n/2)/r_n];
+else
+    u_k = [(v_0(1)+v_0(2)*params(2,1)/2)/params(1,1);
+           (v_0(1)-v_0(2)*params(2,1)/2)/params(1,1)];
+end 
 % u_history = [u0, u1, u2, ..., uN-1] dimension (2)x(Nstep)
 u_history = zeros(2, Nstep); u_history(:,1) = u_k;
 v_history = zeros(2, Nstep); v_history(:,1) = v_0;
@@ -42,6 +49,8 @@ v_history = zeros(2, Nstep); v_history(:,1) = v_0;
 q_history = zeros(3, Nstep); q_history(:,1) = q_0;
 % Controller state
 xhi_history = zeros(3, Nstep); xhi_history(:,1) = [0.1;0.1;0.1];
+% q_dot
+q_dot_history = zeros(3,Nstep);
 
 %% Simulation loop
 for k=2:Nstep
@@ -53,9 +62,11 @@ for k=2:Nstep
     
     % Integrate q_dot = f(q,u)
     if doOptimization == false
+        q_dot_history(:,k) = q_dot(0,q_k,u_k);
         [~, qint] = ode45(@(t,q) q_dot(t,q,u_k),[0 delta],q_k);
         q_k = qint(end,:)';
     else
+        q_dot_history(:,k) = q_dot_opt(0,q_k,u_k,params(:,k-1));
         [~, qint] = ode45(@(t,q) q_dot_opt(t,q,u_k,params(:,k-1)),[0 delta],q_k);
         q_k = qint(end,:)';
     end
@@ -86,7 +97,7 @@ for k=2:Nstep
 end
 
 %% Create and display video animation.
-%video(q_history,p,b_n,time)
+video(q_history,p,b_n,time)
 
 %% Plots
 colors = linspecer(12,'sequential');
@@ -126,8 +137,23 @@ s.LineProperties(i).Color = colors(9+i,:);
 end
 xlabel("time [s]"), title('Error variation over time')
 
+% Plot state derivative (q_dot). 
+figure 
+s = stackedplot(time(1:end),q_dot_history','LineWidth',linewidth);
+s.DisplayLabels = ["x_dot [m] ","y_dot [m]",'theta_dot [rad/s]']; grid on
+for i=1:3
+s.LineProperties(i).Color = colors(i,:);
+end
+xlabel("time [s]"), title('State derivation variation in time')
+
 %% Save variables for the optimization routine.
-save('data/controlwithnominalparams','u_history','p','q_history','params','dp','ddp','xhi_history')
+if followOptim == false && doOptimization == false
+    save('data/controlwithnominalparams','u_history','p','q_history','dp','ddp','xhi_history')
+end
+
+if doOptimization == true && followOptim == false
+    save('data/controlwithnoise','u_history','p','q_history','dp','ddp','xhi_history')
+end 
 
 %% Utility functions
 function [v_in, omega_in] = flatness(dp,ddp)
