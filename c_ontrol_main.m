@@ -67,8 +67,7 @@ for k=2:Nstep
         q_k = qint(end,:)';
     else
         q_dot_history(:,k) = q_dot_opt(0,q_k,u_k,params(:,k-1));
-        [~, qint] = ode45(@(t,q) q_dot_opt(t,q,u_k,params(:,k-1)),[0 delta],q_k);
-        q_k = qint(end,:)';
+        q_k = q_k + delta*q_dot_opt(0,q_k,u_k,params(:,k-1));
     end
 
     % Dynamic Feedback Linearization Internal State
