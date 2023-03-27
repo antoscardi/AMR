@@ -1,18 +1,4 @@
 close all; clc;
-%% HYPERPARAMETERS:
-% Initial position and velocity
-p_0 = [2 4];
-v_0 = [0.1 0.1];
-% Position of the two break points
-p_1 = [5 10];
-p_2 = [7 15];
-% Final position and velocity.
-p_f = [10 20];
-v_f = [0.1 0.1];
-
-%% Choose if you want to have the disturbance in the robot parameters
-haveNoise= true;
-
 %% Choose if you want to follow the optimized trajectory or not
 followOptim = false;
 
@@ -61,15 +47,14 @@ for k=2:Nstep
     xhi_k = xhi_history(:,k-1);
     
     % Integrate q_dot = f(q,u)
-    if haveNoise == false
+    
         q_dot_history(:,k) = q_dot(0,q_k,u_k);
         [~, qint] = ode45(@(t,q) q_dot(t,q,u_k),[0 delta],q_k);
         q_k = qint(end,:)';
-    else
+ 
         q_dot_history(:,k-1) = q_dot_opt(k-1,q_k,u_k,params(:,k-1));
         q_k = q_k + delta*q_dot_opt(k-1,q_k,u_k,params(:,k-1));
-    end
-
+  
     % Dynamic Feedback Linearization Internal State
     [~, xhi_int] = ode45(@(t,xhi) xhi_dot(t,q_k,xhi,p(:,k),dp(:,k),ddp(:,k)),[0 delta],xhi_k);
     xhi_k = xhi_int(end,:)';
@@ -139,14 +124,14 @@ s.LineProperties(i).Color = colors(9+i,:);
 end
 xlabel("time [s]"), title('Error variation over time')
 
-% Plot state derivative (q_dot). 
-figure 
-s = stackedplot(time(1:end),q_dot_history','LineWidth',linewidth);
-s.DisplayLabels = ["x_dot [m] ","y_dot [m]",'theta_dot [rad/s]']; grid on
-for i=1:3
-s.LineProperties(i).Color = colors(i,:);
-end
-xlabel("time [s]"), title('State derivation variation in time')
+% % Plot state derivative (q_dot). 
+% figure 
+% s = stackedplot(time(1:end),q_dot_history','LineWidth',linewidth);
+% s.DisplayLabels = ["x_dot [m] ","y_dot [m]",'theta_dot [rad/s]']; grid on
+% for i=1:3
+% s.LineProperties(i).Color = colors(i,:);
+% end
+% xlabel("time [s]"), title('State derivation variation in time')
 
 %% Save variables for the optimization routine.
 if followOptim == false && haveNoise == false

@@ -1,0 +1,19 @@
+function plot_function(data, title_name, labels_names, time, linewidth)
+
+% Counter to count how many times the function is called in order to change colors 
+persistent  counter, 
+if isempty( counter )
+    counter=0; %Initializing counter
+end
+
+Lines = split(labels_names,';'); len = length(Lines);
+
+figure 
+s = stackedplot(time(1:end),data','LineWidth',linewidth);
+s.DisplayLabels = Lines; grid on
+for i = counter:counter+len
+s.LineProperties(i).Color = colors(i,:);
+xlabel("time [s]"), title(title_name)
+
+counter = counter + len;
+end

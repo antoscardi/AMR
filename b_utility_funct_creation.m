@@ -35,8 +35,7 @@ A = [cos(theta) -xhi_v*sin(theta);
      sin(theta)  xhi_v*cos(theta)];
 
 % Dynamic model
-q_dot = G*S_c*u;
-q_dot_optimization = G*S*u;
+q_dot = G*S*u;
 
 % Controller
 dr_xhi = [cos(theta)*xhi_v;
@@ -56,7 +55,6 @@ new_u = inv(S_c)*[xhi_v;
         [0 1]*inv(A)*eta];
 
 % Calculate v and w
-velocities = S_c*u;
 velocities_opt = S*u;
 
 % Partial Derivatives for sensitivity
@@ -84,9 +82,7 @@ dg_xhi_xhi_gammaxhi = tensor_product(g_xhi,xhi,g);
 %% Function creation
 % State and Control
 matlabFunction(velocities,'File','functions/velocities','Vars',{u});
-matlabFunction(velocities_opt,'File','functions/velocities_opt','Vars',{u,p});
 matlabFunction(q_dot,'File','functions/q_dot','Vars',{t,q,u});
-matlabFunction(q_dot_optimization,'File','functions/q_dot_opt','Vars',{t,q,u,p});
 matlabFunction(new_u,'File','functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d});
 matlabFunction(xhi_dot,'File','functions/xhi_dot','Vars',{t,q,xhi,r_d,dr_d,ddr_d});
 

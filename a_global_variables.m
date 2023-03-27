@@ -1,4 +1,5 @@
 close all; clear; clc;
+%% HYPERPARAMETERS:
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
 setGlobal(0.0993); r_n = getGlobal;
@@ -19,14 +20,22 @@ setGlobal(3); kv = getGlobal;
 setGlobal(2); kp = getGlobal; 
 setGlobal(1); ki = getGlobal;
 
+% Initial position and velocity
+global p_0, p_0 = [2 4];
+global v_0, v_0 = [0.1 0.1];
+% Position of the two break points
+global p_1, p_1 = [5 10];
+global p_2, p_2 = [7 15];
+% Final position and velocity.
+global p_f, p_f = [10 20];
+global v_f, v_f = [0.1 0.1];
+
 % Generate perturbed values of the parameters, components of vector p
 percentage = 0.3;
-min = r_n - r_n*percentage; max = r_n + r_n*percentage;
-a1 = b_n - b_n*percentage; b1 = b_n + b_n*percentage;
 params = zeros(2,Nstep);
 for k=1:Nstep
-    params(:,k) = [unifrnd(min,max);
-                   unifrnd(a1,b1)];
+    params(:,k) = [unifrnd(r_n - r_n*percentage,r_n + r_n*percentage);
+                   unifrnd(b_n - b_n*percentage,b_n + b_n*percentage)];
 end
 
 % Create data folder
@@ -50,15 +59,14 @@ set(groot,'defaultAxesTitleFontWeight','bold')
 set(groot,'defaultAxesTitleFontSizeMultiplier',1.3)
 
 % Generate colors
-contrast_colors = linspecer(7,'qualitative');
+contrast_colors = linspecer(2,'qualitative');
 set(groot,'DefaultAxesColorOrder',contrast_colors)
 
 % Latex default for all text
 list_factory = fieldnames(get(groot,'factory'));
 index_interpreter = find(contains(list_factory,'Interpreter'));
-for i = 1:length(index_interpreter)
-    default_name = strrep(list_factory{index_interpreter(i)},'factory','default');
-    set(groot, default_name,'Latex');
+for index = 1:length(index_interpreter);
+    set(groot, strrep(list_factory{index_interpreter(index)},'factory','default') ,'Latex');
 end
 
 %% Helper functions

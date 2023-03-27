@@ -1,6 +1,7 @@
 function video(q_history,p,param,time)
 % Setting up the Plot
-figure; hold on, colors = linspecer(3,'qualitative'); colororder(colors),
+figure; hold on, 
+colors = linspecer(3,'qualitative'); colororder(colors),
 title(sprintf('Trajectory\nTime: %0.2f sec', time(1)));
 xlabel('x[m]'), ylabel('y[m]'), grid minor  
 xlim([min(min(p(1,:),min(q_history(1,:))))-1 max(max(p(1,:),max(q_history(1,:))))+3])
@@ -11,7 +12,8 @@ R0 = param(1)/2;
 p_r = q_history(1:2,:); theta = q_history(3,:);
 trajectory = plot(q_history(1,1:1), q_history(2,1:1));
 plot(p(1,:), p(2,:));
-orient = line([p_r(1,1),p_r(1,1)+R0*cos(theta(1))],[p_r(2,1), p_r(2,1)+R0*sin(theta(1))],'Color',colors(3,:),"LineStyle","-."); orient.MarkerSize = 6;
+orient = line([p_r(1,1),p_r(1,1)+R0*cos(theta(1))],[p_r(2,1), p_r(2,1)+R0*sin(theta(1))],...
+'Color',colors(3,:),"LineStyle","-."); orient.MarkerSize = 6;
 legend('unicycle traj','desired traj','robot');
 
 % Iterating through the length of the time array
