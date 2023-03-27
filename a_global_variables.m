@@ -20,17 +20,13 @@ setGlobal(2); kp = getGlobal;
 setGlobal(1); ki = getGlobal;
 
 % Generate perturbed values of the parameters, components of vector p
-% percentage = 0.3;
-% min = r_n - r_n*percentage; max = r_n + r_n*percentage;
-% a1 = b_n - b_n*percentage; b1 = b_n + b_n*percentage;
+percentage = 0.3;
+min = r_n - r_n*percentage; max = r_n + r_n*percentage;
+a1 = b_n - b_n*percentage; b1 = b_n + b_n*percentage;
 params = zeros(2,Nstep);
-% for k=1:Nstep
-%     params(:,k) = [unifrnd(min,max);
-%                    unifrnd(a1,b1)];
-% end
 for k=1:Nstep
-    params(:,k) = [r_n*(0.7 + 0.5*rand());
-                   b_n*(0.7 + 0.5*rand())];
+    params(:,k) = [unifrnd(min,max);
+                   unifrnd(a1,b1)];
 end
 
 % Create data folder
