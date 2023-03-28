@@ -1,4 +1,9 @@
 close all; clc;
+% Generate uniform distribution and sample the exstremes: 80% or 120% of the nominal value
+wheelRadious80 = wheelRadious*0.8
+wheelRadious120 = wheelDistance*0.8
+wheelDistance80 = wheelRadious*1.2
+wheelDistance120 = wheelDistance*1.2
 %% Choose if you want to follow the optimized trajectory or not
 followOptim = false;
 
@@ -140,28 +145,7 @@ if haveNoise == true && followOptim == false
     save('data/controlwithnoise','u_history','p','q_history','dp','ddp','xhi_history')
 end 
 
-%% Utility functions
-function [v_in, omega_in] = flatness(dp,ddp)
-% Flatness formula
-v_in = sqrt((dp(1,1))^2+(dp(2,1))^2);
-omega_in = (ddp(2,1)*dp(1,1)-ddp(1,1)*dp(2,1))/v_in^2;
-end
 
-function plot_function(data, title_name, labels_names, time, linewidth)
-    % Counter to count how many times the function is called in order to change colors 
-    persistent  counter, 
-    if isempty( counter )
-        counter=0; %Initializing counter
-    end
-    Lines = split(labels_names,';'); len = length(Lines);   
-    figure 
-    s = stackedplot(time(1:end),data','LineWidth',linewidth);
-    s.DisplayLabels = Lines; grid on
-    for i = counter:counter+len
-    s.LineProperties(i).Color = colors(i,:);
-    xlabel("time [s]"), title(title_name)
-    counter = counter + len;
-    end
 
 
 

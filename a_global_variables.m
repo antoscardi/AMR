@@ -2,41 +2,34 @@ close all; clear; clc;
 %% HYPERPARAMETERS:
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
-setGlobal(0.3); r_n = getGlobal;
+setGlobal(0.3); wheelRadious = getGlobal;
 % Distance between the wheels [m].
-setGlobal(1); b_n = getGlobal;
+setGlobal(1); wheelDistance = getGlobal;
 % Simulation time [s]
-setGlobal(20); tsim = getGlobal;
+setGlobal(20); totalTime = getGlobal;
 % Control frequency [Hz]
 setGlobal(100); f = getGlobal;
 % Time step [s]
 setGlobal(1/f); delta = getGlobal;
 % Total number of steps
-setGlobal(tsim*f+1); Nstep = getGlobal;
+setGlobal(totalTime*f+1); Nstep = getGlobal;
 % Time
-global time, time = 0:delta:tsim;
+global timeVector, timeVector = 0:delta:totalTime;
 % Controller gains
 setGlobal(3); kv = getGlobal;
 setGlobal(2); kp = getGlobal; 
 setGlobal(1); ki = getGlobal;
 
 % Initial position and velocity
-global p_0, p_0 = [2 4];
-global v_0, v_0 = [0.1 0.1];
+global initialPosition, initialPosition = [2 4];
+global initialVelocity, initialVelocity = [0.1 0.1];
 % Position of the two break points
-global p_1, p_1 = [5 10];
-global p_2, p_2 = [7 15];
+global firstBreak, firstBreak = [5 10];
+global secondBreak, secondBreak = [7 15];
 % Final position and velocity.
-global p_f, p_f = [10 20];
-global v_f, v_f = [0.1 0.1];
+global finalPosition, finalPosition = [10 20];
+global finalVelocity, finalVelocity = [0.1 0.1];
 
-% Generate perturbed values of the parameters, components of vector p
-percentage = 0.2;
-params = zeros(2,Nstep);
-for k=1:Nstep
-    params(:,k) = [unifrnd(r_n - r_n*percentage,r_n + r_n*percentage);
-                   unifrnd(b_n - b_n*percentage,b_n + b_n*percentage)];
-end
 
 % Create data folder
 if ~exist('../AMR/data', 'dir')
@@ -53,9 +46,6 @@ end
 
 % Add the folder with our functions to the Path
 addpath ../AMR/my_functions
-
-% Save params 
-save('data/params','params');
 
 % Set settings for all plots
 set(groot,'defaultLineLineWidth',3)

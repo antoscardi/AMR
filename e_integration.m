@@ -123,29 +123,4 @@ save('data/gamma',"gammax1_int", "gammay1_int","gammax2_int", "gammay2_int","gam
 save('data/u_ai',"u_ax1", "u_ay1","u_ax2", "u_ay2","u_ax3", "u_ay3","u_ax4", "u_ay4","u_ax5", "u_ay5","u_ax6", "u_ay6",...
     "u_ax7", "u_ay7","u_ax8", "u_ay8","u_ax9", "u_ay9","u_ax10", "u_ay10","u_ax11", "u_ay11","u_ax12", "u_ay12")
 
-%% Utility Functions 
-function didt=integralSens(~, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k)
-    % Create matrixes from column vector
-    sens = [i(1) i(2);
-            i(3) i(4);
-            i(5) i(6)];
-    sensxhi = [i(7) i(8);
-               i(9) i(10);
-               i(11) i(12)];
-    % Sensitivity component of the ODEs  
-    dsens = f_p(:,:,k) + f_q(:,:,k)*sens + f_u(:,:,k)*(h_q(:,:,k)*sens + h_xhi(:,:,k)*sensxhi);
-    % sensitivity_xhi component of the ODEs
-    dsensxhi = g_q(:,:,k)*sens + g_xhi(:,:,k)*sensxhi;
-    % Output
-    didt = [dsens(1,1); dsens(1,2); dsens(2,1);dsens(2,2);dsens(3,1); dsens(3,2);dsensxhi(1,1); dsensxhi(1,2); dsensxhi(2,1);dsensxhi(2,2);dsensxhi(3,1);dsensxhi(3,2)];
-end 
 
-function dgamma_tot=integralGamma(~, gamma, f_q, f_u, g_q, g_xhi, h_q, h_xhi, h_a_i, g_a_i, k) 
-    t_maius = [gamma(1:3)]; t_maius_xhi = [gamma(4:6)]; 
-    %Gamma component of the ODEs
-    dgamma = f_q(:,:,k)*t_maius + f_u(:,:,k)*(h_q(:,:,k)*t_maius + h_xhi(:,:,k)*t_maius_xhi + h_a_i(:,:,k));
-    %Gamma_xhi component of the ODEs
-    dgammaxhi = g_q(:,:,k)*t_maius + g_xhi(:,:,k)*t_maius_xhi + g_a_i(:,:,k);
-    %Output
-    dgamma_tot = [dgamma(1); dgamma(2); dgamma(3); dgammaxhi(1); dgammaxhi(2); dgammaxhi(3)];
-end

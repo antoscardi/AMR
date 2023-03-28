@@ -5,7 +5,6 @@ syms q [3 1], syms p [2 1], syms u [2 1] real, syms xhi [2 1]
 syms r_d [2 1], syms dr_d [2 1], syms ddr_d [2 1]
 syms a1x a1y a2x a2y a3x a3y a4x a4y 
 
-
 % Assignment
 q(1) = x; q(2) = y; q(3) = theta;
 p(1) = r; p(2) = b;
@@ -31,6 +30,8 @@ A = [cos(theta) -xhi_v*sin(theta);
 
 % Dynamic model
 q_dot = G*S*u;
+% Calculate v and w
+velocities = S*u;
 
 % Controller
 dr_xhi = [cos(theta)*xhi_v;
@@ -48,9 +49,6 @@ xhi_dot = [[1 0]*inv(A)*eta;
 % u = h(xhi,q,r_d,p)
 new_u = inv(S_c)*[xhi_v;
         [0 1]*inv(A)*eta];
-
-% Calculate v and w
-velocities = S*u;
 
 % Partial Derivatives for sensitivity
 f_p = jacobian(q_dot,p); f_q = jacobian(q_dot,q); f_u = jacobian(q_dot,u);
