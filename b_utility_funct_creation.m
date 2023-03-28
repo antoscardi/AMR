@@ -1,14 +1,14 @@
 close all; clc;
 % Symbolic variables declaration 
 syms x_d y_d dx_d dy_d ddx_d ddy_d t x y theta b r wl wr xhi_v xhi_x xhi_y
-syms q [3 1] real, syms p [2 1] real, syms u [2 1] real , syms xhi [2 1] real 
-syms r_d [2 1] real, syms dr_d [2 1] real, syms ddr_d [2 1] real
+syms q [3 1], syms p [2 1], syms u [2 1] real, syms xhi [2 1] 
+syms r_d [2 1], syms dr_d [2 1], syms ddr_d [2 1]
 syms a1x a1y a2x a2y a3x a3y a4x a4y 
 
 % Create functions folder
 if ~exist('../AMR/functions', 'dir')
     mkdir ../AMR functions
-    addpath '../AMR/functions'
+    addpath ../AMR/functions
 end
 
 % Assignment
@@ -55,10 +55,10 @@ new_u = inv(S_c)*[xhi_v;
         [0 1]*inv(A)*eta];
 
 % Calculate v and w
-velocities_opt = S*u;
+velocities = S*u;
 
 % Partial Derivatives for sensitivity
-f_p = jacobian(q_dot_optimization,p); f_q = jacobian(q_dot_optimization,q); f_u = jacobian(q_dot_optimization,u);
+f_p = jacobian(q_dot,p); f_q = jacobian(q_dot,q); f_u = jacobian(q_dot,u);
 h_q = jacobian(new_u,q);  h_xhi = jacobian(new_u,xhi);
 g_q = jacobian(xhi_dot,q); g_xhi = jacobian(xhi_dot,xhi);
 
@@ -72,19 +72,19 @@ df_u_q_gamma = tensor_product(f_u,q,g);
 df_u_u_uai = tensor_product(f_u,u,u_ai);
 dh_q_q_gamma = tensor_product(h_q,q,g);
 dh_q_xhi_gammaxhi = tensor_product(h_q,xhi,g);
-dh_xhi_q_gamma = tensor_product(h_xhi, q,g);
+dh_xhi_q_gamma = tensor_product(h_xhi,q,g);
 dh_xhi_xhi_gammaxhi = tensor_product(h_xhi,xhi,g);
 dg_q_q_gamma = tensor_product(g_q,q,g);
-dg_q_xhi_gammaxhi = tensor_product(g_q,xhi, g);
+dg_q_xhi_gammaxhi = tensor_product(g_q,xhi,g);
 dg_xhi_q_gamma = tensor_product(g_xhi,q,g);
 dg_xhi_xhi_gammaxhi = tensor_product(g_xhi,xhi,g);
 
 %% Function creation
 % State and Control
-matlabFunction(velocities,'File','functions/velocities','Vars',{u});
-matlabFunction(q_dot,'File','functions/q_dot','Vars',{t,q,u});
+matlabFunction(velocities,'File','functions/velocities','Vars',{p,u});
+matlabFunction(q_dot,'File','functions/q_dot','Vars',{q,u,p});
 matlabFunction(new_u,'File','functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d});
-matlabFunction(xhi_dot,'File','functions/xhi_dot','Vars',{t,q,xhi,r_d,dr_d,ddr_d});
+matlabFunction(xhi_dot,'File','functions/xhi_dot','Vars',{q,xhi,r_d,dr_d,ddr_d});
 
 % Derivatives for sensitivity
 matlabFunction(f_p,'File','functions/ff_p','Vars',{q,u,p});

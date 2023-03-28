@@ -14,6 +14,5 @@ s.DisplayLabels = Lines; grid on
 for i = counter:counter+len
 s.LineProperties(i).Color = colors(i,:);
 xlabel("time [s]"), title(title_name)
-
 counter = counter + len;
 end

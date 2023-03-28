@@ -1,4 +1,4 @@
-function video(q_history,p,param,time)
+function video(q_history, p, param, time)
 % Setting up the Plot
 figure; hold on, 
 colors = linspecer(3,'qualitative'); colororder(colors),

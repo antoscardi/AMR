@@ -80,14 +80,12 @@ for k=2:Nstep
 end
 
 %% Create and display video animation.
-if haveNoise == false
-    video(q_history,p,b_n,time)
-else
-    video(q_history,p,params(2,:),time)
-end
+
+video(q_history,p,params(2,:),time)
+
 
 %% Plots
-colors = linspecer(12,'sequential');
+
 % Plot state variables (vector q). 
 figure 
 s = stackedplot(time(1:end),q_history','LineWidth',linewidth);
@@ -148,6 +146,22 @@ function [v_in, omega_in] = flatness(dp,ddp)
 v_in = sqrt((dp(1,1))^2+(dp(2,1))^2);
 omega_in = (ddp(2,1)*dp(1,1)-ddp(1,1)*dp(2,1))/v_in^2;
 end
+
+function plot_function(data, title_name, labels_names, time, linewidth)
+    % Counter to count how many times the function is called in order to change colors 
+    persistent  counter, 
+    if isempty( counter )
+        counter=0; %Initializing counter
+    end
+    Lines = split(labels_names,';'); len = length(Lines);   
+    figure 
+    s = stackedplot(time(1:end),data','LineWidth',linewidth);
+    s.DisplayLabels = Lines; grid on
+    for i = counter:counter+len
+    s.LineProperties(i).Color = colors(i,:);
+    xlabel("time [s]"), title(title_name)
+    counter = counter + len;
+    end
 
 
 

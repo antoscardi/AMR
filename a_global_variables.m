@@ -59,13 +59,14 @@ set(groot,'defaultAxesTitleFontWeight','bold')
 set(groot,'defaultAxesTitleFontSizeMultiplier',1.3)
 
 % Generate colors
+colors = linspecer(12,'sequential');
 contrast_colors = linspecer(2,'qualitative');
 set(groot,'DefaultAxesColorOrder',contrast_colors)
 
 % Latex default for all text
 list_factory = fieldnames(get(groot,'factory'));
 index_interpreter = find(contains(list_factory,'Interpreter'));
-for index = 1:length(index_interpreter);
+for index = 1:length(index_interpreter)
     set(groot, strrep(list_factory{index_interpreter(index)},'factory','default') ,'Latex');
 end
 
