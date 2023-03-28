@@ -1,1 +1,0 @@
-function robot_system(u, q, delta, params)

@@ -1,57 +1,52 @@
 close all; clc;
 %% Desired Trajectory Generation (Spline)
-[p, dp, ddp] = trajectory_generation(p_0, v_0, p_1, p_2, p_f, v_f, tsim, time, linewidth);
+[p, dp, ddp] = trajectory_generation(initialPosition, initialVelocity, firstBreak, secondBreak,...
+                                     finalPosition, finalVelocity, totalTime, timeVector, linewidth);
 
 %% Inizializations
 % Error
 e = zeros(2,Nstep); e_tot = zeros(Nstep,1);
 % Initial state (x,y,theta)
-theta_0 = atan2(v_0(2),v_0(1));
-q_0 = [p_0(1);p_0(2);theta_0];
+initialTheta = atan2(initialVelocity(2),initialVelocity(1));
+initialState = [initialPosition(1);initialPosition(2);initialTheta];
 % Initial input (v,omega) through flatness
-[v_d(1), omega_d(1)] = flatness(dp,ddp);
-v_0 = [v_d(1); omega_d(1)];
+[desideredLinearVelocity(1), desideredAngularVelocity(1)] = flatness(dp,ddp);
+initialVelocity = [desideredLinearVelocity(1); desideredAngularVelocity(1)];
 % u_k=[w_r; w_l]
-u_0 = [(v_0(1)+v_0(2)*b_n/2)/r_n;
-       (v_0(1)-v_0(2)*b_n/2)/r_n];
+initialInput = [(initialVelocity(1)+initialVelocity(2)*wheelDistance/2)/wheelRadius;
+       (initialVelocity(1)-initialVelocity(2)*wheelDistance/2)/wheelRadius];
    
 % u_history = [u0, u1, u2, ..., uN-1] dimension (2)x(Nstep)
-u_history = zeros(2, Nstep); u_history(:,1) = u_0;
-v_history = zeros(2, Nstep); v_history(:,1) = v_0;
+u_history = zeros(2, Nstep); u_history(:,1) = initialInput;
+v_history = zeros(2, Nstep); v_history(:,1) = initialVelocity;
 % q_history = [q0, q1, q2, ..., qN] dimension (3)x(Nstep)
-q_history = zeros(3, Nstep); q_history(:,1) = q_0;
+q_history = zeros(3, Nstep); q_history(:,1) = initialState;
 % Controller state
 xhi_history = zeros(3, Nstep); xhi_history(:,1) = [0.1;0.1;0.1];
 
 %% Simulation loop
-for k=2:Nstep
+for k=1:Nstep
 
     % Initilize input and state
-    u_k = u_history(:,k-1);
-    q_k = q_history(:,k-1);
-    xhi_k = xhi_history(:,k-1);
-    
-    % Integrate q_dot = f(q,u)
-    [~, qint] = ode45(@(t,q) q_dot(q,u_k),[0 delta],q_k);
-    q_k = qint(end,:)';
- 
-  
+    currentInput = u_history(:,k);
+    currentState = q_history(:,k);
+    curretXhi = xhi_history(:,k);
 
-    % velocities calculation for comparison
-    if haveNoise == false
-    v_k = velocities(u_k);
-    v_history(:,k) = v_k;
-    else
-    v_k = velocities_opt(u_k, params(:,k));
-    v_history(:,k) = v_k;
-    end
     % Error calculation
-    e(:,k) = abs(p(:,k)-q_k(1:2));
+    e(:,k) = abs(p(:,k)-currentState(1:2));
     e_tot(k) = sqrt(e(1,k)^2+e(2,k)^2);
+    
+    %IDEAL robot system uses the NOMINAL parameters of the robot
+    params = [wheelRadius;
+             wheelDistance];
+    nextState = robot_system(currentInput,currentState,delta,params);
+
+    % CONTROLLER
+ 
     % Save xk and uk as last columns.
-    q_history(:,k) = q_k;
-    u_history(:,k) = u_k;
-    xhi_history(:,k) = xhi_k;
+    q_history(:,k+1) = nextState;
+    u_history(:,k+1) = nextInput;
+    xhi_history(:,k+1) = nextXhi;
 end
 
 %% Create and display video animation.
@@ -113,4 +108,4 @@ end
 
 if haveNoise == true && followOptim == false
     save('data/controlwithnoise','u_history','p','q_history','dp','ddp','xhi_history')
-end 
+end

@@ -13,3 +13,4 @@ function plot_function(data, title_name, labels_names, time, linewidth)
     xlabel("time [s]"), title(title_name)
     counter = counter + len;
     end
+end 

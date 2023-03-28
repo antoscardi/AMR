@@ -2,7 +2,7 @@ close all; clear; clc;
 %% HYPERPARAMETERS:
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
-setGlobal(0.3); wheelRadious = getGlobal;
+setGlobal(0.3); wheelRadius = getGlobal;
 % Distance between the wheels [m].
 setGlobal(1); wheelDistance = getGlobal;
 % Simulation time [s]
@@ -43,9 +43,6 @@ if ~exist('../AMR/auto_functions', 'dir')
     mkdir ../AMR auto_functions
     addpath ../AMR/auto_functions
 end
-
-% Add the folder with our functions to the Path
-addpath ../AMR/my_functions
 
 % Set settings for all plots
 set(groot,'defaultLineLineWidth',3)

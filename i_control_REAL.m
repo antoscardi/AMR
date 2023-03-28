@@ -1,8 +1,8 @@
 close all; clc;
 % Generate uniform distribution and sample the exstremes: 80% or 120% of the nominal value
-wheelRadious80 = wheelRadious*0.8
+wheelRadious80 = wheelRadius*0.8
 wheelRadious120 = wheelDistance*0.8
-wheelDistance80 = wheelRadious*1.2
+wheelDistance80 = wheelRadius*1.2
 wheelDistance120 = wheelDistance*1.2
 %% Choose if you want to follow the optimized trajectory or not
 followOptim = false;
