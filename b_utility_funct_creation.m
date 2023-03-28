@@ -5,11 +5,6 @@ syms q [3 1], syms p [2 1], syms u [2 1] real, syms xhi [2 1]
 syms r_d [2 1], syms dr_d [2 1], syms ddr_d [2 1]
 syms a1x a1y a2x a2y a3x a3y a4x a4y 
 
-% Create functions folder
-if ~exist('../AMR/functions', 'dir')
-    mkdir ../AMR functions
-    addpath ../AMR/functions
-end
 
 % Assignment
 q(1) = x; q(2) = y; q(3) = theta;
@@ -209,17 +204,6 @@ for i= 1:4
     matlabFunction(func,'File',sprintf('functions/dgxhi_a%dy', i));
 end
 
-%% Utility funtions
-function matrix = tensor_product(A,x,g)
-[m, n] = size(A); matrix = zeros(m,n);
-canonical_basis_matrix_l = eye(m);
-canonical_basis_matrix_k = eye(n);
-for i = 1:m
-    for j=1:n
-        matrix = matrix + (jacobian(A(i,j),x)*g)*canonical_basis_matrix_l(:,i)*canonical_basis_matrix_k(:,j)';
-    end
-end
-end
 
 function out = my_jacobian(A,x)
 syms out [size(A)], [n,m] = size(A);

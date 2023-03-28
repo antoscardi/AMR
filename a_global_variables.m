@@ -2,9 +2,9 @@ close all; clear; clc;
 %% HYPERPARAMETERS:
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
-setGlobal(0.0993); r_n = getGlobal;
+setGlobal(0.3); r_n = getGlobal;
 % Distance between the wheels [m].
-setGlobal(0.29); b_n = getGlobal;
+setGlobal(1); b_n = getGlobal;
 % Simulation time [s]
 setGlobal(20); tsim = getGlobal;
 % Control frequency [Hz]
@@ -31,7 +31,7 @@ global p_f, p_f = [10 20];
 global v_f, v_f = [0.1 0.1];
 
 % Generate perturbed values of the parameters, components of vector p
-percentage = 0.3;
+percentage = 0.2;
 params = zeros(2,Nstep);
 for k=1:Nstep
     params(:,k) = [unifrnd(r_n - r_n*percentage,r_n + r_n*percentage);
@@ -41,10 +41,18 @@ end
 % Create data folder
 if ~exist('../AMR/data', 'dir')
        mkdir ../AMR data
+       % Add paths to the matlab search path
+       addpath ../AMR/data
 end
 
-% Add paths to the matlab search path
-addpath '../AMR/data', addpath '../AMR/functions'
+% Create functions folder
+if ~exist('../AMR/auto_functions', 'dir')
+    mkdir ../AMR auto_functions
+    addpath ../AMR/auto_functions
+end
+
+% Add the folder with our functions to the Path
+addpath ../AMR/my_functions
 
 % Save params 
 save('data/params','params');
