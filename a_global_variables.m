@@ -2,9 +2,9 @@ close all; clear; clc;
 %% HYPERPARAMETERS:
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
-setGlobal(0.3); wheelRadius = getGlobal;
+setGlobal(0.2); wheelRadius = getGlobal;
 % Distance between the wheels [m].
-setGlobal(1); wheelDistance = getGlobal;
+setGlobal(0.8); wheelDistance = getGlobal;
 % Simulation time [s]
 setGlobal(20); totalTime = getGlobal;
 % Control frequency [Hz]
@@ -14,21 +14,21 @@ setGlobal(1/f); delta = getGlobal;
 % Total number of steps
 setGlobal(totalTime*f+1); Nstep = getGlobal;
 % Time
-global timeVector, timeVector = 0:delta:totalTime;
+global timeVec, timeVec = 0:delta:totalTime;
 % Controller gains
 setGlobal(3); kv = getGlobal;
 setGlobal(2); kp = getGlobal; 
 setGlobal(1); ki = getGlobal;
 
 % Initial position and velocity
-global initialPosition, initialPosition = [2 4];
-global initialVelocity, initialVelocity = [0.1 0.1];
+global initialPositionVec, initialPositionVec = [2 4];
+global initialVelocityVec, initialVelocityVec = [0.1 0.1];
 % Position of the two break points
 global firstBreak, firstBreak = [5 10];
 global secondBreak, secondBreak = [7 15];
 % Final position and velocity.
-global finalPosition, finalPosition = [10 20];
-global finalVelocity, finalVelocity = [0.1 0.1];
+global finalPositionVec, finalPositionVec = [10 20];
+global finalVelocityVec, finalVelocityVec = [0.1 0.1];
 
 
 % Create data folder
@@ -57,6 +57,9 @@ set(groot,'defaultAxesTitleFontSizeMultiplier',1.3)
 colors = linspecer(12,'sequential');
 contrast_colors = linspecer(2,'qualitative');
 set(groot,'DefaultAxesColorOrder',contrast_colors)
+
+% Counter to count how many times the function is called in order to change colors, initialize to 1
+setGlobal(1); counter = getGlobal;
 
 % Latex default for all text
 list_factory = fieldnames(get(groot,'factory'));

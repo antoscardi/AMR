@@ -5,8 +5,8 @@ breaks = 0:tsim/3:tsim;
 % Assign variables names
 px_0 = p_0(1); py_0 = p_0(2);
 vx_0 = v_0(1); vy_0 = v_0(2);
-p_x1=p_1(1); p_y1=p_1(2);
-p_x2=p_2(1); p_y2=p_2(2);
+p_x1 = p_1(1); p_y1 = p_1(2);
+p_x2 = p_2(1); p_y2 = p_2(2);
 px_f = p_f(1); py_f = p_f(2);
 vx_f = v_f(1); vy_f = v_f(2);
 

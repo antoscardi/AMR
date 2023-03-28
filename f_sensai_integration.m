@@ -135,7 +135,6 @@ z=z+1;
 all_sensaix{i} = sensai_tot;
 end
 
-% For the y parameters %%%% VANNO SOSTITUTE LE Y 
 all_sensaiy = cell(1,12);
 % Repeat the calculations 3 times, one for each trajectory
 z=1;

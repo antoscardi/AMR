@@ -1,9 +1,12 @@
-function
-
+function [nextInput, nextXhi] = controller(currentState,p,dp,ddp,currentXhi,delta,nominal_params,k)
+%% Controller block which takes as input the current state of the robot system and outputs the new input
+% commands at time step k+1 in order to control the robot.
+% Inside this block the functions are ALWAYS evaluated using the NOMINAL prameters of the robot
 
 % Dynamic Feedback Linearization Internal State
-    [~, xhi_int] = ode45(@(t,xhi) xhi_dot(t,q_k,xhi,p(:,k),dp(:,k),ddp(:,k)),[0 delta],xhi_k);
-    xhi_k = xhi_int(end,:)';
+nextXhi = currentXhi + delta*xhi_dot(currentState,currentXhi,p(:,k+1),dp(:,k+1),ddp(:,k+1));
     
-    % Change control input for next step
-    u_k = new_u(q_history(:,k-1),xhi_history(:,k-1),p(:,k),dp(:,k),ddp(:,k));
+% Change control input for next step
+nextInput = new_u(currentState,currentXhi,p(:,k+1),dp(:,k+1),ddp(:,k+1),nominal_params);
+
+end 
