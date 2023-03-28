@@ -29,8 +29,8 @@ params = zeros(2,Nstep);
 %                    unifrnd(a1,b1)];
 % end
 for k=1:Nstep
-    params(:,k) = [r_n*(0.7 + 0.5*rand());
-                   b_n*(0.7 + 0.5*rand())];
+  params(:,k) = [r_n*(0.7 + 0.5*rand());
+                  b_n*(0.7 + 0.5*rand())];
 end
 
 % Create data folder

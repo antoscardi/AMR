@@ -20,14 +20,14 @@ for k = 2:length(time)
     trajectory.XData = q_history(1,1:k);
     trajectory.YData = q_history(2,1:k);
     % Updating the robot body and orientation
-    R = param(k)/2; % radius is the distance between the wheels b divided by 2
+    R = param(2)/2; % radius is the distance between the wheels b divided by 2
     robot = viscircles([p_r(1,k) p_r(2,k)],R,'Color',colors(3,:),"LineStyle","-.");
     orient.XData = [p_r(1,k),p_r(1,k)+R*cos(theta(k))];
     orient.YData = [p_r(2,k), p_r(2,k)+R*sin(theta(k))];
     % Updating the title
     title(sprintf('Trajectory\nTime: %0.2f sec', time(k)));
     % Delay
-    drawnow
+    %drawnow
     if k<length(time)
     delete(robot);
     end
