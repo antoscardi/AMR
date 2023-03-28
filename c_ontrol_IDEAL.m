@@ -48,7 +48,7 @@ for k=1:Nstep-1
 
     % CONTROLLER block, to avoid error always set this to the nominal ones
     nominal_params = [wheelRadius; wheelDistance];
-    [nextInput,nextXhi] = controller(currentState,p,dp,ddp,currentXhi,delta,nominal_params,k);
+    [nextInput,nextXhi] = controller(nextState,p,dp,ddp,currentXhi,delta,nominal_params,k);
  
     % Save q_k+1,u_k+1 and xhi_k+1 as last columns.
     q_history(:,k+1) = nextState;

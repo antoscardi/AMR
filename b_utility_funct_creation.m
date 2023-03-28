@@ -37,7 +37,7 @@ velocities = S*u;
 dr_xhi = [cos(theta)*xhi_v;
           sin(theta)*xhi_v];
 
-eta = ddr_d + kv*(dr_d - dr_xhi) + kp*(r_d - q(1:2)) + ki*xhi(1:2);
+eta = ddr_d + kv*(dr_d - dr_xhi) + kp*(r_d - q(1:2)) + ki*xhi(2:3);
 
 % xhi_dot = g(xhi,q,r_d)
 xhi_dot = [[1 0]*inv(A)*eta; 
