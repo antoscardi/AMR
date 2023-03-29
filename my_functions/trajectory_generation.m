@@ -35,14 +35,16 @@ polyy = mkpp(breaks,[a_y(1) a_y(2) a_y(3) a_y(4);
                      a_y(5) a_y(6) a_y(7) a_y(8);
                      a_y(9) a_y(10) a_y(11) a_y(12)]);
 
-figure(),
+%% Plots
+fontSize = 18;                 
+figure(), 
 fnplt(polyx,linewidth), hold on
 fnplt(polyy,linewidth)
 line([tsim/3 tsim/3],[0 25],'LineStyle','--','Color','k','LineWidth',1),grid minor
 line([2*tsim/3 2*tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1)
 xlabel('time [sec]'), ylabel('trajecory [m]')
 legend('trajectory in x', 'trajectory in y')
-title('Trajectory varation in time'),hold off
+title('Trajectory varation in time'),fontsize(fontSize,'points'),hold off
 
 % Differentiation first order
 dpolyx = fnder(polyx);
@@ -52,14 +54,14 @@ dpolyy = fnder(polyy);
 ddpolyx = fnder(dpolyx);
 ddpolyy = fnder(dpolyy);
 
-figure()
+figure(),
 fnplt(dpolyx,linewidth), hold on
 fnplt(dpolyy,linewidth), hold off
 line([tsim/3 tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1)
 line([2*tsim/3 2*tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1),grid minor
 xlabel("time [sec]"), ylabel('velocity [m/s]')
 legend('velocity in x', 'velocity in y')
-title('Velocity varation in time')
+title('Velocity varation in time'),fontsize(fontSize,'points'),hold off
 
 p = [ppval(polyx,time);ppval(polyy,time)];
 dp = [ppval(dpolyx,time);ppval(dpolyy,time)];
@@ -67,4 +69,5 @@ ddp = [ppval(ddpolyx,time);ppval(ddpolyy,time)];
 
 % Save variables for the optimization routine.
 save('data/coeff_a','a_x','a_y')
+save('data/desired_trajectory','p',"dp","ddp")
 end

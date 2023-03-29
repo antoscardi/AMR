@@ -34,24 +34,23 @@ global finalVelocityVec, finalVelocityVec = [0.1 0.1];
 % Create data folder
 if ~exist('../AMR/data', 'dir')
        mkdir ../AMR data
-       % Add paths to the matlab search path
-       addpath ../AMR/data
 end
 
 % Create functions folder
 if ~exist('../AMR/auto_functions', 'dir')
     mkdir ../AMR auto_functions
-    addpath ../AMR/auto_functions
 end
 
+% Add paths to the matlab search path
+addpath ../AMR/data
+addpath ../AMR/auto_functions
+addpath ../AMR/my_functions
+
 % Set settings for all plots
-set(groot,'defaultLineLineWidth',3)
-global linewidth, linewidth = 3;
-set(groot,'defaultAxesFontWeight','bold')
-set(groot,'defaultLegendFontWeight','bold')
-set(groot,'defaultAxesSubtitleFontWeight','bold')
-set(groot,'defaultAxesTitleFontWeight','bold')
-set(groot,'defaultAxesTitleFontSizeMultiplier',1.3)
+set(groot,'defaultLineLineWidth',5)
+global linewidth, linewidth = 5;
+set(groot,'defaultAxesTitleFontSizeMultiplier',2.1)
+set(groot,'defaultfigureposition',[400 250 1200 700])
 
 % Generate colors
 colors = linspecer(12,'sequential');
@@ -67,6 +66,15 @@ index_interpreter = find(contains(list_factory,'Interpreter'));
 for index = 1:length(index_interpreter)
     set(groot, strrep(list_factory{index_interpreter(index)},'factory','default') ,'Latex');
 end
+
+% % LINE COLORS
+% N=5;
+% X = linspace(0,pi*3,1000);
+% Y = bsxfun(@(x,n)sin(x+2*n*pi/N), X.', 1:N);
+% C = linspecer(N,'qualitative');
+% axes('NextPlot','replacechildren', 'ColorOrder',C);
+% plot(X,Y,'linewidth',5)
+% ylim([-1.1 1.1]);
 
 %% Helper functions
 function var = getGlobal
