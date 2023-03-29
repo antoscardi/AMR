@@ -12,7 +12,7 @@ wheelDistance80 = wheelRadius*1.2;
 wheelDistance120 = wheelDistance*1.2;
 
 %% FIRST CASE
-params80 = [wheelRadious80; wheelDistance80];
+params80 = [wheelRadius80; wheelDistance80];
 
 initialTheta = atan2(initialVelocityVec(2),initialVelocityVec(1));
 initialState = [initialPositionVec(1);initialPositionVec(2);initialTheta];

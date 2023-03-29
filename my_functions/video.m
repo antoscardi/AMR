@@ -1,7 +1,7 @@
 function video(q, p, b_n, time, linewidth)
 % Setting up the Plot
-figure; hold on,
-fontSize = 18;
+figure('Position',[100 100 540 400]); hold on,
+fontSize = 6;
 colors = linspecer(4,'qualitative'); colororder(colors); 
 title(sprintf('Trajectory\nTime: %0.2f sec', time(1)));
 xlabel('x[m]'), ylabel('y[m]'), grid minor  
