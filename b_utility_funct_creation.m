@@ -198,13 +198,5 @@ for i= 1:4
     func = my_jacobian(gxhi,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dgxhi_a%dy', i));
 end
-
-function out = my_jacobian(A,x)
-syms out [size(A)], [n,m] = size(A);
-for i=1:n
-    for j = 1:m
-    out(i,j) = jacobian(A(i,j),x);
-    end
-end 
 end
 
