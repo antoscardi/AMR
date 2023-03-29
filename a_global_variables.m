@@ -30,7 +30,6 @@ global secondBreak, secondBreak = [7 15];
 global finalPositionVec, finalPositionVec = [10 20];
 global finalVelocityVec, finalVelocityVec = [0.1 0.1];
 
-
 % Create data folder
 if ~exist('../AMR/data', 'dir')
        mkdir ../AMR data

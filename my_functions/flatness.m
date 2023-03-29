@@ -1,4 +1,5 @@
 function [v, omega] = flatness(dp,ddp)
+    % Take only the first values of the matrixes.
     x_dot = dp(1,1);
     y_dot = dp(2,1);
     x_dot_dot = ddp(1,1);

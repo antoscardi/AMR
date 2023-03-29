@@ -1,8 +1,8 @@
 function video(q, p, b_n, time, linewidth)
 % Setting up the Plot
 figure; hold on,
-fontSize = 16;
-colors = linspecer(4,'qualitative'); colororder(colors); fontsize = 15;
+fontSize = 18;
+colors = linspecer(4,'qualitative'); colororder(colors); 
 title(sprintf('Trajectory\nTime: %0.2f sec', time(1)));
 xlabel('x[m]'), ylabel('y[m]'), grid minor  
 xlim([min(min(p(1,:),min(q(1,:))))-1 max(max(p(1,:),max(q(1,:))))+3])
@@ -37,7 +37,7 @@ for k = 2:length(time)
     % Updating the title
     title(sprintf('Trajectory\nTime: %0.2f sec', time(k)));
     % Delay
-    drawnow
+    %drawnow
     if k<length(time)
     delete(robot);
     end
