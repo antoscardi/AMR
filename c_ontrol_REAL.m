@@ -12,13 +12,13 @@ wheelDistance80 = wheelRadius*1.2;
 wheelDistance120 = wheelDistance*1.2;
 
 %% FIRST CASE
-params80 = [wheelRadious80; wheelDistance80];
+params80 = [wheelRadius80; wheelDistance80];
 
 initialTheta = atan2(initialVelocityVec(2),initialVelocityVec(1));
 initialState = [initialPositionVec(1);initialPositionVec(2);initialTheta];
 [initialVelocity, initialAngularVelocity] = flatness(dr_d, ddr_d);
-initialInput = [(initialVelocity + initialAngularVelocity*wheelDistance80/2)/wheelRadius80;
-                (initialVelocity - initialAngularVelocity*wheelDistance80/2)/wheelRadius80];
+initialInput = [(initialVelocity + initialAngularVelocity*wheelDistance/2)/wheelRadius;
+                (initialVelocity - initialAngularVelocity*wheelDistance/2)/wheelRadius];
 
 % Reinitialize states and input and errors
 q_history = zeros(3, Nstep); q_history(:,1) = initialState;
