@@ -39,11 +39,12 @@ xhi_dot = [[1 0]*inv(A)*eta;
             r_d - q(1:2)];
 
 % u = h(xhi,q,r_d,p)
-new_u = inv(S)*[xhi_v; [0 1]*inv(A)*eta];
+new_u = inv(S)*[xhi_v; 
+               [0 1]*inv(A)*eta];
 
 % Partial Derivatives for sensitivity
 f_p = jacobian(q_dot,p); f_q = jacobian(q_dot,q); f_u = jacobian(q_dot,u);
-h_q = jacobian(new_u,q);  h_xhi = jacobian(new_u,xhi);
+h_q = jacobian(new_u,q); h_xhi = jacobian(new_u,xhi);
 g_q = jacobian(xhi_dot,q); g_xhi = jacobian(xhi_dot,xhi);
 
 % Second Partial Derivative
@@ -66,33 +67,35 @@ dg_xhi_xhi_gammaxhi = tensor_product(g_xhi,xhi,g);
 %% Function creation
 % State and Control
 matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{q,u,p});
+%matlabFunction(velocities,'File','auto_functions/velocities_opt','Vars',{u,p});
 matlabFunction(new_u,'File','auto_functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d,p});
 matlabFunction(xhi_dot,'File','auto_functions/xhi_dot','Vars',{q,xhi,r_d,dr_d,ddr_d});
 
 % Derivatives for sensitivity
-matlabFunction(f_p,'File','auto_functions/ff_p');
-matlabFunction(f_q,'File','auto_functions/ff_q');
-matlabFunction(f_u,'File','auto_functions/ff_u');
-matlabFunction(h_q,'File','auto_functions/fh_q');
-matlabFunction(h_xhi,'File','auto_functions/fh_xhi');
-matlabFunction(g_q,'File','auto_functions/fg_q');
-matlabFunction(g_xhi,'File','auto_functions/fg_xhi');
+matlabFunction(f_p,'File','auto_functions/ff_p', 'Vars',{q,u,p});
+matlabFunction(f_q,'File','auto_functions/ff_q', 'Vars',{q,u,p});
+matlabFunction(f_u,'File','auto_functions/ff_u', 'Vars',{q,p});
+matlabFunction(h_q,'File','auto_functions/fh_q', 'Vars',{q,xhi,r_d,dr_d,ddr_d,p});
+matlabFunction(h_xhi,'File','auto_functions/fh_xhi', 'Vars', {q,xhi,r_d,dr_d,ddr_d, p});
+matlabFunction(g_q,'File','auto_functions/fg_q', 'Vars', {q,xhi,r_d,dr_d,ddr_d});
+matlabFunction(g_xhi,'File','auto_functions/fg_xhi','Vars',{q,xhi,r_d,dr_d,ddr_d});
 
 % Tensor Products
-matlabFunction(df_q_q_gamma,'File','auto_functions/df_q_q_gamma');
-matlabFunction(df_q_u_uai,'File','auto_functions/df_q_u_uai');
-matlabFunction(df_p_q_gamma,'File','auto_functions/df_p_q_gamma');
-matlabFunction(df_p_u_uai,'File','auto_functions/df_p_u_uai');
-matlabFunction(df_u_q_gamma,'File','auto_functions/df_u_q_gamma');
-matlabFunction(df_u_u_uai,'File','auto_functions/df_u_u_uai');
-matlabFunction(dh_q_q_gamma,'File','auto_functions/dh_q_q_gamma');
-matlabFunction(dh_q_xhi_gammaxhi,'File','auto_functions/dh_q_xhi_gammaxhi');
-matlabFunction(dh_xhi_q_gamma,'File','auto_functions/dh_xhi_q_gamma');
-matlabFunction(dh_xhi_xhi_gammaxhi,'File','auto_functions/dh_xhi_xhi_gammaxhi');
-matlabFunction(dg_q_q_gamma,'File','auto_functions/dg_q_q_gamma');
-matlabFunction(dg_q_xhi_gammaxhi,'File','auto_functions/dg_q_xhi_gammaxhi');
-matlabFunction(dg_xhi_q_gamma,'File','auto_functions/dg_xhi_q_gamma');
-matlabFunction(dg_xhi_xhi_gammaxhi,'File','auto_functions/dg_xhi_xhi_gammaxhi');
+matlabFunction(df_q_q_gamma,'File','auto_functions/df_q_q_gamma','Vars',{g,p,u,q});
+matlabFunction(df_q_u_uai,'File','auto_functions/df_q_u_uai','Vars',{q,u_ai,p});
+matlabFunction(df_p_q_gamma,'File','auto_functions/df_p_q_gamma','Vars',{g,u,q});
+matlabFunction(df_p_u_uai,'File','auto_functions/df_p_u_uai','Vars',{u_ai,q,p});
+matlabFunction(df_u_q_gamma,'File','auto_functions/df_u_q_gamma','Vars',{g,p,q});
+matlabFunction(df_u_u_uai,'File','auto_functions/df_u_u_uai','Vars',{});
+matlabFunction(dh_q_q_gamma,'File','auto_functions/dh_q_q_gamma','Vars',{g,q,xhi,r_d,dr_d,ddr_d,p});
+matlabFunction(dh_q_xhi_gammaxhi,'File','auto_functions/dh_q_xhi_gammaxhi','Vars',{g,q,xhi,r_d,dr_d,ddr_d,p});
+matlabFunction(dh_xhi_q_gamma,'File','auto_functions/dh_xhi_q_gamma','Vars',{g,q,xhi,r_d,dr_d,ddr_d,p});
+matlabFunction(dh_xhi_xhi_gammaxhi,'File','auto_functions/dh_xhi_xhi_gammaxhi','Vars',{g,q,xhi,r_d,dr_d,ddr_d, p});
+matlabFunction(dg_q_q_gamma,'File','auto_functions/dg_q_q_gamma','Vars',{g,q,xhi,r_d,dr_d,ddr_d});
+matlabFunction(dg_q_xhi_gammaxhi,'File','auto_functions/dg_q_xhi_gammaxhi','Vars',{g,q});
+matlabFunction(dg_xhi_q_gamma,'File','auto_functions/dg_xhi_q_gamma','Vars',{g,q});
+matlabFunction(dg_xhi_xhi_gammaxhi,'File','auto_functions/dg_xhi_xhi_gammaxhi','Vars',{});
+
 
 % Desired parametric trajectory
 x_d = a1x*(t^3) + a2x*(t^2) + a3x*t + a4x;
@@ -107,5 +110,114 @@ ddr_d(1) = ddx_d; ddr_d(2) = ddy_d;
 
 % Rewrite functions to find new equations
 eta = ddr_d + kv*(dr_d - dr_xhi) + kp*(r_d - q(1:2)) + ki*xhi(2:3);
-xhi_dot = [[1 0]*inv(A)*eta; r_d - q(1:2)];
-new_u = inv(S)*[xhi_v; [0 1]*inv(A)*eta];
+
+xhi_dot = [[1 0]*inv(A)*eta;
+           r_d - q(1:2)];
+
+new_u = inv(S)*[xhi_v; 
+               [0 1]*inv(A)*eta];
+
+% Partial Derivatives for gamma
+h_a_1x = jacobian(new_u,a1x); h_a_1y = jacobian(new_u,a1y);
+h_a_2x = jacobian(new_u,a2x); h_a_2y = jacobian(new_u,a2y);
+h_a_3x = jacobian(new_u,a3x); h_a_3y = jacobian(new_u,a3y);
+h_a_4x = jacobian(new_u,a4x); h_a_4y = jacobian(new_u,a4y);
+g_a_1x = jacobian(xhi_dot,a1x); g_a_1y = jacobian(xhi_dot,a1y);
+g_a_2x = jacobian(xhi_dot,a2x); g_a_2y = jacobian(xhi_dot,a2y);
+g_a_3x = jacobian(xhi_dot,a3x); g_a_3y = jacobian(xhi_dot,a3y);
+g_a_4x = jacobian(xhi_dot,a4x); g_a_4y = jacobian(xhi_dot,a4y);
+
+%% Function creation
+% Derivatives for gamma
+matlabFunction(h_a_1x,'File','auto_functions/h_a_1x','Vars',{q,t,xhi,p});
+matlabFunction(h_a_1y,'File','auto_functions/h_a_1y','Vars',{q,t,xhi,p});
+matlabFunction(h_a_2x,'File','auto_functions/h_a_2x','Vars',{q,t,xhi,p});
+matlabFunction(h_a_2y,'File','auto_functions/h_a_2y','Vars',{q,t,xhi,p});
+matlabFunction(h_a_3x,'File','auto_functions/h_a_3x','Vars',{q,t,xhi,p});
+matlabFunction(h_a_3y,'File','auto_functions/h_a_3y','Vars',{q,t,xhi,p});
+matlabFunction(h_a_4x,'File','auto_functions/h_a_4x','Vars',{q,t,xhi,p});
+matlabFunction(h_a_4y,'File','auto_functions/h_a_4y','Vars',{q,t,xhi,p});
+matlabFunction(g_a_1x,'File','auto_functions/g_a_1x','Vars',{q,t});
+matlabFunction(g_a_1y,'File','auto_functions/g_a_1y','Vars',{q,t});
+matlabFunction(g_a_2x,'File','auto_functions/g_a_2x','Vars',{q,t});
+matlabFunction(g_a_2y,'File','auto_functions/g_a_2y','Vars',{q,t});
+matlabFunction(g_a_3x,'File','auto_functions/g_a_3x','Vars',{q,t});
+matlabFunction(g_a_3y,'File','auto_functions/g_a_3y','Vars',{q,t});
+matlabFunction(g_a_4x,'File','auto_functions/g_a_4x','Vars',{q});
+matlabFunction(g_a_4y,'File','auto_functions/g_a_4y','Vars',{q});
+
+% Derivatives for h,g that depends on parameters ai
+% dh_q_ai
+hq = jacobian(new_u,q);
+for i= 1:4
+    ai = eval(sprintf('a%dx', i));
+    func = my_jacobian(hq,ai);
+    matlabFunction(func,'File',sprintf('auto_functions/dhq_a%dx', i));
+end
+for i= 1:4
+    ai = eval(sprintf('a%dy', i));
+    func = my_jacobian(hq,ai);
+    matlabFunction(func,'File',sprintf('auto_functions/dhq_a%dy', i));
+end
+
+% dh_xhi_ai
+hxhi = jacobian(new_u,xhi);
+for i= 1:4
+    ai = eval(sprintf('a%dx', i));
+    func = my_jacobian(hxhi,ai);
+    matlabFunction(func,'File',sprintf('auto_functions/dhxhi_a%dx', i));
+end
+for i= 1:4
+    ai = eval(sprintf('a%dy', i));
+    func = my_jacobian(hxhi,ai);
+    matlabFunction(func,'File',sprintf('auto_functions/dhxhi_a%dy', i));
+end
+
+% dg_q_ai
+gq = jacobian(xhi_dot,q);
+for i= 1:4
+    ai = eval(sprintf('a%dx', i));
+    func = my_jacobian(gq,ai);
+    matlabFunction(func,'File',sprintf('auto_functions/dgq_a%dx', i));
+end
+for i= 1:4
+    ai = eval(sprintf('a%dy', i));
+    func = my_jacobian(gq,ai);
+    matlabFunction(func,'File',sprintf('auto_functions/dgq_a%dy', i));
+end
+
+% dg_xhi_ai
+gxhi = jacobian(xhi_dot,xhi);
+for i= 1:4
+    ai = eval(sprintf('a%dx', i));
+    func = my_jacobian(gxhi,ai);
+    matlabFunction(func,'File',sprintf('auto_functions/dgxhi_a%dx', i));
+end
+for i= 1:4
+    ai = eval(sprintf('a%dy', i));
+    func = my_jacobian(gxhi,ai);
+    matlabFunction(func,'File',sprintf('auto_functions/dgxhi_a%dy', i));
+end
+
+
+%% Utility funtions
+function matrix = tensor_product(A,x,g)
+[m, n] = size(A); matrix = zeros(m,n);
+canonical_basis_matrix_l = eye(m);
+canonical_basis_matrix_k = eye(n);
+for i = 1:m
+    for j=1:n
+        matrix = matrix + (jacobian(A(i,j),x)*g)*canonical_basis_matrix_l(:,i)*canonical_basis_matrix_k(:,j)';
+    end
+end
+end
+
+function out = my_jacobian(A,x)
+syms out [size(A)], [n,m] = size(A);
+for i=1:n
+    for j = 1:m
+    out(i,j) = jacobian(A(i,j),x);
+    end
+end 
+end
+
