@@ -1,7 +1,7 @@
 function video(q, p, b_n, time, linewidth)
 % Setting up the Plot
-figure('Position',[100 100 540 400]); hold on,
-fontSize = 6;
+figure(); hold on,
+fontSize = 16;
 colors = linspecer(4,'qualitative'); colororder(colors); 
 title(sprintf('Trajectory\nTime: %0.2f sec', time(1)));
 xlabel('x[m]'), ylabel('y[m]'), grid minor  
@@ -21,7 +21,7 @@ orient = quiver(x(1),y(1),cos(theta(1)),sin(theta(1)),'Color',colors(2,:),'linew
 orient.MaxHeadSize = linewidth+2;
 
 legend('desired trajectory','robot trajectory','unycicle orientation');
-fontsize(fontSize, 'points')
+fontsize(fontSize, 'points'),
 
 % Iterating through the length of the time array
 for k = 2:length(time)

@@ -4,7 +4,7 @@ params = [wheelRadius; wheelDistance];
 
 %% REAL CONTROL in the PERTURBED case, where the parameters of the robot differ from the nominal ones.
 [r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
-                                     finalPositionVec, finalVelocityVec, totalTime, timeVec, linewidth);
+                                         finalPositionVec, finalVelocityVec, totalTime, timeVec, linewidth);
 % Generate uniform distribution and sample the exstremes: 80% or 120% of the nominal value
 wheelRadius80 = wheelRadius*0.8;
 wheelRadius120 = wheelDistance*0.8;
@@ -68,4 +68,4 @@ plot_function([e;e_tot'],'Error variation over time','e_x [m] ; e_y [m] ; e_tot 
 save('data/REALcontrolpertubed80%','u_history','q_history','xhi_history')
 
 %% SECOND CASE
-params120 = [wheelRadious120; wheelDistance120];
+params120 = [wheelRadius120; wheelDistance120];

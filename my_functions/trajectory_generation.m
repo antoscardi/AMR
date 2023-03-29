@@ -36,8 +36,8 @@ polyy = mkpp(breaks,[a_y(1) a_y(2) a_y(3) a_y(4);
                      a_y(9) a_y(10) a_y(11) a_y(12)]);
 
 %% Plots
-fontSize = 6;                 
-figure('Position',[100 100 540 400]),
+fontSize = 16;                 
+figure(),
 fnplt(polyx,linewidth), hold on
 fnplt(polyy,linewidth)
 line([tsim/3 tsim/3],[0 25],'LineStyle','--','Color','k','LineWidth',1),grid minor
@@ -54,7 +54,7 @@ dpolyy = fnder(polyy);
 ddpolyx = fnder(dpolyx);
 ddpolyy = fnder(dpolyy);
 
-figure('Position',[100 100 540 400]),
+figure(),
 fnplt(dpolyx,linewidth), hold on
 fnplt(dpolyy,linewidth), hold off
 line([tsim/3 tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1)

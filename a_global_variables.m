@@ -2,8 +2,8 @@ close all; clear; clc;
 %% HYPERPARAMETERS:
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
-setGlobal(0.2); wheelRadius = getGlobal;
 % Distance between the wheels [m].
+setGlobal(0.2); wheelRadius = getGlobal;
 setGlobal(0.8); wheelDistance = getGlobal;
 % Simulation time [s]
 setGlobal(20); totalTime = getGlobal;
@@ -47,9 +47,9 @@ addpath ../AMR/my_functions
 
 % Set settings for all plots
 set(groot,'defaultLineLineWidth',5)
-global linewidth, linewidth = 3;
-set(groot,'defaultAxesTitleFontSizeMultiplier',2.1)
-set(groot,'defaultfigureposition',[400 250 1200 700])
+global linewidth, linewidth = 5;
+set(groot,'defaultAxesTitleFontSizeMultiplier',1.8)
+set(groot,'defaultfigureposition',[100 100 540 400])
 
 % Generate colors
 colors = linspecer(12,'sequential');
