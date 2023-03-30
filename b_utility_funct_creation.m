@@ -50,8 +50,12 @@ g_q = jacobian(xhi_dot,q); g_xhi = jacobian(xhi_dot,xhi);
 %%Prova pazza scusa nick
 syms sensitivity(t) [3 2], syms sensitivityxhi(t) [3 2]
 
-ode = f_q*sensitivity + f_p+ f_u*(h_q*sensitivity + h_xhi*sensitivityxhi)
-fff = odeFunction(ode,'Vars',{sensitivity,sensitivityxhi})
+ode = f_q*sensitivity + f_p + f_u*(h_q*sensitivity + h_xhi*sensitivityxhi)
+dots = diff(ode,t)
+dots = simplify(dots)
+
+
+
 
 
 % Second Partial Derivative
