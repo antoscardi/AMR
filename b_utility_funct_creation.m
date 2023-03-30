@@ -48,7 +48,11 @@ h_q = jacobian(new_u,q); h_xhi = jacobian(new_u,xhi);
 g_q = jacobian(xhi_dot,q); g_xhi = jacobian(xhi_dot,xhi);
 
 %%Prova pazza scusa nick
-syms sensitivity [3 2]
+syms sensitivity(t) [3 2], syms sensitivityxhi(t) [3 2]
+
+ode = f_q*sensitivity + f_p+ f_u*(h_q*sensitivity + h_xhi*sensitivityxhi)
+fff = odeFunction(ode,'Vars',{sensitivity,sensitivityxhi})
+
 
 % Second Partial Derivative
 syms g [3 1], syms u_ai [2 1], 
