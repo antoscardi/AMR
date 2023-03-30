@@ -58,9 +58,9 @@ plot_function([e;e_tot'],'Error variation over time','e_x [m] ; e_y [m] ; e_tot 
 
 %% Save variables for the optimization routine.
 if youHaveChoosenThisPercentage == 80
-save('data/REALcontrolpertubed80%','u_history','q_history','xhi_history')
+save('data/REALcontrolperturbed80%','u_history','q_history','xhi_history')
 end
 if youHaveChoosenThisPercentage == 120
-save('data/REALcontrolpertubed120%','u_history','q_history','xhi_history')
+save('data/REALcontrolperturbed120%','u_history','q_history','xhi_history')
 end
 
