@@ -1,4 +1,4 @@
-function video(q, p, b_n, time, linewidth)
+function video(q, p, b_n, time, linewidth, delta)
 % Setting up the Plot
 figure(); hold on,
 fontSize = 16;
@@ -9,7 +9,7 @@ xlim([min(min(p(1,:),min(q(1,:))))-1 max(max(p(1,:),max(q(1,:))))+3])
 ylim([min(min(p(2,:),min(q(2,:))))-1 max(max(p(2,:),max(q(2,:))))+3])
 
 % Plot the entire desired trajectory at the beginning
-plot(p(1,:), p(2,:),'Color',colors(3,:));
+desired = plot(p(1,:), p(2,:),'Color',colors(3,:));
 
 % Setting variables
 R = b_n/2;
@@ -20,10 +20,12 @@ rob_trajectory = plot(q(1,1:1), q(2,1:1),'Color',colors(1,:));
 orient = quiver(x(1),y(1),cos(theta(1)),sin(theta(1)),'Color',colors(2,:),'linewidth',linewidth-1);
 orient.MaxHeadSize = linewidth+2;
 
+% Use the proxy objects in the legend.
 legend('desired trajectory','robot trajectory','unycicle orientation');
 fontsize(fontSize, 'points'),
 
 % Iterating through the length of the time array
+tic;
 for k = 2:length(time)
     % Updating the trajectories 
     rob_trajectory.XData = q(1,1:k);
@@ -34,12 +36,18 @@ for k = 2:length(time)
     orient.YData = y(k);
     orient.UData = cos(theta(k));
     orient.VData = sin(theta(k));
+
     % Updating the title
     title(sprintf('Trajectory\nTime: %0.2f sec', time(k)));
-    % Delay
-    %drawnow
+
+    % Delay using the real time frequency
+    multiplierToMAkeupforComputations = 2.7;
+    if toc > delta*multiplierToMAkeupforComputations
+        drawnow;
+        tic;
+    end
     if k<length(time)
-    delete(robot);
+        delete(robot);
     end
 end
 

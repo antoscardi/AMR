@@ -1,144 +1,88 @@
 close all; clc;
 
 %% Desired Trajectory Generation (Spline)
-if followOptim == false
-    [r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
-                                             finalPositionVec, finalVelocityVec, totalTime, timeVec, linewidth);
-else
-    file = 'data/new_traj';
-    p = load(file,'p'); dp = load(file,'dp'); ddp = load(file,'ddp');
-    p =p.p; dp = dp.dp; ddp = ddp.ddp; 
-end
+[r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
+                                         finalPositionVec, finalVelocityVec, totalTime, timeVec, linewidth);
+%% Optimized trajectory 
+file = 'data/new_traj';
+p = load(file,'p'); dp = load(file,'dp'); ddp = load(file,'ddp');
+optimr_d_ =p.p; optimdr_d = dp.dp; optimddr_d = ddp.ddp; 
 
 %% Inizializations
-% Error
-e = zeros(2,Nstep); e_tot = zeros(Nstep,1);
 % Initial state (x,y,theta)
-theta_0 = atan2(v_0(2),v_0(1));
-q_0 = [p_0(1);p_0(2);theta_0];
-% Initial input (v,omega) through flatness
-[v_d(1), omega_d(1)] = flatness(dp,ddp);
-v_0 = [v_d(1); omega_d(1)];
-% u_k=[w_r; w_l]
-if haveNoise == false
-    u_0 = [(v_0(1)+v_0(2)*b_n/2)/r_n;
-           (v_0(1)-v_0(2)*b_n/2)/r_n];
-else
-    u_0 = [(v_0(1)+v_0(2)*params(2,1)/2)/params(1,1);
-           (v_0(1)-v_0(2)*params(2,1)/2)/params(1,1)];
-end       
-% u_history = [u0, u1, u2, ..., uN-1] dimension (2)x(Nstep)
-u_history = zeros(2, Nstep); u_history(:,1) = u_0;
-v_history = zeros(2, Nstep); v_history(:,1) = v_0;
-% q_history = [q0, q1, q2, ..., qN] dimension (3)x(Nstep)
-q_history = zeros(3, Nstep); q_history(:,1) = q_0;
-% Controller state
-xhi_history = zeros(3, Nstep); xhi_history(:,1) = [0.1;0.1;0.1];
-% q_dot
-q_dot_history = zeros(3,Nstep); q_dot_history(:,1) = q_dot_opt(k-1,q_0,u_0,params(:,1));
+initialTheta = atan2(initialVelocityVec(2),initialVelocityVec(1));
+initialState = [initialPositionVec(1);initialPositionVec(2);initialTheta];
+initialVelocity = sqrt_of_quadratics(initialVelocityVec);
 
-%% Simulation loop
+% Initial input (v,omega) through flatness
+[initialVelocity_flatness, initialAngularVelocity] = flatness(dr_d, ddr_d);
+% Check that initial velocities are equal if calculated from flatness with the given ones
+if abs(initialVelocity_flatness - initialVelocity) < 0.000001
+    disp("All good, the velocities coincide")
+else 
+    disp("There is a problem, the two velocities do not coincide")
+end
+% Optimized case
+[optimInitialVelocity_flatness, optimInitialAngularVelocity] = flatness(optimdr_d, optimddr_d);
+% Check that initial velocities are equal if calculated from flatness with the given ones
+if abs(optimInitialVelocity_flatness - initialVelocity) < 0.000001
+    disp("All good, the velocities coincide also in the optimal case")
+else 
+    disp("There is a problem, the two velocities do not coincide")
+end
+
+% u_k = [w_r; w_l].
+initialInput = [(initialVelocity + initialAngularVelocity*wheelDistance/2)/wheelRadius;
+                (initialVelocity - initialAngularVelocity*wheelDistance/2)/wheelRadius];
+   
+% u_history = [u0, u1, u2, ..., uN] dimension (2)x(Nstep)
+u_history = zeros(2, Nstep); u_history(:,1) = initialInput;
+% q_history = [q0, q1, q2, ..., qN] dimension (3)x(Nstep)
+q_history = zeros(3, Nstep); q_history(:,1) = initialState;
+% Controller state
+xhi_history = zeros(3, Nstep); xhi_history(:,1) = [initialVelocity;0.1;0.1];
+% Error
+e = zeros(2,Nstep); e_tot = zeros(Nstep,1); 
+
+%% IDEAL CONTROL obtained using the NOMINAL parameters inside the robot system.
+%  The system parameters are well-known and do not change.
 for k=2:Nstep
 
-    % Initilize input and state
-    u_k = u_history(:,k-1);
-    q_k = q_history(:,k-1);
-    xhi_k = xhi_history(:,k-1);
+    % Initilize input and states.
+    oldInput = u_history(:,k-1);
+    oldState = q_history(:,k-1);
+    oldXhi = xhi_history(:,k-1);
     
-    % Integrate q_dot = f(q,u)
-    
-        q_dot_history(:,k) = q_dot(0,q_k,u_k);
-        [~, qint] = ode45(@(t,q) q_dot(t,q,u_k),[0 delta],q_k);
-        q_k = qint(end,:)';
+    % IDEAL robot system outputs the next state of the system.
+    currentState = robot_system(oldInput,oldState,delta,params);
+
+    % CONTROLLER block, to avoid error always set this to the nominal ones.
+    nominal_params = [wheelRadius; wheelDistance];
+    oldDesiredPos = r_d(:,k-1); oldDesiredVel = dr_d(:,k-1); oldDesiredAcc = ddr_d(:,k-1);
+    [currentInput,currentXhi] = controller(oldState,oldDesiredPos,oldDesiredVel,oldDesiredAcc,oldXhi,delta,nominal_params);
  
-        q_dot_history(:,k-1) = q_dot_opt(k-1,q_k,u_k,params(:,k-1));
-        q_k = q_k + delta*q_dot_opt(k-1,q_k,u_k,params(:,k-1));
-  
-    % Dynamic Feedback Linearization Internal State
-    [~, xhi_int] = ode45(@(t,xhi) xhi_dot(t,q_k,xhi,p(:,k),dp(:,k),ddp(:,k)),[0 delta],xhi_k);
-    xhi_k = xhi_int(end,:)';
-    
-    % Change control input for next step
-    u_k = new_u(q_history(:,k-1),xhi_history(:,k-1),p(:,k),dp(:,k),ddp(:,k));
+    % Save q_k+1,u_k+1 and xhi_k+1 as last columns.
+    q_history(:,k) = currentState;
+    u_history(:,k) = currentInput;
+    xhi_history(:,k) = currentXhi;
 
-    % velocities calculation for comparison
-    if haveNoise == false
-    v_k = velocities(u_k);
-    v_history(:,k) = v_k;
-    else
-    v_k = velocities_opt(u_k, params(:,k));
-    v_history(:,k) = v_k;
-    end
-    % Error calculation
-    e(:,k) = abs(p(:,k)-q_k(1:2));
-    e_tot(k) = sqrt(e(1,k)^2+e(2,k)^2);
-    % Save xk and uk as last columns.
-    q_history(:,k) = q_k;
-    u_history(:,k) = u_k;
-    xhi_history(:,k) = xhi_k;
+    % Error calculation.
+    currentDesiredPos = r_d(:,k);
+    e(:,k) = abs(currentDesiredPos- currentState(1:2));
+    e_tot(k) = sqrt_of_quadratics(e(:,k));
 end
 
-%% Create and display video animation.
+%% Create and display video animation and plots.
+% The video function just needs the distance between the wheels in order to plot the robot.
+b_n = params(2); 
+video(q_history,r_d,b_n,timeVec,linewidth,delta)
 
-video(q_history,p,params(2,:),time)
-
-
-%% Plots
-
-% Plot state variables (vector q). 
-figure 
-s = stackedplot(time(1:end),q_history','LineWidth',linewidth);
-s.DisplayLabels = ["x [m] ","y [m]",'theta [rad/s]']; grid on
-for i=1:3
-s.LineProperties(i).Color = colors(i,:);
-end
-xlabel("time [s]"), title('State variation in time')
-
+% Plot state variables (vector q).
+plot_function(q_history,'State variation in time','x [m] ; y [m] ; theta [rad/s]', timeVec, linewidth, colors, counter) 
 % Plot input (vector u).
-figure
-s = stackedplot(time(1:end),u_history','LineWidth',linewidth);
-s.DisplayLabels = ["wr [rad/s]", "wl [rad/s]"];grid on
-for i=1:2
-s.LineProperties(i).Color = colors(3+i,:);
-end
-xlabel("time [s]"), title('Input variation in time')
-
-% Plot velocities (vector v).
-figure
-s = stackedplot(time(1:end),v_history','LineWidth',linewidth);
-s.DisplayLabels = ["v [m/s]", "omega [rad/s]"];grid on
-for i=1:2
-s.LineProperties(i).Color = colors(7+i,:);
-end
-xlabel("time [s]"), title('Velocities variation in time')
-
+plot_function(u_history,'Input variation in time','wr [rad/s] ; wl [rad/s]', timeVec, linewidth, colors, counter)
 % Plot errors.
-figure
-s = stackedplot(time(1:end),[e;e_tot']','LineWidth',linewidth);
-s.DisplayLabels = ['e_x [m]',"e_y [m]","e_tot [m]"]; grid on
-for i=1:3
-s.LineProperties(i).Color = colors(9+i,:);
-end
-xlabel("time [s]"), title('Error variation over time')
-
-% % Plot state derivative (q_dot). 
-% figure 
-% s = stackedplot(time(1:end),q_dot_history','LineWidth',linewidth);
-% s.DisplayLabels = ["x_dot [m] ","y_dot [m]",'theta_dot [rad/s]']; grid on
-% for i=1:3
-% s.LineProperties(i).Color = colors(i,:);
-% end
-% xlabel("time [s]"), title('State derivation variation in time')
-
-%% Save variables for the optimization routine.
-if followOptim == false && haveNoise == false
-    save('data/controlwithnominalparams','u_history','p','q_history','dp','ddp','xhi_history')
-end
-
-if haveNoise == true && followOptim == false
-    save('data/controlwithnoise','u_history','p','q_history','dp','ddp','xhi_history')
-end 
-
+plot_function([e;e_tot'],'Error variation over time','e_x [m] ; e_y [m] ; e_tot [m]',timeVec, linewidth, colors, counter)
 
 
 
