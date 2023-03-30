@@ -198,5 +198,5 @@ for i= 1:4
     func = my_jacobian(gxhi,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dgxhi_a%dy', i));
 end
-end
+
 
