@@ -1,11 +1,9 @@
 close all; clc;
 
-%% Choose if you want to follow the optimized trajectory or not
-followOptim = false;
-
 %% Desired Trajectory Generation (Spline)
 if followOptim == false
-    [p, dp, ddp] = trajectory_generation(p_0, v_0, p_1, p_2, p_f, v_f, tsim, time, linewidth);
+    [r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
+                                             finalPositionVec, finalVelocityVec, totalTime, timeVec, linewidth);
 else
     file = 'data/new_traj';
     p = load(file,'p'); dp = load(file,'dp'); ddp = load(file,'ddp');
