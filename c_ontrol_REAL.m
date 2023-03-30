@@ -1,4 +1,4 @@
-close all; clc;
+ close all; clc;
 % IDEAL parameters ONLY used by the CONTROLLER.
 params = [wheelRadius; wheelDistance];
 % REAL PARAMS
@@ -70,7 +70,7 @@ end
 %% Create and display video animation and plots.
 % The video function just needs the distance between the wheels in order to plot the robot.
 b_n = perturbed_params(2); 
-video(q_history,r_d,b_n,timeVec,linewidth)
+video(q_history,r_d,b_n,timeVec,linewidth,delta)
 
 % Plot state variables (vector q).
 plot_function(q_history,'State variation in time','x [m] ; y [m] ; theta [rad/s]', timeVec, linewidth, colors, counter) 
