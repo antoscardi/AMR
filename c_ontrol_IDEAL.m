@@ -75,4 +75,4 @@ plot_function(u_history,'Input variation in time','wr [rad/s] ; wl [rad/s]', tim
 % Plot errors.
 plot_function([e;e_tot'],'Error variation over time','e_x [m] ; e_y [m] ; e_tot [m]',timeVec, linewidth, colors, counter)
 
-% Don't save anything since it's not used in the optimization routine.
+save('data/IDEALcontrol','u_history','q_history','xhi_history')

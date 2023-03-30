@@ -1,12 +1,9 @@
 close all; clc;
 % Load from data
-file = 'data/REALcontrolperturbed80%';
+file = 'data/IDEALcontrol';
 file1 = 'data/desired_trajectory';
 
-wheelRadius80 = wheelRadius*0.8;
-wheelDistance80 = wheelDistance*0.8;
-
-params=[wheelRadius80; wheelDistance80];
+params=[wheelRadius; wheelDistance];
 
 u_history = load(file,'u_history');
 xhi_history = load(file,'xhi_history');

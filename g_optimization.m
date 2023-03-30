@@ -22,12 +22,12 @@ dy = [4 0.1 0 0 0 0 20 0.1]';
 
 M = [0 0 0 1 0 0 0 0 0 0 0 0;
      0 0 1 0 0 0 0 0 0 0 0 0;
-     (tsim/3)^3 (tsim/3)^2 tsim/3 1 0 0 0 -1 0 0 0 0;
-     3*(tsim/3)^2 2*tsim/3 1 0 0 0 -1 0 0 0 0 0;
-     0 0 0 0 (tsim/3)^3 (tsim/3)^2 tsim/3 1 0 0 0 -1;
-     0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0 0 0 -1 0;
-     0 0 0 0 0 0 0 0 (tsim/3)^3 (tsim/3)^2 (tsim/3) 1;
-     0 0 0 0 0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0];
+     (totalTime/3)^3 (totalTime/3)^2 totalTime/3 1 0 0 0 -1 0 0 0 0;
+     3*(totalTime/3)^2 2*totalTime/3 1 0 0 0 -1 0 0 0 0 0;
+     0 0 0 0 (totalTime/3)^3 (totalTime/3)^2 totalTime/3 1 0 0 0 -1;
+     0 0 0 0 3*((totalTime/3)^2) 2*(totalTime/3) 1 0 0 0 -1 0;
+     0 0 0 0 0 0 0 0 (totalTime/3)^3 (totalTime/3)^2 (totalTime/3) 1;
+     0 0 0 0 0 0 0 0 3*((totalTime/3)^2) 2*(totalTime/3) 1 0];
 
 %% Calculate vi for x and y parameters
 sens_last = [sens(1,Nstep) sens(2,Nstep);
@@ -60,7 +60,7 @@ ax_star = ax_k(:,Nstep);
 ay_star = ay_k(:,Nstep);
 
 %% Visualize optimized trajectories
-breaks = 0:tsim/3:tsim;
+breaks = 0:totalTime/3:totalTime;
 polyx = mkpp(breaks,[ax_star(1) ax_star(2) ax_star(3) ax_star(4);
                      ax_star(5) ax_star(6) ax_star(7) ax_star(8);
                      ax_star(9) ax_star(10) ax_star(11) ax_star(12)]);
@@ -71,8 +71,8 @@ polyy = mkpp(breaks,[ay_star(1) ay_star(2) ay_star(3) ay_star(4);
 figure(),
 fnplt(polyx,linewidth), hold on
 fnplt(polyy,linewidth)
-line([tsim/3 tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1), grid minor
-line([2*tsim/3 2*tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1)
+line([totalTime/3 totalTime/3],ylim,'LineStyle','--','Color','k','LineWidth',1), grid minor
+line([2*totalTime/3 2*totalTime/3],ylim,'LineStyle','--','Color','k','LineWidth',1)
 xlabel('time [sec]'), ylabel('trajecory [m]')
 legend('trajectory in x', 'trajectory in y')
 title('Trajectory varation in time'),hold off
@@ -85,9 +85,9 @@ dpolyy = fnder(polyy);
 ddpolyx = fnder(dpolyx);
 ddpolyy = fnder(dpolyy);
 
-p = [ppval(polyx,time);ppval(polyy,time)];
-dp = [ppval(dpolyx,time);ppval(dpolyy,time)];
-ddp = [ppval(ddpolyx,time);ppval(ddpolyy,time)];
+p = [ppval(polyx,timeVec);ppval(polyy,timeVec)];
+dp = [ppval(dpolyx,timeVec);ppval(dpolyy,timeVec)];
+ddp = [ppval(ddpolyx,timeVec);ppval(ddpolyy,timeVec)];
 
 % Optimized trajectory
 figure()

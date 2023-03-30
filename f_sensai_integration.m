@@ -1,8 +1,4 @@
 close all; clc;
-%% Da sostituire quando abbiamo impostato "youHaveChoosenThisPercentage" come variabile globale
-youHaveChoosenThisPercentage=80;
-
-
 %% Load data
 % Iterate in the data folder to extract ALL data in the folder
 folderpath = '../AMR/data';
@@ -12,17 +8,9 @@ filelist = dir(folderpath);
 for i = 1:length(filelist)
     filename = filelist(i).name;
     % Skip directories
-    if youHaveChoosenThisPercentage == 80
-        if filelist(i).isdir || strcmp(filename, 'REALcontrolperturbed120%.mat')
-            continue;
-        end
-
-    elseif  youHaveChoosenThisPercentage == 120
-        if filelist(i).isdir || strcmp(filename, 'REALcontrolperturbed80%.mat')
-            continue;
-        end
+    if filelist(i).isdir
+         continue;
     end
-
     % Load the file and get a struct
     data = load(filename);
     % Find all variables in the struct 
@@ -33,10 +21,7 @@ for i = 1:length(filelist)
     end
 end
 
-wheelRadius80 = wheelRadius*0.8;
-wheelDistance80 = wheelDistance*0.8;
-
-params=[wheelRadius80; wheelDistance80];
+params=[wheelRadius; wheelDistance];
 
 %% Tensor product calculations, one for each parameter
 % initialize 3D matrixes, which are overwritten  
@@ -64,10 +49,10 @@ for i = 1:12
     for k = 1:Nstep
         gamma = var(1:3,k); gammaxhi = var(4:6,k); u_ai = var2(:,:,k);
         curr_dfqqgamma(:,:,k) = df_q_q_gamma(gamma, params(1:2),u_history(:,k),q_history(:,k));
-        curr_dfquuai(:,:,k) = df_q_u_uai(q_history(:,k),u_ai,params(:,k));
+        curr_dfquuai(:,:,k) = df_q_u_uai(q_history(:,k),u_ai,params(1:2));
         curr_dfpqgamma(:,:,k) = df_p_q_gamma(gamma, u_history(:,k), q_history(:,k));
-        curr_dfpuuai(:,:,k) = df_p_u_uai(u_ai, q_history(:,k), params(:,k));
-        curr_dfuqgamma(:,:,k) = df_u_q_gamma(gamma, params(:,k), q_history(:,k));
+        curr_dfpuuai(:,:,k) = df_p_u_uai(u_ai, q_history(:,k), params(1:2));
+        curr_dfuqgamma(:,:,k) = df_u_q_gamma(gamma, params(1:2), q_history(:,k));
         curr_dfuuuai(:,:,k) = df_u_u_uai();
         curr_dhqqgamma(:,:,k) = dh_q_q_gamma(gamma,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k), params(1:2));
         curr_dhqxhigammaxhi(:,:,k) =dh_q_xhi_gammaxhi(gammaxhi,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k), params(1:2));
@@ -104,16 +89,16 @@ for i = 1:12
     % Loop over time steps
     for k = 1:Nstep
         gamma = var(1:3,k); gammaxhi = var(4:6,k); u_ai = var2(:,:,k);
-        curr_dfqqgamma(:,:,k) = df_q_q_gamma(gamma, params(:,k),u_history(:,k),q_history(:,k));
-        curr_dfquuai(:,:,k) = df_q_u_uai(q_history(:,k),u_ai,params(:,k));
+        curr_dfqqgamma(:,:,k) = df_q_q_gamma(gamma, params(1:2),u_history(:,k),q_history(:,k));
+        curr_dfquuai(:,:,k) = df_q_u_uai(q_history(:,k),u_ai,params(1:2));
         curr_dfpqgamma(:,:,k) = df_p_q_gamma(gamma, u_history(:,k), q_history(:,k));
-        curr_dfpuuai(:,:,k) = df_p_u_uai(u_ai, q_history(:,k), params(:,k));
-        curr_dfuqgamma(:,:,k) = df_u_q_gamma(gamma, params(:,k), q_history(:,k));
+        curr_dfpuuai(:,:,k) = df_p_u_uai(u_ai, q_history(:,k), params(1:2));
+        curr_dfuqgamma(:,:,k) = df_u_q_gamma(gamma, params(1:2), q_history(:,k));
         curr_dfuuuai(:,:,k) = df_u_u_uai();
-        curr_dhqqgamma(:,:,k) = dh_q_q_gamma(gamma,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
-        curr_dhqxhigammaxhi(:,:,k) =dh_q_xhi_gammaxhi(gammaxhi,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
-        curr_dhxhiqgamma(:,:,k) =dh_xhi_q_gamma(gamma,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
-        curr_dhxhixhigammaxhi(:,:,k) = dh_xhi_xhi_gammaxhi(gammaxhi,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
+        curr_dhqqgamma(:,:,k) = dh_q_q_gamma(gamma,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k), params(1:2));
+        curr_dhqxhigammaxhi(:,:,k) =dh_q_xhi_gammaxhi(gammaxhi,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k), params(1:2));
+        curr_dhxhiqgamma(:,:,k) =dh_xhi_q_gamma(gamma,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k), params(1:2));
+        curr_dhxhixhigammaxhi(:,:,k) = dh_xhi_xhi_gammaxhi(gammaxhi,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k), params(1:2));
         curr_dgqqgamma(:,:,k) = dg_q_q_gamma(gamma,q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
         curr_dgqxhigammaxhi(:, :, k) = dg_q_xhi_gammaxhi(gammaxhi,q_history(:,k));
         curr_dgxhiqgamma(:,:,k) = dg_xhi_q_gamma(gamma,q_history(:,k));
@@ -152,6 +137,7 @@ z=z+1;
 all_sensaix{i} = sensai_tot;
 end
 
+% For the y parameters
 all_sensaiy = cell(1,12);
 % Repeat the calculations 3 times, one for each trajectory
 z=1;
