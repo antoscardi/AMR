@@ -58,11 +58,12 @@ plot_function([e;e_tot'],'Error variation over time','e_x [m] ; e_y [m] ; e_tot 
 b_n = perturbed_params(2); 
 video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Real Control')
 
+all_e =[e;e_tot'];
 %% Save variables for the comparison in the optimization routine.
 if youHaveChoosenThisPercentage == 80
-save('data/REALcontrolperturbed80%','u_history','q_history','xhi_history')
+save('data/REALcontrolperturbed80%','u_history','q_history','xhi_history','all_e')
 end
 if youHaveChoosenThisPercentage == 120
-save('data/REALcontrolperturbed120%','u_history','q_history','xhi_history')
+save('data/REALcontrolperturbed120%','u_history','q_history','xhi_history','all_e')
 end
 
