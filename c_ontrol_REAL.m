@@ -1,29 +1,9 @@
 close all; clc;
 % IDEAL parameters ONLY used by the CONTROLLER.
-params = [wheelRadius; wheelDistance];
+nominal_params = [wheelRadius; wheelDistance];
 % REAL PARAMS
 % Generate uniform distribution and sample the exstremes: 80% or 120% of the nominal value
-wheelRadius80 = wheelRadius*0.8;
-wheelRadius120 = wheelRadius*1.2;
-wheelDistance80 = wheelDistance*0.8;
-wheelDistance120 = wheelDistance*1.2;
-
-% Choose if you want to see the case in which the params are the 80% or the 120% of the nominal values.
-choose = input('Enter either 80 or 120: ');
-switch choose
-    case 80
-        %% FIRST CASE
-        caseParams80 = true;
-        perturbed_params = [wheelRadius80; wheelDistance80];
-        disp('You have choosen to use 80% of the nominal value')
-    case 120
-        %% SECOND CASE
-        caseParams120 = true;
-        perturbed_params = [wheelRadius120; wheelDistance120];
-        disp('You choose to use 120% of the nominal value')
-    otherwise
-        disp('You did not choose anything')
-end
+[chosenCase, perturbed_params] = switch_case(wheelDistance, wheelRadius);
 
 %% REAL CONTROL in the PERTURBED case, where the parameters of the robot differ from the nominal ones.
 [r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
@@ -52,7 +32,6 @@ for k=2:Nstep
     currentState = robot_system(oldInput,oldState,delta,perturbed_params);
 
     % CONTROLLER block, to avoid error always set this to the nominal ones.
-    nominal_params = [wheelRadius; wheelDistance];
     oldDesiredPos = r_d(:,k-1); oldDesiredVel = dr_d(:,k-1); oldDesiredAcc = ddr_d(:,k-1);
     [currentInput,currentXhi] = controller(oldState,oldDesiredPos,oldDesiredVel,oldDesiredAcc,oldXhi,delta,nominal_params);
  
@@ -70,7 +49,7 @@ end
 %% Create and display video animation and plots.
 % The video function just needs the distance between the wheels in order to plot the robot.
 b_n = perturbed_params(2); 
-video(q_history,r_d,b_n,timeVec,linewidth)
+video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Real Control')
 
 % Plot state variables (vector q).
 plot_function(q_history,'State variation in time','x [m] ; y [m] ; theta [rad/s]', timeVec, linewidth, colors, counter) 

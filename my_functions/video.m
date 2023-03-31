@@ -1,6 +1,6 @@
-function video(q, p, b_n, time, linewidth, delta)
+function video(q, p, b_n, time, linewidth, delta, figureName)
 % Setting up the Plot
-figure(); hold on,
+figure('Name', figureName); hold on,
 fontSize = 16;
 colors = linspecer(4,'qualitative'); colororder(colors); 
 title(sprintf('Trajectory\nTime: %0.2f sec', time(1)));
@@ -50,5 +50,5 @@ for k = 2:length(time)
         delete(robot);
     end
 end
-
+hold off;
 end
