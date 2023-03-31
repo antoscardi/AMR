@@ -64,9 +64,6 @@ for k=2:Nstep
 end
 
 %% Create and display video animation and plots.
-% The video function just needs the distance between the wheels in order to plot the robot.
-b_n = params(2); 
-video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Ideal Control')
 
 % Plot state variables (vector q).
 plot_function(q_history,'State variation in time','x [m] ; y [m] ; theta [rad/s]', timeVec, linewidth, colors, counter) 
@@ -75,4 +72,9 @@ plot_function(u_history,'Input variation in time','wr [rad/s] ; wl [rad/s]', tim
 % Plot errors.
 plot_function([e;e_tot'],'Error variation over time','e_x [m] ; e_y [m] ; e_tot [m]',timeVec, linewidth, colors, counter)
 
+% The video function just needs the distance between the wheels in order to plot the robot.
+b_n = params(2); 
+video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Ideal Control')
+
+% Save the ideal control data for the OPTIMIZATION.
 save('data/IDEALcontrol','u_history','q_history','xhi_history')

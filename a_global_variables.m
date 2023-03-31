@@ -52,6 +52,9 @@ set(groot,'defaultAxesTitleFontSizeMultiplier',1.8)
 set(groot,'defaultfigureposition',[100 100 540 400])
 set(groot,'defaultLegendAutoUpdate','off')
 
+% Clear the persisten variable in plot_function
+clear plot_function
+
 % Generate colors
 colors = linspecer(12,'sequential');
 contrast_colors = linspecer(2,'qualitative');

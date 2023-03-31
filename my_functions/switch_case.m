@@ -21,7 +21,7 @@ switch choose
         perturbed_params = [wheelRadius120; wheelDistance120];
         disp('You choose to use 120% of the nominal value')
     otherwise
-        disp('You did not choose anything')
+        disp('You did not choose anything or you typed wrong')
         [choosenCase, perturbed_params] = switch_case(wheelDistance,wheelRadius);
 end
 end

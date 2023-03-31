@@ -37,7 +37,7 @@ polyy = mkpp(breaks,[a_y(1) a_y(2) a_y(3) a_y(4);
 
 %% Plots
 fontSize = 16;                 
-figure(),
+figure(1),
 fnplt(polyx,linewidth), hold on
 fnplt(polyy,linewidth)
 line([tsim/3 tsim/3],[0 25],'LineStyle','--','Color','k','LineWidth',1),grid minor
@@ -54,9 +54,9 @@ dpolyy = fnder(polyy);
 ddpolyx = fnder(dpolyx);
 ddpolyy = fnder(dpolyy);
 
-figure(),
+figure(2),
 fnplt(dpolyx,linewidth), hold on
-fnplt(dpolyy,linewidth), hold off
+fnplt(dpolyy,linewidth)
 line([tsim/3 tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1)
 line([2*tsim/3 2*tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1),grid minor
 xlabel("time [sec]"), ylabel('velocity [m/s]')

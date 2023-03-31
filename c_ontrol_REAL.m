@@ -47,9 +47,6 @@ for k=2:Nstep
 end
 
 %% Create and display video animation and plots.
-% The video function just needs the distance between the wheels in order to plot the robot.
-b_n = perturbed_params(2); 
-video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Real Control')
 
 % Plot state variables (vector q).
 plot_function(q_history,'State variation in time','x [m] ; y [m] ; theta [rad/s]', timeVec, linewidth, colors, counter) 
@@ -57,6 +54,10 @@ plot_function(q_history,'State variation in time','x [m] ; y [m] ; theta [rad/s]
 plot_function(u_history,'Input variation in time','wr [rad/s] ; wl [rad/s]', timeVec, linewidth, colors, counter)
 % Plot errors.
 plot_function([e;e_tot'],'Error variation over time','e_x [m] ; e_y [m] ; e_tot [m]',timeVec, linewidth, colors, counter)
+
+% The video function just needs the distance between the wheels in order to plot the robot.
+b_n = perturbed_params(2); 
+video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Real Control')
 
 %% Save variables for the comparison in the optimization routine.
 if youHaveChoosenThisPercentage == 80
