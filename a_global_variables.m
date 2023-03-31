@@ -50,6 +50,7 @@ set(groot,'defaultLineLineWidth',5)
 global linewidth, linewidth = 5;
 set(groot,'defaultAxesTitleFontSizeMultiplier',1.8)
 set(groot,'defaultfigureposition',[100 100 540 400])
+set(groot,'defaultLegendAutoUpdate','off')
 
 % Generate colors
 colors = linspecer(12,'sequential');

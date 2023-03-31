@@ -21,6 +21,7 @@ orient = quiver(x(1),y(1),cos(theta(1)),sin(theta(1)),'Color',colors(2,:),'linew
 orient.MaxHeadSize = linewidth+2;
 
 % Use the proxy objects in the legend.
+% Use the proxy objects in the legend.
 legend('desired trajectory','robot trajectory','unycicle orientation');
 fontsize(fontSize, 'points'),
 

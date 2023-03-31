@@ -3,7 +3,7 @@ close all; clc;
 nominal_params = [wheelRadius; wheelDistance];
 % REAL PARAMS
 % Generate uniform distribution and sample the exstremes: 80% or 120% of the nominal value
-[chosenCase, perturbed_params] = switch_case(wheelDistance, wheelRadius);
+[youHaveChoosenThisPercentage,perturbed_params] = switch_case(wheelDistance,wheelRadius);
 
 %% REAL CONTROL in the PERTURBED case, where the parameters of the robot differ from the nominal ones.
 [r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
@@ -58,11 +58,11 @@ plot_function(u_history,'Input variation in time','wr [rad/s] ; wl [rad/s]', tim
 % Plot errors.
 plot_function([e;e_tot'],'Error variation over time','e_x [m] ; e_y [m] ; e_tot [m]',timeVec, linewidth, colors, counter)
 
-% %% Save variables for the optimization routine.
-% if caseParams80 == true
-% save('data/REALcontrolpertubed80%','u_history','q_history','xhi_history')
-% end
-% if caseParams120 == true
-% save('data/REALcontrolpertubed120%','u_history','q_history','xhi_history')
-% end
+%% Save variables for the comparison in the optimization routine.
+if youHaveChoosenThisPercentage == 80
+save('data/REALcontrolperturbed80%','u_history','q_history','xhi_history')
+end
+if youHaveChoosenThisPercentage == 120
+save('data/REALcontrolperturbed120%','u_history','q_history','xhi_history')
+end
 
