@@ -25,22 +25,3 @@ switch choose
         [choosenCase, perturbed_params] = switch_case(wheelDistance,wheelRadius);
 end
 end
-
-
-% Choose if you want to see the case in which the params are the 80% or the 120% of the nominal values.
-choose = input('Enter either 80 or 120: ');
-switch choose
-    case 80
-        %% FIRST CASE
-        choosenCase = 80;
-        perturbed_params = [wheelRadius80; wheelDistance80];
-        disp('You have choosen to use 80% of the nominal value')
-    case 120
-        %% SECOND CASE
-        choosenCase= 120;
-        perturbed_params = [wheelRadius120; wheelDistance120];
-        disp('You choose to use 120% of the nominal value')
-    otherwise
-        disp('You did not choose anything')
-end
-end
