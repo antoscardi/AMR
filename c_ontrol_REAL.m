@@ -47,7 +47,6 @@ for k=2:Nstep
 end
 
 %% Create and display video animation and plots.
-
 % Plot state variables (vector q).
 plot_function(q_history,'State variation in time','x [m] ; y [m] ; theta [rad/s]', timeVec, linewidth, colors, counter) 
 % Plot input (vector u).
