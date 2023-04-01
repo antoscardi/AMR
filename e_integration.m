@@ -15,7 +15,7 @@ end
 % for k=2:Nstep
 % sens_int(:,k) = sens_int(:,k-1) + delta*integralSens(sens_int(:,k-1),f_q,f_p,f_u,g_q,g_xhi,h_q,h_xhi,k-1);
 % end
-sens_k = zeros(12,1); sens_int= zeros(12, Nstep); tic
+sens_k = zeros(6,1); sens_int= zeros(6, Nstep); tic
 for k=1:Nstep
     [t_s, i] = ode45(@(t,i) integralSens(t, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k), [0 delta], sens_k);
     sens_k= i(end, :)'; sens_int(:,k) = sens_k;
@@ -122,5 +122,11 @@ save('data/gamma',"gammax1_int", "gammay1_int","gammax2_int", "gammay2_int","gam
     "gammax7_int", "gammay7_int","gammax8_int", "gammay8_int","gammax9_int", "gammay9_int","gammax10_int", "gammay10_int","gammax11_int", "gammay11_int","gammax12_int", "gammay12_int")
 save('data/u_ai',"u_ax1", "u_ay1","u_ax2", "u_ay2","u_ax3", "u_ay3","u_ax4", "u_ay4","u_ax5", "u_ay5","u_ax6", "u_ay6",...
     "u_ax7", "u_ay7","u_ax8", "u_ay8","u_ax9", "u_ay9","u_ax10", "u_ay10","u_ax11", "u_ay11","u_ax12", "u_ay12")
+
+%% Print the sensitivity trend over time
+size(sens_int(1:3))
+% Optimized trajectory
+plot_function(sens_int(1:3,:),'Sensitivity variation in time','1 com; 2 com; 3 com', timeVec, linewidth, colors, counter)
+
 
 

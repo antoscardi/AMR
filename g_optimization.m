@@ -95,6 +95,7 @@ plot(p(1,:),p(2,:));
 xlabel('x [m]'), ylabel('y [m]'), grid minor
 title('Optimized Trajectory')
 
+
 %% Save optimized coefficients and new trajectory
 save('data/coeff_a_star',"ay_star","ay_star")
 save('data/new_traj',"p","dp","ddp")
