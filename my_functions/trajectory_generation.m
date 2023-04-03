@@ -11,17 +11,17 @@ px_f = p_f(1); py_f = p_f(2);
 vx_f = v_f(1); vy_f = v_f(2);
 
 % The coefficients of the polynomial are found as solution of the system: Ma = d.
-dx = [px_0 vx_0 0 0 p_x1 0 0 p_x2 px_f vx_f]';
-dy = [py_0 vy_0 0 0 p_y1 0 0 p_y2 py_f vy_f]';
+%dx = [px_0 vx_0 0 0 p_x1 0 0 p_x2 px_f vx_f]';
+%dy = [py_0 vy_0 0 0 p_y1 0 0 p_y2 py_f vy_f]';
+dx = [px_0 vx_0 0 0 0 0 px_f vx_f]';
+dy = [py_0 vy_0 0 0 0 0 py_f vy_f]';
 
 M = [0 0 0 1 0 0 0 0 0 0 0 0;
      0 0 1 0 0 0 0 0 0 0 0 0;
      (tsim/3)^3 (tsim/3)^2 tsim/3 1 0 0 0 -1 0 0 0 0;
      3*(tsim/3)^2 2*tsim/3 1 0 0 0 -1 0 0 0 0 0;
-     0 0 0 0 0 0 0 1 0 0 0 0 ;
      0 0 0 0 (tsim/3)^3 (tsim/3)^2 tsim/3 1 0 0 0 -1;
      0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0 0 0 -1 0;
-     0 0 0 0 0 0 0 0 0 0 0 1;
      0 0 0 0 0 0 0 0 (tsim/3)^3 (tsim/3)^2 (tsim/3) 1;
      0 0 0 0 0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0];
 

@@ -47,12 +47,9 @@ f_p = jacobian(q_dot,p); f_q = jacobian(q_dot,q); f_u = jacobian(q_dot,u);
 h_q = jacobian(new_u,q); h_xhi = jacobian(new_u,xhi);
 g_q = jacobian(xhi_dot,q); g_xhi = jacobian(xhi_dot,xhi);
 
-% %%Prova pazza scusa nick
-% syms sensitivity(t) [3 2], syms sensitivityxhi(t) [3 2]
-% 
-% ode = f_q*sensitivity + f_p + f_u*(h_q*sensitivity + h_xhi*sensitivityxhi)
-% dots = diff(ode,t)
-% dots = simplify(dots)
+
+
+%dsens = fsensitivity(f_q,f_p,f_u,h_q,h_xhi)
 
 
 % Second Partial Derivative

@@ -14,7 +14,7 @@ ax0 = ax. a_x;
 ay = load(file3,'a_y');
 ay0 = ay.a_y;
 %% Hyperparameters 
-k1 = 1e-6; k2 = 1e-6;
+k1 = 1e-12; k2 = 1e-12;
 
 %% Optimization
 dx = [2 0.1 0 0 0 0 10 0.1]';
