@@ -6,9 +6,9 @@ close all; clear; clc;
 setGlobal(0.2); wheelRadius = getGlobal;
 setGlobal(0.8); wheelDistance = getGlobal;
 % Simulation time [s]
-setGlobal(20); totalTime = getGlobal;
+setGlobal(15); totalTime = getGlobal;
 % Control frequency [Hz]
-setGlobal(100); f = getGlobal;
+setGlobal(33); f = getGlobal;
 % Time step [s]
 setGlobal(1/f); delta = getGlobal;
 % Total number of steps

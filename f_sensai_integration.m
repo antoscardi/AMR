@@ -5,19 +5,21 @@ folderpath = '../AMR/data';
 % Get a list of all files in the folder
 filelist = dir(folderpath);
 % Iterate through each file in the folder
+% Iterate through each file in the folder
 for i = 1:length(filelist)
     filename = filelist(i).name;
     % Skip directories
-    if filelist(i).isdir
-         continue;
-    end
-    % Load the file and get a struct
-    data = load(filename);
-    % Find all variables in the struct 
-    varNames = fieldnames(data);
-    % Extract all variables
-    for j = 1:length(varNames)
-        eval(sprintf('%s = data.%s;', varNames{j}, varNames{j}));
+    if filelist(i).isdir ||  strcmp(filename,'sensitivity_deriv2.mat') || strcmp(filename,'IDEALcontrol2.mat') || strcmp(filename,'new_traj.mat') || strcmp(filename,'REALcontrolperturbed80%.mat')
+        continue;
+    else
+        % Load the file and get a struct
+        data = load(filename);
+        % Find all variables in the struct 
+        varNames = fieldnames(data);
+        % Extract all variables
+        for j = 1:length(varNames) 
+            eval(sprintf('%s = data.%s;', varNames{j}, varNames{j}));
+        end
     end
 end
 
@@ -26,7 +28,7 @@ params=[wheelRadius; wheelDistance];
 %% Tensor product calculations, one for each parameter
 % initialize 3D matrixes, which are overwritten  
 curr_dfqqgamma = zeros(3,3,Nstep); curr_dfquuai = zeros(3,3,Nstep); 
-curr_dfpqgamma = zeros(3,2,Nstep); curr_dfpuuai = zeros(3,2,Nstep); 
+curr_dfpqgamma = zeros(3,1,Nstep); curr_dfpuuai = zeros(3,1,Nstep); 
 curr_dfuqgamma = zeros(3,2,Nstep); curr_dfuuuai = zeros(3,2,Nstep); 
 curr_dhqqgamma = zeros(2,3,Nstep); curr_dhqxhigammaxhi = zeros(2,3,Nstep); 
 curr_dhxhiqgamma = zeros(2,3,Nstep); curr_dhxhixhigammaxhi = zeros(2,3,Nstep); 
@@ -123,12 +125,12 @@ for i=1:12
 if z==5
     z=1;
 end
-sens_k = zeros(12,1); sensai_tot = zeros(12,1,Nstep); 
+sens_k = zeros(6,1); sensai_tot = zeros(6,1,Nstep); 
 dgq = eval(sprintf('dgqa%dx', z)); dgxhi = eval(sprintf('dgxhia%dx', z)); dhq = eval(sprintf('dhqa%dx', z)); dhxhi = eval(sprintf('dhxhia%dx', z));
 for k=1:Nstep
-[~, j] = ode45(@(t,j) integralSens_ai(t,j, allx_dfqqgamma{i}(:,:,k),allx_dfquuai{i}(:,:,k),sens_int(1:6,k),...
+[~, j] = ode45(@(t,j) integralSens_ai(t,j, allx_dfqqgamma{i}(:,:,k),allx_dfquuai{i}(:,:,k),sens_int(1:3,k),...
          f_q(:,:,k), allx_dfpqgamma{i}(:,:,k), allx_dfpuuai{i}(:,:,k),allx_dfuqgamma{i}(:,:,k),allx_dfuuuai{i}(:,:,k),...
-         h_q(:,:,k), h_xhi(:,:,k),sens_int(6:12,k), f_u(:,:,k), allx_dhqqgamma{i}(:,:,k),allx_dhqxhigammaxhi{i}(:,:,k),...
+         h_q(:,:,k), h_xhi(:,:,k),sens_int(4:6,k), f_u(:,:,k), allx_dhqqgamma{i}(:,:,k),allx_dhqxhigammaxhi{i}(:,:,k),...
          dhq(:,:,k),allx_dhxhiqgamma{i}(:,:,k), allx_dhxhixhigammaxhi{i}(:,:,k),dhxhi(:,:,k),allx_dgqqgamma{i}(:,:,k),allx_dgqxhigammaxhi{i}(:,:,k),...
          dgq(:,:,k),allx_dgxhiqgamma{i}(:,:,k),allx_dgxhixhigammaxhi{i}(:,:,k),dgxhi(:,:,k), g_q(:,:,k), g_xhi(:,:,k)), [0 delta],sens_k);
 sens_k = j(end, :)'; sensai_tot(:,:,k) = sens_k;
@@ -145,12 +147,12 @@ for i=1:12
 if z==5
     z=1;
 end
-sens_k = zeros(12,1); sensai_tot = zeros(12,1,Nstep); 
+sens_k = zeros(6,1); sensai_tot = zeros(6,1,Nstep); 
 dgq = eval(sprintf('dgqa%dy', z)); dgxhi = eval(sprintf('dgxhia%dy', z)); dhq = eval(sprintf('dhqa%dy', z)); dhxhi = eval(sprintf('dhxhia%dy', z));
 for k=1:Nstep
-[~, j] = ode45(@(t,j) integralSens_ai(t,j, ally_dfqqgamma{i}(:,:,k),ally_dfquuai{i}(:,:,k),sens_int(1:6,k),...
+[~, j] = ode45(@(t,j) integralSens_ai(t,j, ally_dfqqgamma{i}(:,:,k),ally_dfquuai{i}(:,:,k),sens_int(1:3,k),...
          f_q(:,:,k), ally_dfpqgamma{i}(:,:,k), ally_dfpuuai{i}(:,:,k),ally_dfuqgamma{i}(:,:,k),ally_dfuuuai{i}(:,:,k),...
-         h_q(:,:,k), h_xhi(:,:,k),sens_int(6:12,k), f_u(:,:,k), ally_dhqqgamma{i}(:,:,k),ally_dhqxhigammaxhi{i}(:,:,k),...
+         h_q(:,:,k), h_xhi(:,:,k),sens_int(4:6,k), f_u(:,:,k), ally_dhqqgamma{i}(:,:,k),ally_dhqxhigammaxhi{i}(:,:,k),...
          dhq(:,:,k),ally_dhxhiqgamma{i}(:,:,k), ally_dhxhixhigammaxhi{i}(:,:,k),dhxhi(:,:,k),ally_dgqqgamma{i}(:,:,k),ally_dgqxhigammaxhi{i}(:,:,k),...
          dgq(:,:,k),ally_dgxhiqgamma{i}(:,:,k),ally_dgxhixhigammaxhi{i}(:,:,k),dgxhi(:,:,k), g_q(:,:,k), g_xhi(:,:,k)), [0 delta],sens_k);
 sens_k = j(end, :)'; sensai_tot(:,:,k) = sens_k;

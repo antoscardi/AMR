@@ -124,9 +124,9 @@ save('data/u_ai',"u_ax1", "u_ay1","u_ax2", "u_ay2","u_ax3", "u_ay3","u_ax4", "u_
     "u_ax7", "u_ay7","u_ax8", "u_ay8","u_ax9", "u_ay9","u_ax10", "u_ay10","u_ax11", "u_ay11","u_ax12", "u_ay12")
 
 %% Print the sensitivity trend over time
-size(sens_int(1:3))
+%size(sens_int(1:3))
 % Optimized trajectory
-plot_function(sens_int(1:3,:),'Sensitivity variation in time','1 com; 2 com; 3 com', timeVec, linewidth, colors, counter)
+%plot_function(sens_int(1:3,:),'Sensitivity variation in time','1 com; 2 com; 3 com', timeVec, linewidth, colors, counter)
 
 
 

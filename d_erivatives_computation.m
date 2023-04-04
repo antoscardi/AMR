@@ -12,7 +12,7 @@ desired_traj = load(file1,'p');
 dp = load(file1,'dp'); 
 ddp = load(file1,'ddp');
 
-% Create variables
+%  Create variables
 q_history = q_history.q_history; 
 u_history = u_history.u_history;
 desired_traj = desired_traj.p; 
@@ -93,7 +93,8 @@ for k=1:Nstep
     dgxhia2y(:,:,k)=dgxhi_a2y();
     dgxhia3y(:,:,k)=dgxhi_a3y();
     dgxhia4y(:,:,k)=dgxhi_a4y();
- end
+end
+
 
 % Save sensitivity derivatives for the integration routine.
 save('data/sensitivity_deriv','f_q','f_p','f_u','g_q','g_xhi','h_q','h_xhi')

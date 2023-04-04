@@ -97,5 +97,5 @@ title('Optimized Trajectory')
 
 
 %% Save optimized coefficients and new trajectory
-save('data/coeff_a_star',"ay_star","ay_star")
+save('data/coeff_a_star',"ax_k","ay_k")
 save('data/new_traj',"p","dp","ddp")
