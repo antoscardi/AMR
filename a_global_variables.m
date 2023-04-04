@@ -70,15 +70,6 @@ for index = 1:length(index_interpreter)
     set(groot, strrep(list_factory{index_interpreter(index)},'factory','default') ,'Latex');
 end
 
-% % LINE COLORS
-% N=5;
-% X = linspace(0,pi*3,1000);
-% Y = bsxfun(@(x,n)sin(x+2*n*pi/N), X.', 1:N);
-% C = linspecer(N,'qualitative');
-% axes('NextPlot','replacechildren', 'ColorOrder',C);
-% plot(X,Y,'linewidth',5)
-% ylim([-1.1 1.1]);
-
 %% Helper functions
 function var = getGlobal
 global x; var = x;
