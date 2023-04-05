@@ -23,7 +23,7 @@ orient.MaxHeadSize = linewidth+2;
 % Use the proxy objects in the legend.
 % Use the proxy objects in the legend.
 legend('desired trajectory','robot trajectory','unycicle orientation');
-fontsize(fontSize, 'points'),
+%fontsize(fontSize, 'points'),
 
 % Iterating through the length of the time array
 tic;

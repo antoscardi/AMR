@@ -1,5 +1,7 @@
 function [v, omega] = flatness(dp,ddp)
-    % Take only the first values of the matrixes.
+    %   The flatness function that takes as input the velocity and acceleration of the starting point 
+    %   and calculates the initial linear velocity and initial angular velocity.
+    %   Take only the first values of the matrixes.
     x_dot = dp(1,1);
     y_dot = dp(2,1);
     x_dot_dot = ddp(1,1);

@@ -1,4 +1,5 @@
 %% Integration function Ode
+%Function used in the integration of Sensitivity_ai  
 function djdt = integralSens_ai(t, j, dfqqgamma, dfquuai, sens, f_q, dfpqgamma, dfpuuai,dfuqgamma,dfuuuai,h_q, h_xhi, sens_xhi, f_u, dhqqgamma,dhqxhigammaxhi,hq_ai,dhxhiqgamma, dhxhixhigammaxhi, h_xhi_ai, dgqqgamma,dgqxhigammaxhi,g_q_ai,dgxhiqgamma,dgxhixhigammaxhi,g_xhi_ai, g_q, g_xhi)
     % Create matrixes from column vector
     sensai = [j(1) j(2);

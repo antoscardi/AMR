@@ -1,3 +1,5 @@
+%Function used in the integration of the Sensitivity [3 2] (N.B. the
+%sensitivty passed in the form of the vector)
 function didt=integralSens(~, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k)
     % Create matrixes from column vector
     sens = [i(1) i(2);
@@ -11,5 +13,5 @@ function didt=integralSens(~, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k)
     % sensitivity_xhi component of the ODEs
     dsensxhi = g_q(:,:,k)*sens + g_xhi(:,:,k)*sensxhi;
     % Output
-    didt = [dsens(1,1); dsens(1,2); dsens(2,1);dsens(2,2);dsens(3,1); dsens(3,2);dsensxhi(1,1); dsensxhi(1,2); dsensxhi(2,1);dsensxhi(2,2);dsensxhi(3,1);dsensxhi(3,2)];
+    didt = [dsens(1,1); dsens(1,2); dsens(2,1); dsens(2,2); dsens(3,1); dsens(3,2); dsensxhi(1,1); dsensxhi(1,2); dsensxhi(2,1); dsensxhi(2,2); dsensxhi(3,1); dsensxhi(3,2)];
 end 

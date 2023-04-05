@@ -1,3 +1,4 @@
+%Function used for the integration of Gamma 
 function dgamma_tot=integralGamma(~, gamma, f_q, f_u, g_q, g_xhi, h_q, h_xhi, h_a_i, g_a_i, k) 
     t_maius = [gamma(1:3)]; t_maius_xhi = [gamma(4:6)]; 
     %Gamma component of the ODEs
