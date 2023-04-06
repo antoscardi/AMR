@@ -45,7 +45,7 @@ for k = 2:length(time)
     % Delay using the real time frequency
     multiplierToMAkeupforComputations = 2.7;
     if toc > delta*multiplierToMAkeupforComputations
-        %drawnow();
+        #drawnow();
         tic;
     end
     if k<length(time)
