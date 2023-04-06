@@ -15,20 +15,22 @@ setGlobal(1/f); delta = getGlobal;
 setGlobal(totalTime*f+1); Nstep = getGlobal;
 % Time
 global timeVec, timeVec = 0:delta:totalTime;
+
 % Controller gains
-setGlobal(3); kv = getGlobal;
-setGlobal(2); kp = getGlobal; 
-setGlobal(1); ki = getGlobal;
+setGlobal(1); kv = getGlobal;
+setGlobal(10); kp = getGlobal; 
+setGlobal(0); ki = getGlobal;
 
 % Initial position and velocity
-global initialPositionVec, initialPositionVec = [2 4];
-global initialVelocityVec, initialVelocityVec = [0.1 0.1];
+global initialPositionVec, initialPositionVec = [1 1];
+global initialVelocityVec, initialVelocityVec = [0.083 0.083];
 % Position of the two break points
 global firstBreak, firstBreak = [5 10];
-global secondBreak, secondBreak = [7 15];
+global secondBreak, secondBreak = [10 20];
+
 % Final position and velocity.
-global finalPositionVec, finalPositionVec = [10 20];
-global finalVelocityVec, finalVelocityVec = [0.1 0.1];
+global finalPositionVec, finalPositionVec = [20 25];
+global finalVelocityVec, finalVelocityVec = [1.1 1.1];
 
 % Create data folder
 if ~exist('../AMR/data', 'dir')

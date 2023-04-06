@@ -11,19 +11,37 @@ px_f = p_f(1); py_f = p_f(2);
 vx_f = v_f(1); vy_f = v_f(2);
 
 % The coefficients of the polynomial are found as solution of the system: Ma = d.
-dx = [px_0 vx_0 0 0 p_x1 0 0 p_x2 px_f vx_f]';
-dy = [py_0 vy_0 0 0 p_y1 0 0 p_y2 py_f vy_f]';
+dx = [px_0 vx_0 0 0 0 p_x1 0 0 p_x2 0 px_f vx_f]';
+dy = [py_0 vy_0 0 0 0 p_y1 0 0 p_y2 0 py_f vy_f]';
 
+%% This is the constraints matrix
+% p(t) = a_3*t^3 + a_2*t^2 + a_1*t + a_0;
+% v(t) = 3a_3*t^3 + 2a_2*t^2 + a_1
+% a(t) = 6a_3*t +2a_2
 M = [0 0 0 1 0 0 0 0 0 0 0 0;
+     % this correspond to define the polinomial to the initial position -> p(0) = a_01;
      0 0 1 0 0 0 0 0 0 0 0 0;
+     % this correspond to define the polinomial to the initial velocity -> v(0) = a_11;
      (tsim/3)^3 (tsim/3)^2 tsim/3 1 0 0 0 -1 0 0 0 0;
+     % this correspond to the constraint for which the point on the end of the first polynomial is equal to the start of the second polynomial -> p1(t/3) = p2(0);
      3*(tsim/3)^2 2*tsim/3 1 0 0 0 -1 0 0 0 0 0;
-     0 0 0 0 0 0 0 1 0 0 0 0 ;
+     % this correspond to the constraint for which the velocity on the end of the first polynomial is equal to the start of the second polynomial -> v1(t/3) = v2(0);
+     2*tsim 2 0 0 0 -2 0 0 0 0 0 0; 
+     % this correspond to the constraint for which the accelleration on the end of the first polynomial is equal to the start of the second polynomial -> a1(t/3) = a2(0);
+     0 0 0 0 0 0 0 1 0 0 0 0 ; 
+     % this correspond to define the polinomial to the breack point -> p(0) = a_02;
      0 0 0 0 (tsim/3)^3 (tsim/3)^2 tsim/3 1 0 0 0 -1;
-     0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0 0 0 -1 0;
+     % this correspond to the constraint for which the point on the end of the first polynomial is equal to the start of the second polynomial -> p1(t/3) = p2(0);
+     0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0 0 0 -1 0; 
+     % this correspond to the constraint for which the velocity on the end of the second polynomial is equal to the start of the third polynomial -> v2(t/3) = v3(0);
      0 0 0 0 0 0 0 0 0 0 0 1;
-     0 0 0 0 0 0 0 0 (tsim/3)^3 (tsim/3)^2 (tsim/3) 1;
-     0 0 0 0 0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0];
+     % this correspond to the constraint for which the point on the end of the second polynomial is equal to the start of the third polynomial -> p2(t/3) = p3(0);
+     0 0 0 0 2*tsim 2 0 0 0 -2 0 0; 
+     % this correspond to the constraint for which the accelleration on the end of the first polynomial is equal to the start of the second polynomial -> a2(t/3) = a3(0);
+     0 0 0 0 0 0 0 0 (tsim/3)^3 (tsim/3)^2 (tsim/3) 1; 
+     % this correspond to define the polinomial to the final position -> p(t/3) = a_03;
+     0 0 0 0 0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0]; 
+     % this correspond to define the polinomial to the final velocity -> v(t/3) = a_13;
 
 a_x = pinv(M) * dx;
 a_y = pinv(M) * dy;
