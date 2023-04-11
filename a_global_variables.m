@@ -3,8 +3,12 @@ close all; clear; clc;
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
 % Distance between the wheels [m].
-setGlobal(0.2); wheelRadius = getGlobal;
-setGlobal(0.8); wheelDistance = getGlobal;
+% setGlobal(0.2); wheelRadius = getGlobal;
+% setGlobal(0.8); wheelDistance = getGlobal;
+
+setGlobal(0.5); wheelRadius = getGlobal;
+setGlobal(1.2); wheelDistance = getGlobal;
+
 % Simulation time [s]
 setGlobal(20); totalTime = getGlobal;
 % Control frequency [Hz]
@@ -17,20 +21,20 @@ setGlobal(totalTime*f+1); Nstep = getGlobal;
 global timeVec, timeVec = 0:delta:totalTime;
 
 % Controller gains
-setGlobal(1); kv = getGlobal;
-setGlobal(10); kp = getGlobal; 
-setGlobal(0); ki = getGlobal;
+setGlobal(3); kv = getGlobal;
+setGlobal(28); kp = getGlobal; 
+setGlobal(3); ki = getGlobal;
 
 % Initial position and velocity
-global initialPositionVec, initialPositionVec = [1 1];
-global initialVelocityVec, initialVelocityVec = [0.083 0.083];
+global initialPositionVec, initialPositionVec = [5 5];
+global initialVelocityVec, initialVelocityVec = [1 1];
 % Position of the two break points
-global firstBreak, firstBreak = [5 10];
-global secondBreak, secondBreak = [10 20];
+global firstBreak, firstBreak = [18 23];
+global secondBreak, secondBreak = [40 45];
 
 % Final position and velocity.
-global finalPositionVec, finalPositionVec = [20 25];
-global finalVelocityVec, finalVelocityVec = [1.1 1.1];
+global finalPositionVec, finalPositionVec = [62 66];
+global finalVelocityVec, finalVelocityVec = [2.5 2.5];
 
 % Create data folder
 if ~exist('../AMR/data', 'dir')
