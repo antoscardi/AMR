@@ -120,7 +120,7 @@ plot_function([e; e_tot'],'Error variation, non-optimal case','e_x [m] ; e_y [m]
 
 % The video function just needs the distance between the wheels in order to plot the robot.
 b_n = perturbed_params(2); 
-video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Non Optimized Trajectory Following')
+%video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Non Optimized Trajectory Following')
 
 %% Create and display video animation and plots for the OPTIMAL trajectory.
 % Plot state variables (vector q).
@@ -132,5 +132,5 @@ plot_function([e_opt; e_tot_opt'],'Error variation, optimal case','e_x [m] ; e_y
 
 % The video function just needs the distance between the wheels in order to plot the robot.
 b_n = perturbed_params(2); 
-video(q_history_opt,r_d_opt,b_n,timeVec,linewidth,delta, 'Optimal Trajectory Following')
+%video(q_history_opt,r_d_opt,b_n,timeVec,linewidth,delta, 'Optimal Trajectory Following')
 
