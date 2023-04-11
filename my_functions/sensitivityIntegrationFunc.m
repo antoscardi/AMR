@@ -5,7 +5,6 @@ function sensMatrixAt_tf = sensitivityIntegrationFunc(fq,fp,fu,hq,hxhi,gq,gxhi,t
 
     %% COMMENTARE
     syms sens [3 2], syms sensxhi [3 2]
-
     syms sensVec [6 1], syms sensxhiVec [6 1]
     
     sensVec(1) = sens(1,1); sensVec(2) = sens(1,2);sensVec(3) = sens(2,1);

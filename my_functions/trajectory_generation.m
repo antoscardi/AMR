@@ -1,4 +1,4 @@
-function [p,dp,ddp] = trajectory_generation(p_0, v_0, p_1, p_2, p_f, v_f,tsim,time,linewidth)
+function [p,dp,ddp] = trajectory_generation(p_0, v_0, p_1, p_2, p_f, v_f,tsim,time,linewidth,v_x1,v_y1,v_x2,v_y2)
 % Generation of a trajectory divided into 3 polinomial pieces.
 breaks = 0:tsim/3:tsim;                         
 
@@ -11,17 +11,38 @@ px_f = p_f(1); py_f = p_f(2);
 vx_f = v_f(1); vy_f = v_f(2);
 
 % The coefficients of the polynomial are found as solution of the system: Ma = d.
-dx = [px_0 vx_0 0 0 p_x1 0 0 p_x2 px_f vx_f]';
-dy = [py_0 vy_0 0 0 p_y1 0 0 p_y2 py_f vy_f]';
+% dx = [px_0 vx_0 0 0 0 v_x1 p_x1 0 0 p_x2 v_x2 0 px_f vx_f]';
+% dy = [py_0 vy_0 0 0 0 v_y1 p_y1 0 0 p_y2 v_y2 0 py_f vy_f]';
+% 
+% M = [0 0 0 1 0 0 0 0 0 0 0 0;
+%      0 0 1 0 0 0 0 0 0 0 0 0;
+%      (tsim/3)^3 (tsim/3)^2 tsim/3 1 0 0 0 -1 0 0 0 0;
+%      3*(tsim/3)^2 2*tsim/3 1 0 0 0 -1 0 0 0 0 0;
+%      2*tsim 2/3 0 0 0 -2/3 0 0 0 0 0 0;
+%      0 0 0 0 0 0 1 0 0 0 0 0;
+%      0 0 0 0 0 0 0 1 0 0 0 0;
+%      0 0 0 0 (tsim/3)^3 (tsim/3)^2 tsim/3 1 0 0 0 -1;
+%      0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0 0 0 -1 0;
+%      0 0 0 0 0 0 0 0 0 0 0 1;
+%      0 0 0 0 0 0 0 0 0 0 1 0;
+%      0 0 0 0 6*tsim/3 2/3 0 0 0 -2/3 0 0;
+%      0 0 0 0 0 0 0 0 (tsim/3)^3 (tsim/3)^2 (tsim/3) 1;
+%      0 0 0 0 0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0];
+
+dx = [px_0 vx_0 0 0 0 p_x1 0 0 p_x2 0 px_f vx_f]';
+dy = [py_0 vy_0 0 0 0 p_y1 0 0 p_y2 0 py_f vy_f]';
+
 
 M = [0 0 0 1 0 0 0 0 0 0 0 0;
      0 0 1 0 0 0 0 0 0 0 0 0;
      (tsim/3)^3 (tsim/3)^2 tsim/3 1 0 0 0 -1 0 0 0 0;
      3*(tsim/3)^2 2*tsim/3 1 0 0 0 -1 0 0 0 0 0;
+     2*tsim 2 0 0 0 -2 0 0 0 0 0 0;
      0 0 0 0 0 0 0 1 0 0 0 0 ;
      0 0 0 0 (tsim/3)^3 (tsim/3)^2 tsim/3 1 0 0 0 -1;
      0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0 0 0 -1 0;
      0 0 0 0 0 0 0 0 0 0 0 1;
+     0 0 0 0 2*tsim 2 0 0 0 -2 0 0;
      0 0 0 0 0 0 0 0 (tsim/3)^3 (tsim/3)^2 (tsim/3) 1;
      0 0 0 0 0 0 0 0 3*((tsim/3)^2) 2*(tsim/3) 1 0];
 

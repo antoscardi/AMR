@@ -3,9 +3,11 @@ close all; clc;
 params = [wheelRadius; 
           wheelDistance];
 
+
 %% Desired Trajectory Generation (Spline)
 [r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
-                                     finalPositionVec, finalVelocityVec, totalTime, timeVec, linewidth);
+                                     finalPositionVec, finalVelocityVec, totalTime, timeVec, linewidth,...
+                                     v_x1,v_y1,v_x2,v_y2);
 
 %% Inizializations
 % Initial state (x,y,theta)
@@ -31,7 +33,7 @@ u_history = zeros(2, Nstep); u_history(:,1) = initialInput;
 % q_history = [q0, q1, q2, ..., qN] dimension (3)x(Nstep)
 q_history = zeros(3, Nstep); q_history(:,1) = initialState;
 % Controller state
-xhi_history = zeros(3, Nstep); xhi_history(:,1) = [initialVelocity;0.1;0.1];
+xhi_history = zeros(3, Nstep); xhi_history(:,1) = [initialVelocity;initialVelocity;initialVelocity];
 % Error
 e = zeros(2,Nstep); e_tot = zeros(Nstep,1); 
 
@@ -66,7 +68,7 @@ end
 %% Create and display video animation and plots.
 
 % Plot state variables (vector q).
-plot_function(q_history,'State variation in time','x [m] ; y [m] ; theta [rad/s]', timeVec, linewidth, colors, counter) 
+plot_function(q_history,'State variation in time','x [m] ; y [m] ; theta [rad]', timeVec, linewidth, colors, counter) 
 % Plot input (vector u).
 plot_function(u_history,'Input variation in time','wr [rad/s] ; wl [rad/s]', timeVec, linewidth, colors, counter)
 % Plot errors.
