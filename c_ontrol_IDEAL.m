@@ -77,7 +77,7 @@ plot_function([e;e_tot'],'Error variation over time','e_x [m] ; e_y [m] ; e_tot 
 
 % The video function just needs the distance between the wheels in order to plot the robot.
 b_n = params(2); 
-%video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Ideal Control')
+video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Ideal Control')
 
 % Save the ideal control data for the OPTIMIZATION.
 save('data/IDEALcontrol','u_history','q_history','xhi_history')

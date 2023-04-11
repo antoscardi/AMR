@@ -5,7 +5,7 @@ close all; clc;
 syms x_d y_d dx_d dy_d ddx_d ddy_d t x y theta b r wl wr xhi_v xhi_x xhi_y
 syms q [3 1], syms p [2 1], syms u [2 1] , syms xhi [3 1] 
 syms r_d [2 1], syms dr_d [2 1], syms ddr_d [2 1]
-syms a1x a1y a2x a2y a3x a3y a4x a4y 
+syms a1x a1y a2x a2y a3x a3y a4x a4y a5x a5y %a6x a6y a7x a7y a8x a8y a9x a9y a10x a10y a11x a11y a12x a12y a13x a13y a14x a14y a15x a15y
 
 % Assignment
 q(1) = x; q(2) = y; q(3) = theta;
@@ -102,8 +102,11 @@ matlabFunction(dg_xhi_xhi_gammaxhi_,'File','auto_functions/dg_xhi_xhi_gammaxhi',
 %% Here we make explicit the dependence with respect to the coefficients of the trajectory ai so as to properly perform the derivatives with respect to these
 
 % Desired parametric trajectory
-x_d = a1x*(t^3) + a2x*(t^2) + a3x*t + a4x;
-y_d = a1y*(t^3) + a2y*(t^2) + a3y*t + a4y;
+% x_d = a1x*(t^3) + a2x*(t^2) + a3x*t + a4x;
+% y_d = a1y*(t^3) + a2y*(t^2) + a3y*t + a4y;
+
+x_d = a1x*(t^4) + a2x*(t^3) + a3x*(t^2) + a4x*t + a5x;
+y_d = a1y*(t^4) + a2y*(t^3) + a3y*(t^2) + a4y*t + a5y;
 dx_d = diff(x_d,t); dy_d = diff(y_d,t);
 ddx_d = diff(x_d,2,t); ddy_d = diff(y_d,2,t);
 
@@ -126,10 +129,13 @@ h_a_1x_ = jacobian(new_u,a1x); h_a_1y_ = jacobian(new_u,a1y);
 h_a_2x_ = jacobian(new_u,a2x); h_a_2y_ = jacobian(new_u,a2y);
 h_a_3x_ = jacobian(new_u,a3x); h_a_3y_ = jacobian(new_u,a3y);
 h_a_4x_ = jacobian(new_u,a4x); h_a_4y_ = jacobian(new_u,a4y);
+h_a_5x_ = jacobian(new_u,a5x); h_a_5y_ = jacobian(new_u,a5y);
+
 g_a_1x_ = jacobian(xhi_dot,a1x); g_a_1y_ = jacobian(xhi_dot,a1y);
 g_a_2x_ = jacobian(xhi_dot,a2x); g_a_2y_ = jacobian(xhi_dot,a2y);
 g_a_3x_ = jacobian(xhi_dot,a3x); g_a_3y_ = jacobian(xhi_dot,a3y);
 g_a_4x_ = jacobian(xhi_dot,a4x); g_a_4y_ = jacobian(xhi_dot,a4y);
+g_a_5x_ = jacobian(xhi_dot,a5x); g_a_5y_ = jacobian(xhi_dot,a5y);
 
 %% Function creation
 % Derivatives for gamma
@@ -141,25 +147,30 @@ matlabFunction(h_a_3x_,'File','auto_functions/h_a_3x','Vars',{q,t,xhi,p});
 matlabFunction(h_a_3y_,'File','auto_functions/h_a_3y','Vars',{q,t,xhi,p});
 matlabFunction(h_a_4x_,'File','auto_functions/h_a_4x','Vars',{q,t,xhi,p});
 matlabFunction(h_a_4y_,'File','auto_functions/h_a_4y','Vars',{q,t,xhi,p});
+matlabFunction(h_a_5x_,'File','auto_functions/h_a_5x','Vars',{q,t,xhi,p});
+matlabFunction(h_a_5y_,'File','auto_functions/h_a_5y','Vars',{q,t,xhi,p});
+
 matlabFunction(g_a_1x_,'File','auto_functions/g_a_1x','Vars',{q,t});
 matlabFunction(g_a_1y_,'File','auto_functions/g_a_1y','Vars',{q,t});
 matlabFunction(g_a_2x_,'File','auto_functions/g_a_2x','Vars',{q,t});
 matlabFunction(g_a_2y_,'File','auto_functions/g_a_2y','Vars',{q,t});
 matlabFunction(g_a_3x_,'File','auto_functions/g_a_3x','Vars',{q,t});
 matlabFunction(g_a_3y_,'File','auto_functions/g_a_3y','Vars',{q,t});
-matlabFunction(g_a_4x_,'File','auto_functions/g_a_4x','Vars',{q});
-matlabFunction(g_a_4y_,'File','auto_functions/g_a_4y','Vars',{q});
+matlabFunction(g_a_4x_,'File','auto_functions/g_a_4x','Vars',{q,t});
+matlabFunction(g_a_4y_,'File','auto_functions/g_a_4y','Vars',{q,t});
+matlabFunction(g_a_5x_,'File','auto_functions/g_a_5x','Vars',{q,t});
+matlabFunction(g_a_5y_,'File','auto_functions/g_a_5y','Vars',{q,t});
 
 
 % Derivatives for h,g that depends on parameters ai
 % derivatives of h_q with respect to the coefficients ai --> dh_q_ai
 hq = jacobian(new_u,q);
-for i= 1:4
+for i= 1:5
     ai = eval(sprintf('a%dx', i));
     func = my_jacobian(hq,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dhq_a%dx', i));
 end
-for i= 1:4
+for i= 1:5
     ai = eval(sprintf('a%dy', i));
     func = my_jacobian(hq,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dhq_a%dy', i));
@@ -167,12 +178,12 @@ end
 
 % derivatives of h_xhi with respect to the coefficients ai --> dh_xhi_ai
 hxhi = jacobian(new_u,xhi);
-for i= 1:4
+for i= 1:5
     ai = eval(sprintf('a%dx', i));
     func = my_jacobian(hxhi,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dhxhi_a%dx', i));
 end
-for i= 1:4
+for i= 1:5
     ai = eval(sprintf('a%dy', i));
     func = my_jacobian(hxhi,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dhxhi_a%dy', i));
@@ -180,12 +191,12 @@ end
 
 % derivatives of g_q with respect to the coefficients ai --> dg_q_ai
 gq = jacobian(xhi_dot,q);
-for i= 1:4
+for i= 1:5
     ai = eval(sprintf('a%dx', i));
     func = my_jacobian(gq,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dgq_a%dx', i));
 end
-for i= 1:4
+for i= 1:5
     ai = eval(sprintf('a%dy', i));
     func = my_jacobian(gq,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dgq_a%dy', i));
@@ -193,12 +204,12 @@ end
 
 % % derivatives of g_q with respect to the coefficients ai --> dg_xhi_ai
 gxhi = jacobian(xhi_dot,xhi);
-for i= 1:4
+for i= 1:5
     ai = eval(sprintf('a%dx', i));
     func = my_jacobian(gxhi,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dgxhi_a%dx', i));
 end
-for i= 1:4
+for i= 1:5
     ai = eval(sprintf('a%dy', i));
     func = my_jacobian(gxhi,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dgxhi_a%dy', i));
