@@ -5,7 +5,7 @@ close all; clc;
 syms x_d y_d dx_d dy_d ddx_d ddy_d t x y theta b r wl wr xhi_v xhi_x xhi_y
 syms q [3 1], syms p [2 1], syms u [2 1] , syms xhi [3 1] 
 syms r_d [2 1], syms dr_d [2 1], syms ddr_d [2 1]
-syms a1x a1y a2x a2y a3x a3y a4x a4y a5x a5y %a6x a6y a7x a7y a8x a8y a9x a9y a10x a10y a11x a11y a12x a12y a13x a13y a14x a14y a15x a15y
+syms a1x a1y a2x a2y a3x a3y a4x a4y a5x a5y 
 
 % Assignment
 q(1) = x; q(2) = y; q(3) = theta;

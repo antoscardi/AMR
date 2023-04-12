@@ -62,8 +62,8 @@ fontSize = 16;
 figure(1),
 fnplt(polyx,linewidth), hold on
 fnplt(polyy,linewidth)
-line([tsim/3 tsim/3],[0 25],'LineStyle','--','Color','k','LineWidth',1),grid minor
-line([2*tsim/3 2*tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1)
+xline(tsim/3 ,'LineStyle','--','Color','k','LineWidth',1.5),grid minor
+xline(2*tsim/3 ,'LineStyle','--','Color','k','LineWidth',1.5)
 xlabel('time [sec]'), ylabel('trajecory [m]')
 legend('trajectory in x', 'trajectory in y')
 title('Trajectory varation in time'),fontsize(fontSize,"points"), hold off
@@ -79,8 +79,8 @@ ddpolyy = fnder(dpolyy);
 figure(2),
 fnplt(dpolyx,linewidth), hold on
 fnplt(dpolyy,linewidth)
-line([tsim/3 tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1)
-line([2*tsim/3 2*tsim/3],ylim,'LineStyle','--','Color','k','LineWidth',1),grid minor
+xline(tsim/3 ,'LineStyle','--','Color','k','LineWidth',1.5),grid minor
+xline(2*tsim/3 ,'LineStyle','--','Color','k','LineWidth',1.5)
 xlabel("time [sec]"), ylabel('velocity [m/s]')
 legend('velocity in x', 'velocity in y')
 title('Velocity varation in time'),fontsize(fontSize,"points"), hold off
