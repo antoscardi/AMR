@@ -2,8 +2,8 @@ close all; clear; clc;
 %% HYPERPARAMETERS:
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
-% Distance between the wheels [m].
 wheelRadius = 1.2;
+% Distance between the wheels [m].
 wheelDistance = 2.2;
 
 % Simulation time [s]
@@ -19,8 +19,8 @@ timeVec = 0:delta:totalTime;
 
 % Controller gains
 kv = 3;
-kp = 10; 
-ki = 0;
+kp = 28; 
+ki = 3;
 
 % Initial position and velocity
 initialPositionVec = [5 5];
