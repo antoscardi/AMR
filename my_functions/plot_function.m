@@ -11,7 +11,8 @@ function plot_function(data, title_name, labels_names, timeVec, linewidth, color
     % Adding the labels and the grid.
     s.DisplayLabels = splittedLabels; grid on
     % Changing the size of all text and set title.
-    fontsize(10, 'points'), xlabel("time [s]"); s.Title = title_name;
+    fontsize(10, 'points');
+    xlabel("time [s]"); s.Title = title_name;
     % Changing color for each line of polt.
     for i = counter:counter + number -1
     s.LineProperties(i-counter+1).Color = colors(i,:);
