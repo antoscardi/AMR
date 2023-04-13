@@ -49,8 +49,8 @@ u_history_opt = zeros(2, Nstep); u_history_opt(:,1) = initialInput;
 q_history = zeros(3, Nstep); q_history(:,1) = initialState;
 q_history_opt = zeros(3, Nstep); q_history_opt(:,1) = initialState;
 % Controller state
-xhi_history = zeros(3, Nstep); xhi_history(:,1) = [initialVelocity;0.1;0.1];
-xhi_history_opt = zeros(3, Nstep); xhi_history_opt(:,1) = [initialVelocity;0.1;0.1];
+xhi_history = zeros(3, Nstep); xhi_history(:,1) = [initialVelocity;0.03;0.03];
+xhi_history_opt = zeros(3, Nstep); xhi_history_opt(:,1) = [initialVelocity;0.03;0.03];
 % Error
 e = zeros(2,Nstep); e_tot = zeros(Nstep,1); 
 e_opt = zeros(2,Nstep); e_tot_opt = zeros(Nstep,1); 
