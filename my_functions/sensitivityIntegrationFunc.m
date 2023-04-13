@@ -8,7 +8,7 @@ function sensMatrixAt_tf = sensitivityIntegrationFunc(fq,fp,fu,hq,hxhi,gq,gxhi,t
     syms sensVec [6 1], syms sensxhiVec [6 1]
     
     sensVec(1) = sens(1,1); sensVec(2) = sens(1,2);sensVec(3) = sens(2,1);
-    sensVec(4) = sens(2,2);sensVec(5) = sens(3,1);sensVec(6) = sens(3,2);
+    sensVec(4) = sens(2,2); sensVec(5) = sens(3,1);sensVec(6) = sens(3,2);
 
     sensxhiVec(1) = sensxhi(1,1); sensxhiVec(2) = sensxhi(1,2);sensxhiVec(3) = sensxhi(2,1);
     sensxhiVec(4) = sensxhi(2,2); sensxhiVec(5) = sensxhi(3,1);sensxhiVec(6) = sensxhi(3,2);
@@ -66,5 +66,10 @@ function sensMatrixAt_tf = sensitivityIntegrationFunc(fq,fp,fu,hq,hxhi,gq,gxhi,t
     
     sensMatrixAt_tf = [sens_history(:,:,Nstep); sensxhi_history(:,:,Nstep)];
 
-    %plot(timeVec[sens_history;sensxhi_history]);
+    
+    normofsens = zeros(3,2,Nstep);
+    for k = 1:Nstep
+        normofsens(:,:,k) = 0.5*trace(sens_history(1:3,1:2,k)'*sens_history(1:3,1:2,k));
+    end
+    normofsens
 end 
