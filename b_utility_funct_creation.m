@@ -69,7 +69,7 @@ dg_xhi_xhi_gammaxhi_ = tensor_product(g_xhi,xhi,g);
 
 %% Function creation
 % State and Control
-matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{q,u,p});
+matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{t,q,u,p});
 %matlabFunction(velocities,'File','auto_functions/velocities_opt','Vars',{u,p});
 matlabFunction(new_u,'File','auto_functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d,p});
 matlabFunction(xhi_dot,'File','auto_functions/xhi_dot','Vars',{q,xhi,r_d,dr_d,ddr_d});

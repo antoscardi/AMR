@@ -432,7 +432,7 @@ end
 
 %% Hyperparameters 
 % Chosen in this way, to make a scaling to the size we are interested in
-k1 = 1e-6; k2 = 1e-6;
+k1 = 1e-3; k2 = 1e-3;
 
 %% Constraints vectors
 
