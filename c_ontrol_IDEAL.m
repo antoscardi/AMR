@@ -5,7 +5,7 @@ params = [wheelRadius;
 
 %% Desired Trajectory Generation (Spline)
 [r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
-                                     finalPositionVec, finalVelocityVec, totalTime, timeVec, linewidth);
+                                         finalPositionVec, finalVelocityVec, totalTime, timeVec, linewidth);
 
 %% Inizializations
 % Initial state (x,y,theta)
@@ -62,7 +62,7 @@ for k=2:Nstep
 
     % Error calculation.
     currentDesiredPos = r_d(:,k);
-    e(:,k) = abs(currentDesiredPos- currentState(1:2));
+    e(:,k) = abs(currentDesiredPos - currentState(1:2));
     e_tot(k) = sqrt_of_quadratics(e(:,k));
 end
 
