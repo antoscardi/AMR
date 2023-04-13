@@ -2,37 +2,36 @@ close all; clear; clc;
 %% HYPERPARAMETERS:
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
+wheelRadius = 1.2;
 % Distance between the wheels [m].
-setGlobal(0.2); wheelRadius = getGlobal;
-setGlobal(0.8); wheelDistance = getGlobal;
+wheelDistance = 2.2;
+
 % Simulation time [s]
-setGlobal(20); totalTime = getGlobal;
+totalTime = 20;
 % Control frequency [Hz]
-setGlobal(100); f = getGlobal;
+f = 100;
 % Time step [s]
-setGlobal(1/f); delta = getGlobal;
+delta = 1/f;
 % Total number of steps
-setGlobal(totalTime*f+1); Nstep = getGlobal;
+Nstep = totalTime*f+1;
 % Time
-global timeVec, timeVec = 0:delta:totalTime;
+timeVec = 0:delta:totalTime;
+
 % Controller gains
-setGlobal(1); kv = getGlobal;
-setGlobal(10); kp = getGlobal; 
-setGlobal(0); ki = getGlobal;
+kv = 3;
+kp = 28; 
+ki = 3;
 
 % Initial position and velocity
-global initialPositionVec, initialPositionVec = [1 1];
-global initialVelocityVec, initialVelocityVec = [0.083 0.083];
+initialPositionVec = [5 5];
+initialVelocityVec = [1 1];
 % Position of the two break points
-global firstBreak, firstBreak = [5 10];
-global secondBreak, secondBreak = [10 20];
-v_x1 = 10;
-v_x2 = 10;
-v_y1 = 10;
-v_y2 = 10;
+firstBreak = [18 20];
+secondBreak = [40 42];
+
 % Final position and velocity.
-global finalPositionVec, finalPositionVec = [20 25];
-global finalVelocityVec, finalVelocityVec = [1.1 1.1];
+finalPositionVec = [62 63];
+finalVelocityVec = [2.5 2.5];
 
 % Create data folder
 if ~exist('../AMR/data', 'dir')
@@ -51,12 +50,12 @@ addpath ../AMR/my_functions
 
 % Set settings for all plots
 set(groot,'defaultLineLineWidth',5)
-global linewidth, linewidth = 5;
+linewidth = 5;
 set(groot,'defaultAxesTitleFontSizeMultiplier',1.8)
 set(groot,'defaultfigureposition',[100 100 540 400])
 set(groot,'defaultLegendAutoUpdate','off')
 
-% Clear the persisten variable in plot_function
+% Clear the persistent variable in plot_function
 clear plot_function
 
 % Generate colors
@@ -65,7 +64,7 @@ contrast_colors = linspecer(2,'qualitative');
 set(groot,'DefaultAxesColorOrder',contrast_colors)
 
 % Counter to count how many times the function is called in order to change colors, initialize to 1
-setGlobal(1); counter = getGlobal;
+counter = 1;
 
 % Latex default for all text
 list_factory = fieldnames(get(groot,'factory'));
@@ -74,11 +73,4 @@ for index = 1:length(index_interpreter)
     set(groot, strrep(list_factory{index_interpreter(index)},'factory','default') ,'Latex');
 end
 
-%% Helper functions
-function var = getGlobal
-global x; var = x;
-end
 
-function setGlobal(valore)
-global x; x = valore;
-end
