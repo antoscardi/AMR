@@ -515,11 +515,13 @@ r = [ppval(polyx,timeVec);ppval(polyy,timeVec)];
 dr = [ppval(dpolyx,timeVec);ppval(dpolyy,timeVec)];
 ddr = [ppval(ddpolyx,timeVec);ppval(ddpolyy,timeVec)];
 
-% Optimized trajectory
-figure()
-plot(r(1,:),r(2,:));
+% Optimized trajectory and non optimized comparison
+figure(1)
+plot(r(1,:),r(2,:)); hold on 
+plot(desired_traj(1,:),desired_traj(2,:))
 xlabel('x [m]'), ylabel('y [m]'), grid minor
-title('Optimized Trajectory')
+title('Optimized and Non-Optimized Trajectory')
+legend('Optimized','Non-Optimized'), hold off
 
 toc
 
