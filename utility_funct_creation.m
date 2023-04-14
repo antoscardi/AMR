@@ -3,7 +3,7 @@
 close all; clc;
 % Symbolic variables declaration 
 syms x_d y_d dx_d dy_d ddx_d ddy_d t x y theta b r wl wr xhi_v xhi_x xhi_y
-syms q [3 1], syms p [2 1], syms u [2 1] , syms xhi [3 1] 
+syms q [3 1], syms p [2 1], syms u [2 1], syms xhi [3 1] 
 syms r_d [2 1], syms dr_d [2 1], syms ddr_d [2 1]
 syms a1x a1y a2x a2y a3x a3y a4x a4y a5x a5y 
 
@@ -28,7 +28,7 @@ A = [cos(theta) -xhi_v*sin(theta);
      sin(theta)  xhi_v*cos(theta)];
 
 % Dynamic model
-q_dot = G*S*u
+q_dot = G*S*u;
 
 % Controller
 dr_xhi = [cos(theta)*xhi_v;
@@ -51,7 +51,6 @@ g_q = jacobian(xhi_dot,q); g_xhi = jacobian(xhi_dot,xhi);
 
 %% Function creation
 % State and Control
-matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{t,q,u,p});
+matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{q,u,p});
 matlabFunction(new_u,'File','auto_functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d,p});
 matlabFunction(xhi_dot,'File','auto_functions/xhi_dot','Vars',{q,xhi,r_d,dr_d,ddr_d});
-
