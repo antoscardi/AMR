@@ -12,21 +12,16 @@ params=[wheelRadius; wheelDistance];
 % Load nominal data and the desired trajectory (needed to make substitution
 % in the parametric function computed in b_utility_funct_creation)
 fileControl = 'data/IDEALcontrol';
-fileDesiredTraj = 'data/desired_trajectory';
 fileCoefficients ='data/coeff_a';
-
 dataControl = load(fileControl,'q_history','u_history','xhi_history');
-dataDesiredTraj = load(fileDesiredTraj, 'p','dp','ddp');
-
 q_history = dataControl.q_history; u_history = dataControl.u_history; xhi_history = dataControl.xhi_history;
-desired_traj = dataDesiredTraj.p; dp = dataDesiredTraj.dp; ddp = dataDesiredTraj.ddp;
 
 % Load of the params of the nominal trajectory --> they are used to set the
 % initial values of the optimal trajectory (computed at the end of this
 % file)
 dataCoefficients = load(fileCoefficients,'a_x','a_y');
-
 ay0 = dataCoefficients.a_y; ax0 = dataCoefficients.a_x;
+coeffMatrix = [ax0,ay0];
 
 %   In this case we are substituting parameters within the functions we created, 
 %   so we get the elements to create the sensitivity.
