@@ -12,22 +12,16 @@ params=[wheelRadius; wheelDistance];
 % Load nominal data and the desired trajectory (needed to make substitution
 % in the parametric function computed in b_utility_funct_creation)
 fileControl = 'data/IDEALcontrol';
-fileDesiredTraj = 'data/desired_trajectory';
 fileCoefficients ='data/coeff_a';
-
 dataControl = load(fileControl,'q_history','u_history','xhi_history');
-dataDesiredTraj = load(fileDesiredTraj, 'p','dp','ddp');
-
 q_history = dataControl.q_history; u_history = dataControl.u_history; xhi_history = dataControl.xhi_history;
-desired_traj = dataDesiredTraj.p; dp = dataDesiredTraj.dp; ddp = dataDesiredTraj.ddp;
 
 % Load of the params of the nominal trajectory --> they are used to set the
 % initial values of the optimal trajectory (computed at the end of this
 % file)
 dataCoefficients = load(fileCoefficients,'a_x','a_y');
-
 ay0 = dataCoefficients.a_y; ax0 = dataCoefficients.a_x;
-
+coeffMatrix = [ax0,ay0];
 %   In this case we are substituting parameters within the functions we created, 
 %   so we get the elements to create the sensitivity.
 f_q = zeros(3,3,Nstep); f_p = zeros(3,2,Nstep); f_u = zeros(3,2,Nstep); g_q = zeros(3,3,Nstep); g_xhi = zeros(3,3,Nstep); h_xhi = zeros(2,3,Nstep); h_q = zeros(2,3,Nstep);
@@ -519,7 +513,13 @@ ddr = [ppval(ddpolyx,timeVec);ppval(ddpolyy,timeVec)];
 figure(1)
 plot(r(1,:),r(2,:)); hold on 
 plot(desired_traj(1,:),desired_traj(2,:))
+% Optimized trajectory and non optimized comparison
+figure(1)
+plot(r(1,:),r(2,:)); hold on 
+plot(desired_traj(1,:),desired_traj(2,:))
 xlabel('x [m]'), ylabel('y [m]'), grid minor
+title('Optimized and Non-Optimized Trajectory')
+legend('Optimized','Non-Optimized'), hold off
 title('Optimized and Non-Optimized Trajectory')
 legend('Optimized','Non-Optimized'), hold off
 
