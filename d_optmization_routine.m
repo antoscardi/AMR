@@ -1,7 +1,7 @@
 %% In this file we computed all the thing necessary for the optimization
 % At first we computed all the matrix necessary for the computation of the
-% two sensitivity, with the use of the MatlabFunction created in the file
-% b. And then we make the integration of the two sensitivity that we used
+% two sensitivity, with the use of the MatlabFunction created in the file b.
+% And then we make the integration of the two sensitivity that we used
 % to compute the new coefficients of the optimal trajectory at the end of
 % the file 
 

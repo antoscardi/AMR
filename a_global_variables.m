@@ -42,5 +42,8 @@ clear plot_function
 % Counter to count how many times the function is called in order to change colors, initialize to 1
 counter = 1;
 
+linewidth = 5;
+colors = linspecer(12,'sequential');
+
 
 
