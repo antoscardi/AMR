@@ -4,7 +4,9 @@ function [currentInput, currentXhi] = controller(oldState,desiredPos,oldDesiredV
 % Inside this block the functions are ALWAYS evaluated using the NOMINAL prameters of the robot
 
 % Dynamic Feedback Linearization Internal State
-currentXhi = oldXhi + delta*xhi_dot(oldState,oldXhi,desiredPos,oldDesiredVel,oldDesiredAcc);
+%currentXhi = oldXhi + delta*xhi_dot(oldState,oldXhi,desiredPos,oldDesiredVel,oldDesiredAcc);
+[~, xhiint] = ode45(@(t,xhi) xhi_dot(oldState,xhi,desiredPos,oldDesiredVel,oldDesiredAcc),[0 delta],oldXhi);
+currentXhi = xhiint(end,:)';
     
 % Change control input for next step
 currentInput = new_u(oldState,oldXhi,desiredPos,oldDesiredVel,oldDesiredAcc,nominal_params);

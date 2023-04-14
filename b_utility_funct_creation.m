@@ -51,33 +51,33 @@ matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{q,u,p});
 matlabFunction(new_u,'File','auto_functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d,p});
 matlabFunction(xhi_dot,'File','auto_functions/xhi_dot','Vars',{q,xhi,r_d,dr_d,ddr_d});
 
-% Desired parametric trajectory
-x_d = a1x*(t^3) + a2x*(t^2) + a3x*t + a4x;
-y_d = a1y*(t^3) + a2y*(t^2) + a3y*t + a4y;
-dx_d = diff(x_d,t); dy_d = diff(y_d,t);
-ddx_d = diff(x_d,2,t); ddy_d = diff(y_d,2,t);
-
-% Reassign
-r_d(1) = x_d; r_d(2) = y_d;
-dr_d(1) = dx_d; dr_d(2) = dy_d;
-ddr_d(1) = ddx_d; ddr_d(2) = ddy_d;
-
-% Rewrite functions to find new equations
-eta = ddr_d + kv*(dr_d - dr_xhi) + kp*(r_d - q(1:2)) + ki*xhi(2:3);
-
-xhi_dot = [[1 0]*inv(A)*eta;
-           r_d - q(1:2)];
-
-new_u = inv(S)*[xhi_v; 
-               [0 1]*inv(A)*eta];
-
+% % Desired parametric trajectory
+% x_d = a1x*(t^3) + a2x*(t^2) + a3x*t + a4x;
+% y_d = a1y*(t^3) + a2y*(t^2) + a3y*t + a4y;
+% dx_d = diff(x_d,t); dy_d = diff(y_d,t);
+% ddx_d = diff(x_d,2,t); ddy_d = diff(y_d,2,t);
+% 
+% % Reassign
+% r_d(1) = x_d; r_d(2) = y_d;
+% dr_d(1) = dx_d; dr_d(2) = dy_d;
+% ddr_d(1) = ddx_d; ddr_d(2) = ddy_d;
+% 
+% % Rewrite functions to find new equations
+% eta = ddr_d + kv*(dr_d - dr_xhi) + kp*(r_d - q(1:2)) + ki*xhi(2:3);
+% 
+% xhi_dot = [[1 0]*inv(A)*eta;
+%            r_d - q(1:2)];
+% 
+% new_u = inv(S)*[xhi_v; 
+%                [0 1]*inv(A)*eta];
+% 
 % Partial Derivatives for sensitivity
 f_p = jacobian(q_dot,p); f_q = jacobian(q_dot,q); f_u = jacobian(q_dot,u);
 h_q = jacobian(new_u,q); h_xhi = jacobian(new_u,xhi);
 g_q = jacobian(xhi_dot,q); g_xhi = jacobian(xhi_dot,xhi);
-
-
-aaaaan = sensitivityIntegrationFunc(f_q,f_p,f_u,h_q,h_xhi,g_q,g_xhi,t,q,u,a,p,xhi,delta,Nstep,wheelDistance,wheelRadius,timeVec)
+% 
+% 
+% aaaaan = sensitivityIntegrationFunc(f_q,f_p,f_u,h_q,h_xhi,g_q,g_xhi,t,q,u,a,p,xhi,delta,Nstep,wheelDistance,wheelRadius,timeVec)
 
 % Tensor product creation 
 syms g [3 1], syms u_ai [2 1], 
@@ -98,7 +98,7 @@ dg_xhi_xhi_gammaxhi_ = tensor_product(g_xhi,xhi,g);
 
 %% Function creation
 % State and Control
-matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{t,q,u,p});
+matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{q,u,p});
 %matlabFunction(velocities,'File','auto_functions/velocities_opt','Vars',{u,p});
 matlabFunction(new_u,'File','auto_functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d,p});
 matlabFunction(xhi_dot,'File','auto_functions/xhi_dot','Vars',{q,xhi,r_d,dr_d,ddr_d});

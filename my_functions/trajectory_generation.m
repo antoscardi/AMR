@@ -1,4 +1,4 @@
-function [p,dp,ddp] = trajectory_generation(p_0, v_0, p_1, p_2, p_f, v_f,tsim,time,linewidth,v_x1,v_y1,v_x2,v_y2)
+function [p,dp,ddp] = trajectory_generation(p_0, v_0, p_1, p_2, p_f, v_f,tsim,time,linewidth)
 % Generation of a trajectory divided into 3 polinomial pieces.
 breaks = 0:tsim/3:tsim;                         
 
