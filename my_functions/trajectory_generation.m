@@ -1,4 +1,4 @@
-function [p,dp,ddp] = trajectory_generation(p_0, v_0, p_1, p_2, p_f, v_f,tsim,time,linewidth)
+function [p,dp,ddp] = trajectory_generation(p_0, v_0, p_1, p_2, p_f, v_f,v_f_b, v_s_b,tsim,time,linewidth)
 % Generation of a trajectory divided into 3 polinomial pieces.
 breaks = 0:tsim/3:tsim;                         
 
@@ -9,6 +9,8 @@ p_x1 = p_1(1); p_y1 = p_1(2);
 p_x2 = p_2(1); p_y2 = p_2(2);
 px_f = p_f(1); py_f = p_f(2);
 vx_f = v_f(1); vy_f = v_f(2);
+v_f_b_x = v_f_b(1); v_f_b_y = v_f_b(2);
+v_s_b_x = v_f_b(1); v_s_b_y = v_f_b(2);
 
 % The coefficients of the polynomial are found as solution of the system: Ma = d.
 % 
@@ -44,8 +46,8 @@ M = [0 0 0 0 1 0 0 0 0 0 0 0 0 0 0;
      0 0 0 0 0 0 0 0 0 0 4*(tsim/3)^3 3*(tsim/3)^2 2*(tsim/3) 1 0];
      % this correspond to define the polinomial to the final velocity -> v(t/3) = a_13;
 
-dx = [px_0 vx_0 0 0 3 p_x1 0 0 p_x2 3.5 px_f vx_f]';
-dy = [py_0 vy_0 0 0 3 p_y1 0 0 p_y2 3.5 py_f vy_f]';
+dx = [px_0 vx_0 0 0 v_f_b_x p_x1 0 0 p_x2 v_s_b_x px_f vx_f]';
+dy = [py_0 vy_0 0 0 v_f_b_y p_y1 0 0 p_y2 v_s_b_y py_f vy_f]';
 
 a_x = pinv(M) * dx;
 a_y = pinv(M) * dy;
