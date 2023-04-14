@@ -1,6 +1,6 @@
 %Function used in the integration of the Sensitivity [3 2] (N.B. the
 %sensitivty passed in the form of the vector)
-function didt=integralSens(~, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k)
+function didt=integralSens(t, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k)
     % Create matrixes from column vector
     sens = [i(1) i(2);
             i(3) i(4);

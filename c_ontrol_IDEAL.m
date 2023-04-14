@@ -4,12 +4,15 @@ params = [wheelRadius;
           wheelDistance];
 
 %% Desired Trajectory Generation (Spline)
-[r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
-                                         finalPositionVec, finalVelocityVec,velocityFirstBreak, velocitySecondBreak, totalTime, timeVec, linewidth);
+% [r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
+%                                          finalPositionVec, finalVelocityVec,velocityFirstBreak, velocitySecondBreak, totalTime, timeVec, linewidth);
 
 fileTraj = 'data/new_traj';
-dataTraj = load(fileTraj,'r_d','dr_d','ddr_d');
-r_d = dataTraj.q_history;
+dataTraj = load(fileTraj,'r','dr','ddr');
+r_d = dataTraj.r;
+dr_d = dataTraj.dr;
+ddr_d = dataTraj.ddr;
+
 
 %% Inizializations
 % Initial state (x,y,theta)

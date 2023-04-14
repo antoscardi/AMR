@@ -12,21 +12,29 @@ params=[wheelRadius; wheelDistance];
 % Load nominal data and the desired trajectory (needed to make substitution
 % in the parametric function computed in b_utility_funct_creation)
 fileControl = 'data/IDEALcontrol';
-fileCoefficients ='data/coeff_a';
-%DA CANCELLARE QUANDO MIGLIORIAMO IL CODICE
-%fileCoefficients= 'data/coeff_a_star';
-%dataCoefficients = load(fileCoefficients,'ax_star','ay_star');
-%ay0 = dataCoefficients.ay_star; ax0 = dataCoefficients.ax_star;
+file1 = 'data/desired_trajectory';
+%fileCoefficients ='data/coeff_a';
+%% DA CANCELLARE QUANDO MIGLIORIAMO IL CODICE
+fileCoefficients= 'data/coeff_a_star';
+dataCoefficients = load(fileCoefficients,'ax_star','ay_star');
+ay0 = dataCoefficients.ay_star; ax0 = dataCoefficients.ax_star;
+
+desired_traj = load(file1,'p'); 
+dp = load(file1,'dp'); 
+ddp = load(file1,'ddp');
 
 dataControl = load(fileControl,'q_history','u_history','xhi_history');
 q_history = dataControl.q_history; u_history = dataControl.u_history; xhi_history = dataControl.xhi_history;
 
+desired_traj = desired_traj.p; 
+dp = dp.dp; ddp = ddp.ddp; 
+
 % Load of the params of the nominal trajectory --> they are used to set the
 % initial values of the optimal trajectory (computed at the end of this
 % file)
-dataCoefficients = load(fileCoefficients,'a_x','a_y');
-ay0 = dataCoefficients.a_y; ax0 = dataCoefficients.a_x;
-coeffMatrix = [ax0,ay0];
+% dataCoefficients = load(fileCoefficients,'a_x','a_y');
+% ay0 = dataCoefficients.a_y; ax0 = dataCoefficients.a_x;
+% coeffMatrix = [ax0,ay0];
 %   In this case we are substituting parameters within the functions we created, 
 %   so we get the elements to create the sensitivity.
 f_q = zeros(3,3,Nstep); f_p = zeros(3,2,Nstep); f_u = zeros(3,2,Nstep); g_q = zeros(3,3,Nstep); g_xhi = zeros(3,3,Nstep); h_xhi = zeros(2,3,Nstep); h_q = zeros(2,3,Nstep);
@@ -71,8 +79,10 @@ end
 % We do there the integration with the use of integralSens function
 % presented in my_function folder
 sens_k = zeros(12,1); sens_int= zeros(12, Nstep); 
-[t_s, i] = ode45(@(t,i) integralSens(t, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k), [0 totalTime], sens_k);
-sens_k= i(end, :)'; sens_int(:,k) = sens_k;
+for k=1:Nstep
+    [t_s, i] = ode45(@(t,i) integralSens(t, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k), [0 totalTime], sens_k);
+    sens_k= i(end, :)'; sens_int(:,k) = sens_k;
+end 
 
 %% Gamma calculation from integration for every parameter x
 % In this part, we are going to calculate the integration of the gamma 
@@ -419,38 +429,38 @@ end
 
 %% Hyperparameters 
 % Chosen in this way, to make a scaling to the size we are interested in
-k1 = 1e-3; k2 = 1e-3;
+k1 = 1; k2 =10;
 
 %% Constraints vectors
 
-dx = [initialPositionVec(1) initialVelocityVec(1) 0 0 0 0 finalPositionVec(1) finalVelocityVec(1)]';
-dy = [initialPositionVec(2) initialVelocityVec(2) 0 0 0 0 finalPositionVec(2) finalVelocityVec(2)]';
+dx = [initialPositionVec(1) initialVelocityVec(1) 0 0 velocityFirstBreak(1) firstBreak(1) 0 0 secondBreak(1) velocitySecondBreak(1) finalPositionVec(1) finalVelocityVec(1)]';
+dy = [initialPositionVec(1) initialVelocityVec(1) 0 0 velocityFirstBreak(1) firstBreak(1) 0 0 secondBreak(1) velocitySecondBreak(1) finalPositionVec(1) finalVelocityVec(1)]';
 
 M = [0 0 0 0 1 0 0 0 0 0 0 0 0 0 0;
     % this correspond to define the polinomial to the initial position -> p(0) = a_01;
      0 0 0 1 0 0 0 0 0 0 0 0 0 0 0;
      % this correspond to define the polinomial to the initial velocity -> v(0) = a_11;
-     (tsim/3)^4 (tsim/3)^3 (tsim/3)^2 (tsim/3) 1 0 0 0 0 -1 0 0 0 0 0;
+     (totalTime/3)^4 (totalTime/3)^3 (totalTime/3)^2 (totalTime/3) 1 0 0 0 0 -1 0 0 0 0 0;
      % this correspond to the constraint for which the point on the end of the first polynomial is equal to the start of the second polynomial -> p1(t/3) = p2(0);
-     4*(tsim/3)^3 3*(tsim/3)^2 2*(tsim/3) 1 0 0 0 0 -1 0 0 0 0 0 0;
+     4*(totalTime/3)^3 3*(totalTime/3)^2 2*(totalTime/3) 1 0 0 0 0 -1 0 0 0 0 0 0;
      % this correspond to the constraint for which the velocity on the end of the first polynomial is equal to the start of the second polynomial -> v1(t/3) = v2(0);
-     4*(tsim/3)^3 3*(tsim/3)^2 2*(tsim/3) 1 0 0 0 0 0 0 0 0 0 0 0;
+     4*(totalTime/3)^3 3*(totalTime/3)^2 2*(totalTime/3) 1 0 0 0 0 0 0 0 0 0 0 0;
      % this correspond to the constraint for which the velocity on the
      % first break point have to assume a determined positive value
      0 0 0 0 0 0 0 0 0 1 0 0 0 0 0;
      % This is the definition of the first break point
-     0 0 0 0 0 (tsim/3)^4 (tsim/3)^3 (tsim/3)^2 (tsim/3) 1 0 0 0 0 -1;
+     0 0 0 0 0 (totalTime/3)^4 (totalTime/3)^3 (totalTime/3)^2 (totalTime/3) 1 0 0 0 0 -1;
      % this correspond to the constraint for which the point on the end of the first polynomial is equal to the start of the second polynomial -> p1(t/3) = p2(0);
-     0 0 0 0 0 4*(tsim/3)^3 3*(tsim/3)^2 2*tsim/3 1 0 0 0 0 -1 0;
+     0 0 0 0 0 4*(totalTime/3)^3 3*(totalTime/3)^2 2*(totalTime/3) 1 0 0 0 0 -1 0;
      % this correspond to the constraint for which the velocity on the end of the second polynomial is equal to the start of the third polynomial -> v2(t/3) = v3(0);
      0 0 0 0 0 0 0 0 0 0 0 0 0 0 1;
      % This is the definition of the second break point
-     0 0 0 0 0 4*(tsim/3)^3 3*(tsim/3)^2 2*(tsim/3) 1 0 0 0 0 0 0;
+     0 0 0 0 0 4*(totalTime/3)^3 3*(totalTime/3)^2 2*(totalTime/3) 1 0 0 0 0 0 0;
      % this correspond to the constraint for which the velocity on the
      % second break point have to assume a determined positive value
-     0 0 0 0 0 0 0 0 0 0 (tsim/3)^4 (tsim/3)^3 (tsim/3)^2 (tsim/3) 1;
+     0 0 0 0 0 0 0 0 0 0 (totalTime/3)^4 (totalTime/3)^3 (totalTime/3)^2 (totalTime/3) 1;
      % this correspond to define the polinomial to the final position -> p(t/3) = a_03;
-     0 0 0 0 0 0 0 0 0 0 4*(tsim/3)^3 3*(tsim/3)^2 2*(tsim/3) 1 0];
+     0 0 0 0 0 0 0 0 0 0 4*(totalTime/3)^3 3*(totalTime/3)^2 2*(totalTime/3) 1 0];
      % this correspond to define the polinomial to the final velocity -> v(t/3) = a_13;
 
 %% Calculate vi for each x and y trajectory's coefficient
@@ -476,31 +486,31 @@ I = eye(15);
 ax_star = zeros(15,1);
 ay_star = zeros(15,1);
 
-ax_star(:,:) = ax_0 + delta*(k1*pinv(M)*(dx-M*ax_k(:,n-1)) + k2*(I - pinv(M)*M)*vx);
-ay_star(:,:) = ay_0 + delta*(k1*pinv(M)*(dy-M*ay_k(:,n-1)) + k2*(I - pinv(M)*M)*vy);
+ax_star(:,:) = ax0 + delta*(k1*pinv(M)*(dx-M*ax0) + k2*(I - pinv(M)*M)*vx);
+ay_star(:,:) = ay0 + delta*(k1*pinv(M)*(dy-M*ay0) + k2*(I - pinv(M)*M)*vy);
 
 % ax_star = ax_k(:,Nstep);
 % ay_star = ay_k(:,Nstep);
 % 
-% %% Visualize optimized trajectories
-% breaks = 0:totalTime/3:totalTime;
-% 
+%% Visualize optimized trajectories
+breaks = 0:totalTime/3:totalTime;
+
 polyx = mkpp(breaks,[ax_star(1) ax_star(2) ax_star(3) ax_star(4) ax_star(5);
                      ax_star(6) ax_star(7) ax_star(8) ax_star(9) ax_star(10);
                      ax_star(11) ax_star(12) ax_star(13) ax_star(14) ax_star(15)]);
 polyy = mkpp(breaks,[ay_star(1) ay_star(2) ay_star(3) ay_star(4) ay_star(5);
                      ay_star(6) ay_star(7) ay_star(8) ay_star(9) ay_star(10);
                      ay_star(11) ay_star(12) ay_star(13) ay_star(14) ay_star(15)]);
-% 
-% figure(),
-% fnplt(polyx,linewidth), hold on
-% fnplt(polyy,linewidth)
-% line([totalTime/3 totalTime/3],ylim,'LineStyle','--','Color','k','LineWidth',1), grid minor
-% line([2*totalTime/3 2*totalTime/3],ylim,'LineStyle','--','Color','k','LineWidth',1)
-% xlabel('time [sec]'), ylabel('trajecory [m]')
-% legend('trajectory in x', 'trajectory in y')
-% title('Trajectory varation in time'),hold off
-% 
+
+figure(),
+fnplt(polyx,linewidth), hold on
+fnplt(polyy,linewidth)
+line([totalTime/3 totalTime/3],ylim,'LineStyle','--','Color','k','LineWidth',1), grid minor
+line([2*totalTime/3 2*totalTime/3],ylim,'LineStyle','--','Color','k','LineWidth',1)
+xlabel('time [sec]'), ylabel('trajecory [m]')
+legend('trajectory in x', 'trajectory in y')
+title('Trajectory varation in time'),hold off
+
 % Differentiation first order
 dpolyx = fnder(polyx);
 dpolyy = fnder(polyy);
@@ -513,19 +523,17 @@ r = [ppval(polyx,timeVec);ppval(polyy,timeVec)];
 dr = [ppval(dpolyx,timeVec);ppval(dpolyy,timeVec)];
 ddr = [ppval(ddpolyx,timeVec);ppval(ddpolyy,timeVec)];
 
-% % Optimized trajectory and non optimized comparison
-% figure(1)
-% plot(r(1,:),r(2,:)); hold on 
-% plot(desired_traj(1,:),desired_traj(2,:))
 % Optimized trajectory and non optimized comparison
-% figure(1)
-% plot(r(1,:),r(2,:)); hold on 
-% plot(desired_traj(1,:),desired_traj(2,:))
-% xlabel('x [m]'), ylabel('y [m]'), grid minor
-% title('Optimized and Non-Optimized Trajectory')
-% legend('Optimized','Non-Optimized'), hold off
-% title('Optimized and Non-Optimized Trajectory')
-% legend('Optimized','Non-Optimized'), hold off
+figure(1)
+plot(r(1,:),r(2,:)); hold on 
+plot(desired_traj(1,:),desired_traj(2,:))
+%Optimized trajectory and non optimized comparison
+figure(1)
+plot(r(1,:),r(2,:)); hold on 
+plot(desired_traj(1,:),desired_traj(2,:))
+xlabel('x [m]'), ylabel('y [m]'), grid minor
+title('Optimized and Non-Optimized Trajectory')
+legend('Optimized','Non-Optimized'), hold off
 
 toc
 
