@@ -32,7 +32,7 @@ ay0 = ay.a_y;
 
 % Create variables
 q_history = q_history.q_history; 
-u_history = u_history.u_history;
+u_history = u_history.u_history;v_x1,v_y1,v_x2,v_y2
 desired_traj = desired_traj.p; 
 dp = dp.dp; ddp = ddp.ddp; 
 xhi_history = xhi_history.xhi_history;
