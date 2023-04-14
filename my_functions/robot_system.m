@@ -5,5 +5,5 @@ function currentState = robot_system( oldInput, oldState, delta, params)
 [~, qint] = ode45(@(t,q) q_dot(t,q,oldInput,params),[0 delta],oldState);
 currentState = qint(end,:)';
 
-%currentState = oldState + delta*q_dot(oldState,oldInput,params);
+%currentState = oldState + delta*q_dot(t, oldState,oldInput,params);
 end

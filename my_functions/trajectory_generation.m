@@ -10,7 +10,7 @@ p_x2 = p_2(1); p_y2 = p_2(2);
 px_f = p_f(1); py_f = p_f(2);
 vx_f = v_f(1); vy_f = v_f(2);
 v_f_b_x = v_f_b(1); v_f_b_y = v_f_b(2);
-v_s_b_x = v_f_b(1); v_s_b_y = v_f_b(2);
+v_s_b_x = v_s_b(1); v_s_b_y = v_s_b(2);
 
 % The coefficients of the polynomial are found as solution of the system: Ma = d.
 % 

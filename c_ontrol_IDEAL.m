@@ -7,6 +7,10 @@ params = [wheelRadius;
 [r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
                                          finalPositionVec, finalVelocityVec,velocityFirstBreak, velocitySecondBreak, totalTime, timeVec, linewidth);
 
+fileTraj = 'data/new_traj';
+dataTraj = load(fileTraj,'r_d','dr_d','ddr_d');
+r_d = dataTraj.q_history;
+
 %% Inizializations
 % Initial state (x,y,theta)
 initialTheta = atan2(dr_d(2,1),dr_d(1,1));

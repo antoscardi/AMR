@@ -28,7 +28,7 @@ A = [cos(theta) -xhi_v*sin(theta);
      sin(theta)  xhi_v*cos(theta)];
 
 % Dynamic model
-q_dot = G*S*u
+q_dot = G*S*u;
 
 % Controller
 dr_xhi = [cos(theta)*xhi_v;
