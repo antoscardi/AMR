@@ -15,7 +15,6 @@ addpath ../AMR/my_functions
 
 % Set settings for all plots
 set(groot,'defaultLineLineWidth',5)
-linewidth = 5;
 set(groot,'defaultAxesTitleFontSizeMultiplier',1.8)
 set(groot,'defaultfigureposition',[100 100 540 400])
 set(groot,'defaultLegendAutoUpdate','off')
@@ -28,6 +27,5 @@ for index = 1:length(index_interpreter)
 end
 
 % Generate colors
-colors = linspecer(12,'sequential');
 contrast_colors = linspecer(2,'qualitative');
 set(groot,'DefaultAxesColorOrder',contrast_colors)

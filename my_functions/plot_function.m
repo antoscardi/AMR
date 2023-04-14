@@ -6,7 +6,7 @@ function plot_function(data, title_name, labels_names, timeVec, linewidth, color
     end
     % The inserted string with the names of the labels is splitted and the number of "lines" of plots is counted.
     splittedLabels = split(labels_names,';'); number = length(splittedLabels);   
-    figure(n+3), hold off,
+    figure(n+5), hold off,
     s = stackedplot(timeVec, data', 'LineWidth',linewidth);
     % Adding the labels and the grid.
     s.DisplayLabels = splittedLabels; grid on

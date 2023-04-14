@@ -18,9 +18,7 @@ Nstep = totalTime*f+1;
 timeVec = 0:delta:totalTime;
 
 % Controller gains
-kv = 3;
-kp = 28; 
-ki = 3;
+kv = 3; kp = 28; ki = 3;12
 
 % Initial position and velocity
 initialPositionVec = [5 5];
@@ -42,6 +40,7 @@ clear plot_function
 % Counter to count how many times the function is called in order to change colors, initialize to 1
 counter = 1;
 
+% Set linewidth and colors 
 linewidth = 5;
 colors = linspecer(12,'sequential');
 

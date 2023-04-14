@@ -28,7 +28,7 @@ A = [cos(theta) -xhi_v*sin(theta);
      sin(theta)  xhi_v*cos(theta)];
 
 % Dynamic model
-q_dot = G*S*u
+q_dot = G*S*u;
 
 % Controller
 dr_xhi = [cos(theta)*xhi_v;
@@ -69,8 +69,7 @@ dg_xhi_xhi_gammaxhi_ = tensor_product(g_xhi,xhi,g);
 
 %% Function creation
 % State and Control
-matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{t,q,u,p});
-%matlabFunction(velocities,'File','auto_functions/velocities_opt','Vars',{u,p});
+matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{q,u,p});
 matlabFunction(new_u,'File','auto_functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d,p});
 matlabFunction(xhi_dot,'File','auto_functions/xhi_dot','Vars',{q,xhi,r_d,dr_d,ddr_d});
 
@@ -100,11 +99,7 @@ matlabFunction(dg_xhi_q_gamma_,'File','auto_functions/dg_xhi_q_gamma','Vars',{g,
 matlabFunction(dg_xhi_xhi_gammaxhi_,'File','auto_functions/dg_xhi_xhi_gammaxhi','Vars',{});
 
 %% Here we make explicit the dependence with respect to the coefficients of the trajectory ai so as to properly perform the derivatives with respect to these
-
 % Desired parametric trajectory
-% x_d = a1x*(t^3) + a2x*(t^2) + a3x*t + a4x;
-% y_d = a1y*(t^3) + a2y*(t^2) + a3y*t + a4y;
-
 x_d = a1x*(t^4) + a2x*(t^3) + a3x*(t^2) + a4x*t + a5x;
 y_d = a1y*(t^4) + a2y*(t^3) + a3y*(t^2) + a4y*t + a5y;
 dx_d = diff(x_d,t); dy_d = diff(y_d,t);

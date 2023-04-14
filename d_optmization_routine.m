@@ -520,8 +520,6 @@ plot(desired_traj(1,:),desired_traj(2,:))
 xlabel('x [m]'), ylabel('y [m]'), grid minor
 title('Optimized and Non-Optimized Trajectory')
 legend('Optimized','Non-Optimized'), hold off
-title('Optimized and Non-Optimized Trajectory')
-legend('Optimized','Non-Optimized'), hold off
 
 toc
 

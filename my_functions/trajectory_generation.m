@@ -1,4 +1,4 @@
-function [p,dp,ddp] = trajectory_generation(p_0, v_0, p_1, p_2, p_f, v_f,v_f_b, v_s_b,tsim,time,linewidth)
+function [p,dp,ddp] = trajectory_generation(p_0, v_0, p_1, p_2, p_f, v_f,v_f_b, v_s_b,tsim,time,linewidth,colors)
 % Generation of a trajectory divided into 3 polinomial pieces.
 breaks = 0:tsim/3:tsim;                         
 
@@ -15,10 +15,6 @@ v_s_b_x = v_f_b(1); v_s_b_y = v_f_b(2);
 % The coefficients of the polynomial are found as solution of the system: Ma = d.
 % 
 % %% This is the constraints matrix
-% % p(t) = a_4*t^4 + a_3*t^3 + a_2*t^2 + a_1*t + a_0;
-% % v(t) = 4a_4*t^3 + 3a_3*t^2 + 2_a_2*t + a_1
-% % a(t) = 12a_3*t^2 +6a_2*t + 2a_2
-
 M = [0 0 0 0 1 0 0 0 0 0 0 0 0 0 0;
     % this correspond to define the polinomial to the initial position -> p(0) = a_01;
      0 0 0 1 0 0 0 0 0 0 0 0 0 0 0;
@@ -90,6 +86,16 @@ title('Velocity varation in time'),fontsize(fontSize,"points"), hold off
 p = [ppval(polyx,time);ppval(polyy,time)];
 dp = [ppval(dpolyx,time);ppval(dpolyy,time)];
 ddp = [ppval(ddpolyx,time);ppval(ddpolyy,time)];
+
+figure(3),
+plot(ppval(polyx,time),ppval(polyy,time),'Color',colors(3,:))
+xlabel("x[m]"), ylabel('y[m]'), grid minor
+title('Trajectory'),fontsize(fontSize,"points")
+
+figure(4),
+plot(ppval(dpolyx,time),ppval(dpolyy,time),'Color',colors(4,:))
+xlabel("xdot[m/s]"), ylabel('ydot[m/s]'), grid minor
+title('Velocity of the Trajectory'),fontsize(fontSize,"points")
 
 % Save variables for the optimization routine.
 save('data/coeff_a','a_x','a_y')
