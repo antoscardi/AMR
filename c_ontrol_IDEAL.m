@@ -5,7 +5,7 @@ params = [wheelRadius;
 
 %% Desired Trajectory Generation (Spline)
 [r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
-                                         finalPositionVec, finalVelocityVec, totalTime, timeVec, linewidth);
+                                         finalPositionVec, finalVelocityVec,velocityFirstBreak, velocitySecondBreak, totalTime, timeVec, linewidth);
 
 %% Inizializations
 % Initial state (x,y,theta)
