@@ -56,7 +56,7 @@ plot_function([e;e_tot'],'Error variation over time','e_x [m] ; e_y [m] ; e_tot 
 
 % The video function just needs the distance between the wheels in order to plot the robot.
 b_n = perturbed_params(2); 
-video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Real control')
+%video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Real control')
 
 all_e =[e;e_tot'];
 %% Save variables for the comparison in the optimization routine.

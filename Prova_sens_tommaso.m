@@ -27,4 +27,8 @@ end
 sens_fin(:,j)=sens_int(1:3,end,j);
 end
 % Optimized trajectory
-plot_function(sens_fin,'Sensitivity variation in time','1 com; 2 com; 3 com', timeVec, linewidth, colors, counter)
+sens_plot=zeros(1,Nstep);
+for i=1:Nstep
+    sens_plot(:,i)=0.5*trace(sens_fin(:,i)'*sens_fin(:,i));
+end
+plot_function(sens_plot,'Sensitivity variation in time','cost function', timeVec, linewidth, colors, counter)
