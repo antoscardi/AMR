@@ -6,36 +6,27 @@
 % the file 
 
 close all; clc;
-% Load nominal data and the desired trajectory (needed to make substitution
-% in the parametric function computed in b_utility_funct_creation)
-file = 'data/IDEALcontrol';
-file1 = 'data/desired_trajectory';
-file2 ='data/coeff_a';
-
 % We set the params vector to the nominal parameters
 params=[wheelRadius; wheelDistance];
 
-u_history = load(file,'u_history');
-xhi_history = load(file,'xhi_history');
-q_history = load(file,'q_history');
-desired_traj = load(file1,'p'); 
-dp = load(file1,'dp'); 
-ddp = load(file1,'ddp');
+% Load nominal data and the desired trajectory (needed to make substitution
+% in the parametric function computed in b_utility_funct_creation)
+fileControl = 'data/IDEALcontrol';
+fileDesiredTraj = 'data/desired_trajectory';
+fileCoefficients ='data/coeff_a';
+
+dataControl = load(fileControl,'q_history','u_history','xhi_history');
+dataDesiredTraj = load(fileDesiredTraj, 'p','dp','ddp');
+
+q_history = dataControl.q_history; u_history = dataControl.u_history; xhi_history = dataControl.xhi_history;
+desired_traj = dataDesiredTraj.p; dp = dataDesiredTraj.dp; ddp = dataDesiredTraj.ddp;
 
 % Load of the params of the nominal trajectory --> they are used to set the
 % initial values of the optimal trajectory (computed at the end of this
 % file)
-ax = load(file2,'a_x');
-ax0 = ax. a_x;
-ay = load(file2,'a_y');
-ay0 = ay.a_y;
+dataCoefficients = load(fileCoefficients,'a_x','a_y');
 
-% Create variables
-q_history = q_history.q_history; 
-u_history = u_history.u_history;
-desired_traj = desired_traj.p; 
-dp = dp.dp; ddp = ddp.ddp; 
-xhi_history = xhi_history.xhi_history;
+ay0 = dataCoefficients.a_y; ax0 = dataCoefficients.a_x;
 
 %   In this case we are substituting parameters within the functions we created, 
 %   so we get the elements to create the sensitivity.
@@ -80,7 +71,6 @@ end
 %% Computation of the Sensitivity
 % We do there the integration with the use of integralSens function
 % presented in my_function folder
-%sens_k = zeros(12,1); sens_int= zeros(12, Nstep); 
 sens_k = zeros(12,1); sens_int= zeros(12, Nstep); 
 for k=1:Nstep
     [t_s, i] = ode45(@(t,i) integralSens(t, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k), [0 delta], sens_k);
@@ -465,6 +455,9 @@ M = [0 0 0 0 1 0 0 0 0 0 0 0 0 0 0;
 sens_last = [sens_int(1,Nstep) sens_int(2,Nstep);
              sens_int(3,Nstep) sens_int(4,Nstep);
              sens_int(5,Nstep) sens_int(6,Nstep)];
+
+% COST FUNCTION
+C = 0.5*trace(sens_last'*sens_last)
 
 vx = zeros(15,1);
 for i= 1: length(all_sensaix)
