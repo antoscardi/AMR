@@ -44,6 +44,6 @@ end
 %PER VELOCIZZARE RIFARE STO RESHAPE
 sensAtLastTimeInstant = [sens_int(1,Nstep) sens_int(2,Nstep);
                          sens_int(3,Nstep) sens_int(4,Nstep);
-                        sens_int(5,Nstep) sens_int(6,Nstep)];
+                         sens_int(5,Nstep) sens_int(6,Nstep)];
 
 end

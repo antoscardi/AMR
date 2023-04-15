@@ -33,9 +33,9 @@ newCoeffMAtrix = [ax_old,ay_old];
 
 % Running the simulation loop for every new trajectory, ALWAYS NOMINAL CASE
 [q_history,u_history,xhi_history,] = simulation_loop(initialPositionVec,initialVelocityVec,...
-                                                     totalTime, delta, timeVec,...
+                                                     delta,...
                                                      nominal_params, perturbed_params,false,...
-                                                     newCoeffMAtrix,r_d,dr_d,ddr_d);
+                                                     r_d,dr_d,ddr_d);
 
 % Sensitivity calculation 
 sens_last = sensitivity_integration(Nstep,nominal_params,...
@@ -44,7 +44,10 @@ sens_last = sensitivity_integration(Nstep,nominal_params,...
                                     delta);
 
 % Sensitivity_ai calculation, by calling the function
-
+% Sensitivity_ai calculation, by calling the function gamma_integration
+%sensitivity_ai_integration_through_gamma(Nstep,nominal_params,timeVec,...
+%                                          q_history,xhi_history,u_history,...
+%                                          r_d,dr_d,ddr_d,delta)
 
 %% Calculate vi for each x and y trajectory's coefficient which is the negative gradient of the cost function
 %%%PER ORA LA CALCOLO SOLO CON LA SENSITIVITY RICORDARSI DI CAMBIARLO
@@ -63,7 +66,7 @@ for i= 1:grado
 end
 
 % Calculate the loss function: as norm the trace of the sensitivity.
-Loss(n) = 0.5*trace(sens_last'*sens_last);
+Loss(n-1) = 0.5*trace(sens_last'*sens_last);
 
 % Update law of the optimization
 I = eye(grado);
@@ -86,7 +89,7 @@ optimizedCoeffMatrix = [ax_star,ay_star];
 
 % Plot Loss function
 figure(5)
-plot(1:epochs+1,Loss)
+plot(1:epochs,Loss)
 title('Loss Function of a')
 xlabel('epochs'); ylabel("Norm of sens at tf");fontsize(fontSize,"points")
 

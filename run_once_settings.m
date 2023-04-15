@@ -12,6 +12,7 @@ end
 % Add paths to the matlab search path
 addpath ../AMR/data
 addpath ../AMR/auto_functions
+addpath ../AMR/my_functions
 addpath ../AMR/my_functions/utility_functions
 addpath ../AMR/my_functions/useful_functions
 
