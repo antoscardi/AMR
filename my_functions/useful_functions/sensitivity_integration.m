@@ -9,10 +9,11 @@ g_q = zeros(3,3);   g_xhi = zeros(3,3);
 h_xhi = zeros(2,3); h_q = zeros(2,3);
 
 %% Computation of the Sensitivity
-% We do there the integration with the use of integralSens function
-% presented in my_function folder 
-sens_k = zeros(12,1); sens_int= zeros(12, Nstep); 
+% We do there the integration with the use of sensitivity_dot function present in my_function folder 
+sens_k = zeros(12,1); sens_int= zeros(12, Nstep);
+
 for k=1:Nstep
+
     % Creation of the vectors of the partial derivaatives needed in the integration of the Sensitivity
     f_p = ff_p(q_history(:,k),u_history(:,k),nominal_params);
     f_q = ff_q(q_history(:,k),u_history(:,k),nominal_params);

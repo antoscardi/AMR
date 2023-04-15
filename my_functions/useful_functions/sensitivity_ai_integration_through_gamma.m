@@ -2,14 +2,10 @@ function sensitivity_ai_integration_through_gamma(Nstep,params,timeVec,...
                                                   q_history,xhi_history,u_history,...
                                                   desired_traj,dp,ddp,...
                                                   delta)
-                                                  %f_q, f_u, g_q, g_xhi, h_q, h_xhi)
-%% Tensor product calculations, one for each parameter
-% initialize 3D matrixes, which are overwritten 
-% how to read: 
-% - dfqqgamma--> tensor product between the derivate of f_q respect to q and gamma
-% - dfpqgamma--> tensor product between the derivate of f_p respect to q wand gamma
-% - dhxhiqgamma--> tensor product between the derivate of h_xhi respect to q with gamma
-% ...
+
+%% GAMMA vectors calculation with respect to each a coefficient.
+% Creation of cell arrays to store the integration history of each gamma.
+
 h_ax1 = zeros(2,1,Nstep); h_ay1 = zeros(2,1,Nstep); 
 h_ax2 = zeros(2,1,Nstep); h_ay2= zeros(2,1,Nstep); 
 h_ax3 = zeros(2,1,Nstep); h_ay3 = zeros(2,1,Nstep); 
@@ -148,6 +144,14 @@ gamma_k14= gamma14(end, :)'; gammay14_int(:,:,k) = gamma_k14;
 [~, gamma15] = ode45(@(t,gamma15) gamma_dot(t,gamma15, f_q, f_u, g_q, g_xhi, h_q, h_xhi, h_ax5, g_ax5, k), [0 delta], gamma_k15);
 gamma_k15= gamma15(end, :)'; gammay15_int(:,:,k) = gamma_k15;
 end
+
+%% Tensor product calculations, one for each parameter
+% initialize 3D matrixes, which are overwritten 
+% how to read: 
+% - dfqqgamma--> tensor product between the derivate of f_q respect to q and gamma
+% - dfpqgamma--> tensor product between the derivate of f_p respect to q wand gamma
+% - dhxhiqgamma--> tensor product between the derivate of h_xhi respect to q with gamma
+% ...
 curr_dfqqgamma = zeros(3,3,Nstep); curr_dfquuai = zeros(3,3,Nstep); 
 curr_dfpqgamma = zeros(3,2,Nstep); curr_dfpuuai = zeros(3,2,Nstep); 
 curr_dfuqgamma = zeros(3,2,Nstep); curr_dfuuuai = zeros(3,2,Nstep); 
