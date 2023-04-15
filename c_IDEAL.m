@@ -2,17 +2,21 @@ close all; clc;
 %% IDEAL CONTROL
 doPerturbation = false;
 
+%% Desired Trajectory Generation (Spline)
+% Generate coefficients
+[coeffMatrix,~] = coeff_generation(totalTime, dx, dy);
+
+% Generate trajectory
+doPlots = true;
+[r_d,dr_d,ddr_d] = trajectory_generation(coeffMatrix, timeVec, totalTime,...
+                                         linewidth, colors, doPlotsSave);
+
 % Run the simulation loop in the IDEAL CASE
 [q_history,u_history,xhi_history,e] = simulation_loop(initialPositionVec,initialVelocityVec,...
                                                     totalTime, delta, timeVec,...
                                                     nominal_params, perturbed_params, doPerturbation,...
-                                                    dx, dy,...
-                                                    linewidth, colors);
-
-% Generate trajectory using the NON OPTIMIZED coefficients
-coeffMatrix = coeff_generation(totalTime, dx, dy);
-[r_d,dr_d,ddr_d] = trajectory_generation(coeffMatrix, timeVec, totalTime,...
-                                         linewidth, colors);
+                                                    coeffMatrix,r_d,dr_d,ddr_d,...
+                                                    );
 
 %% Create and display video animation and plots.
 % Plot comparison between state variables (vector q) and desired state.

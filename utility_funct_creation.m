@@ -54,3 +54,12 @@ g_q = jacobian(xhi_dot,q); g_xhi = jacobian(xhi_dot,xhi);
 matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{q,u,p});
 matlabFunction(new_u,'File','auto_functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d,p});
 matlabFunction(xhi_dot,'File','auto_functions/xhi_dot','Vars',{q,xhi,r_d,dr_d,ddr_d});
+
+% Derivatives for sensitivity
+matlabFunction(f_p,'File','auto_functions/ff_p', 'Vars',{q,u,p});
+matlabFunction(f_q,'File','auto_functions/ff_q', 'Vars',{q,u,p});
+matlabFunction(f_u,'File','auto_functions/ff_u', 'Vars',{q,p});
+matlabFunction(h_q,'File','auto_functions/fh_q', 'Vars',{q,xhi,r_d,dr_d,ddr_d,p});
+matlabFunction(h_xhi,'File','auto_functions/fh_xhi', 'Vars', {q,xhi,r_d,dr_d,ddr_d, p});
+matlabFunction(g_q,'File','auto_functions/fg_q', 'Vars', {q,xhi,r_d,dr_d,ddr_d});
+matlabFunction(g_xhi,'File','auto_functions/fg_xhi','Vars',{q,xhi,r_d,dr_d,ddr_d});

@@ -1,5 +1,5 @@
 function [pos,vel,acc] = trajectory_generation(coeffMatrix, timeVec, totalTime,...
-                                               linewidth, colors)
+                                               linewidth, colors, doPlotsSave)
 % Function that calculates the trajectory given a set of parameters.
 a_x = coeffMatrix(:,1);
 a_y = coeffMatrix(:,2);
@@ -27,6 +27,7 @@ pos = [ppval(polyx,timeVec); ppval(polyy,timeVec)];
 vel = [ppval(dpolyx,timeVec); ppval(dpolyy,timeVec)];
 acc = [ppval(ddpolyx,timeVec); ppval(ddpolyy,timeVec)];
 
+if doPlotsSave == true
 % Save variables for the optimization routine.
 save('data/desired_trajectory',"pos","vel","acc")
 
@@ -59,5 +60,6 @@ figure(4),
 plot(ppval(dpolyx,timeVec),ppval(dpolyy,timeVec),'Color',colors(4,:))
 xlabel("xdot[m/s]"), ylabel('ydot[m/s]'), grid minor
 title('Velocity of the Trajectory'),fontsize(fontSize,"points")
+end 
 
 end 

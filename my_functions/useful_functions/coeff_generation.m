@@ -1,4 +1,4 @@
-function coeffMatrix = coeff_generation(tsim, dx, dy)                     
+function [coeffMatrix, M] = coeff_generation(tsim, dx, dy)                     
 % The coefficients of the polynomial are found as solution of the system: Ma = d.
 
 %% This is the constraints matrix

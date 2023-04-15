@@ -1,10 +1,10 @@
-function [q_evolution,u_evolution,xhi_evolution,e_history] = simulation_loop(initialPositionVec,initialVelocityVec,...
-                                                                   totalTime, delta, timeVec,...
-                                                                   nominal_params, perturbed_params, doPerturbation,...
-                                                                   dx, dy, ...
-                                                                   linewidth, colors)
+function [q_evolution,u_evolution,xhi_evolution,e_evolution] = simulation_loop(initialPositionVec,initialVelocityVec,...
+                                                                               totalTime, delta, timeVec,...
+                                                                               nominal_params, perturbed_params, doPerturbation,...
+                                                                               coeffMatrix, r_d, dr_d, ddr_d...
+                                                                               )
 
-% Change the params when 
+% Choose to have perturbed parameters or not. 
 if doPerturbation == true
     params = perturbed_params;
 end
@@ -12,17 +12,8 @@ if doPerturbation == false
     params = nominal_params;
 end
 
-%% Desired Trajectory Generation (Spline)
-% Generate coefficients
-coeffMatrix = coeff_generation(totalTime, dx, dy);
-
-% Generate trajectory
-[r_d,dr_d,ddr_d] = trajectory_generation(coeffMatrix, timeVec, totalTime,...
-                                         linewidth, colors);
-
 % Setting the Nstep to be the same as the size of the trajectory.
-trajectory_size = size(r_d(1,:));
-Nstep = trajectory_size(2);
+[~,Nstep] = size(r_d);
 
 %% Inizializations
 % Initial state (x,y,theta)
@@ -87,5 +78,5 @@ end
 q_evolution = q_history;
 xhi_evolution = xhi_history;
 u_evolution = u_history;
-e_history = [e',e_tot,e_theta];
+e_evolution = [e',e_tot,e_theta];
 end 

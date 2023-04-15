@@ -21,7 +21,8 @@ f = 100;
 % Time step [s]
 delta = 1/f;
 % Total number of steps
-%Nstep = totalTime*f+1;
+Nstep = totalTime*f+1;
+%Time
 timeVec = 0:delta:totalTime;
 
 % Controller gains
@@ -80,6 +81,7 @@ counter = 1;
 % Set linewidth and colors.
 linewidth = 5;
 colors = linspecer(12,'sequential');
+fontSize =16;
 
 
 
