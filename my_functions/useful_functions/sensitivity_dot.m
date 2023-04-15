@@ -9,9 +9,9 @@ function didt=sensitivity_dot(~, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k)
                i(9) i(10);
                i(11) i(12)];
     % Sensitivity component of the ODEs  
-    dsens = f_p(:,:,k) + f_q(:,:,k)*sens + f_u(:,:,k)*(h_q(:,:,k)*sens + h_xhi(:,:,k)*sensxhi);
+    dsens = f_p + f_q*sens + f_u*(h_q*sens + h_xhi*sensxhi);
     % sensitivity_xhi component of the ODEs
-    dsensxhi = g_q(:,:,k)*sens + g_xhi(:,:,k)*sensxhi;
+    dsensxhi = g_q*sens + g_xhi*sensxhi;
     % Output
     didt = [dsens(1,1); dsens(1,2); dsens(2,1); dsens(2,2); dsens(3,1); dsens(3,2); dsensxhi(1,1); dsensxhi(1,2); dsensxhi(2,1); dsensxhi(2,2); dsensxhi(3,1); dsensxhi(3,2)];
 end 

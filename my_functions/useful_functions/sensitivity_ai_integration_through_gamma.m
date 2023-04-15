@@ -59,6 +59,14 @@ gamma_k11 = zeros(6,1); gammax11_int= zeros(6,1,Nstep); gamma_k12 = zeros(6,1); 
 gamma_k13 = zeros(6,1); gammax13_int= zeros(6,1,Nstep); gamma_k14 = zeros(6,1); gammax14_int= zeros(6,1,Nstep);
 gamma_k15 = zeros(6,1); gammax15_int= zeros(6,1,Nstep);
 for k=1:Nstep
+% Creation of the vectors of the partial derivaatives needed in the integration of the Sensitivity
+f_p = ff_p(q_history(:,k),u_history(:,k),nominal_params);
+f_q = ff_q(q_history(:,k),u_history(:,k),nominal_params);
+f_u = ff_u(q_history(:,k),nominal_params);
+h_q = fh_q(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k),nominal_params);
+h_xhi = fh_xhi(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k),nominal_params);
+g_q = fg_q(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
+g_xhi = fg_xhi(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
 [~, gamma1] = ode45(@(t,gamma1) gamma_dot(t,gamma1, f_q, f_u, g_q, g_xhi, h_q, h_xhi, h_ax1, g_ax1, k), [0 delta], gamma_k1);
 gamma_k1= gamma1(end, :)'; gammax1_int(:,:,k) = gamma_k1;
 [~, gamma2] = ode45(@(t,gamma2) gamma_dot(t,gamma2, f_q, f_u, g_q, g_xhi, h_q, h_xhi, h_ax2, g_ax2, k), [0 delta], gamma_k2);
@@ -101,6 +109,14 @@ gamma_k11 = zeros(6,1); gammay11_int= zeros(6,1,Nstep); gamma_k12 = zeros(6,1); 
 gamma_k13 = zeros(6,1); gammay13_int= zeros(6,1,Nstep); gamma_k14 = zeros(6,1); gammay14_int= zeros(6,1,Nstep);
 gamma_k15 = zeros(6,1); gammay15_int= zeros(6,1,Nstep);
 for k=1:Nstep
+ % Creation of the vectors of the partial derivaatives needed in the integration of the Sensitivity
+ f_p = ff_p(q_history(:,k),u_history(:,k),nominal_params);
+ f_q = ff_q(q_history(:,k),u_history(:,k),nominal_params);
+ f_u = ff_u(q_history(:,k),nominal_params);
+ h_q = fh_q(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k),nominal_params);
+ h_xhi = fh_xhi(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k),nominal_params);
+ g_q = fg_q(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
+ g_xhi = fg_xhi(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));   
 [~, gamma1] = ode45(@(t,gamma1) gamma_dot(t,gamma1, f_q, f_u, g_q, g_xhi, h_q, h_xhi, h_ax1, g_ax1, k), [0 delta], gamma_k1);
 gamma_k1= gamma1(end, :)'; gammay1_int(:,:,k) = gamma_k1;
 [~, gamma2] = ode45(@(t,gamma2) gamma_dot(t,gamma2, f_q, f_u, g_q, g_xhi, h_q, h_xhi, h_ax2, g_ax2, k), [0 delta], gamma_k2);
