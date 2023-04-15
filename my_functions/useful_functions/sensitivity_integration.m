@@ -1,7 +1,7 @@
-function sensAtLastTimeInstant = sensitivity_integration(Nstep,nominal_params,...
-                                                         q_history,xhi_history,u_history,...
-                                                         p,dp,ddp,...
-                                                         delta)
+function [sensAtLastTimeInstant, sensitivity_history] = sensitivity_integration(Nstep,nominal_params,...
+                                                                     q_history,xhi_history,u_history,...
+                                                                     p,dp,ddp,...
+                                                                     delta)
 % In this case we are substituting parameters within the functions we created, 
 % so we get the elements to create the sensitivity.
 f_q = zeros(3,3);   f_p = zeros(3,2);    f_u = zeros(3,2); 
@@ -33,5 +33,7 @@ end
 sensAtLastTimeInstant = [sens_int(1,Nstep) sens_int(2,Nstep);
                          sens_int(3,Nstep) sens_int(4,Nstep);
                          sens_int(5,Nstep) sens_int(6,Nstep)];
+
+sensitivity_history = sens_int;
 
 end

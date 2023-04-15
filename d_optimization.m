@@ -26,9 +26,9 @@ ay_evolution = zeros(grado,epochs); ay_evolution(:,1)= initial_ay;
 
 for n = 2:epochs+1
 ax_old = ax_evolution(:,n-1); ay_old = ay_evolution(:,n-1);
-newCoeffMAtrix = [ax_old,ay_old];
+newCoeffMatrix = [ax_old,ay_old];
 % Generate NEW trajectory
-[r_d,dr_d,ddr_d] = trajectory_generation(newCoeffMAtrix, timeVec, totalTime,...
+[r_d,dr_d,ddr_d] = trajectory_generation(newCoeffMatrix, timeVec, totalTime,...
                                          linewidth, colors, false);
 
 % Running the simulation loop for every new trajectory, ALWAYS NOMINAL CASE
@@ -38,31 +38,29 @@ newCoeffMAtrix = [ax_old,ay_old];
                                                      r_d,dr_d,ddr_d);
 
 % Sensitivity calculation 
-sens_last = sensitivity_integration(Nstep,nominal_params,...
+[sens_last, sens_hist] = sensitivity_integration(Nstep,nominal_params,...
                                     q_history,xhi_history,u_history,...
                                     r_d,dr_d,ddr_d,...
                                     delta);
 
-% Sensitivity_ai calculation, by calling the function
 % Sensitivity_ai calculation, by calling the function gamma_integration
-%sensitivity_ai_integration_through_gamma(Nstep,nominal_params,timeVec,...
-%                                          q_history,xhi_history,u_history,...
-%                                          r_d,dr_d,ddr_d,delta)
+sens_ai_Array = sensitivity_ai_integration_through_gamma(sens_hist,newCoeffMatrix,...
+                                                        nominal_params,timeVec,...
+                                                        q_history,xhi_history,u_history,...
+                                                        r_d,dr_d,ddr_d,...
+                                                        delta,Nstep);
 
 %% Calculate vi for each x and y trajectory's coefficient which is the negative gradient of the cost function
-%%%PER ORA LA CALCOLO SOLO CON LA SENSITIVITY RICORDARSI DI CAMBIARLO
-%%CAPITOOOO
-%%%%CAPITOOOOOOOOOOO
 vx = zeros(grado,1);
 for i= 1:grado
-    %sensai_last = reshape(all_sensaix{i}(1:6,Nstep),2,[])';
-    vx(i) = -trace(sens_last'*sens_last);
+    sensai_last = reshape(sens_ai_Array{i,1}(1:6,Nstep),2,[])';
+    vx(i) = -trace(sens_last'*sensai_last);
 end
 
 vy = zeros(grado,1);
 for i= 1:grado
-    %sensai_last = reshape(all_sensaiy{i}(1:6,Nstep),2,[])';
-    vy(i) = -trace(sens_last'*sens_last);
+    sensai_last = reshape(sens_ai_Array{i,2}(1:6,Nstep),2,[])';
+    vy(i) = -trace(sens_last'*sensai_last);
 end
 
 % Calculate the loss function: as norm the trace of the sensitivity.
@@ -98,46 +96,3 @@ save('data/coeff_a_star',"ay_star","ay_star")
 save('data/optimized_traj','opt_traj','opt_vel','opt_acc')
 toc
 
-%%% QUESTO DA RIFARE DOMANI O LASCIARE COSI
-%% FUNZIONE CHE NE FA X E Y INSIEME E LA CHIAMI 15 VOLTE
-%% u_ai vectors creation
-% which is used to differentiate the whole system with respect to the coefficients a_i
-% We use these vectors in the integration of the Sensitivity_ai
-
-% %for coefficients x
-% u_ax1 = pagemtimes(h_q,gammax1_int(1:3,:,:)) + pagemtimes(h_xhi,gammax1_int(4:6,:,:)) + h_ax1;
-% u_ax2 = pagemtimes(h_q,gammax2_int(1:3,:,:)) + pagemtimes(h_xhi,gammax2_int(4:6,:,:)) + h_ax2;
-% u_ax3 = pagemtimes(h_q,gammax3_int(1:3,:,:)) + pagemtimes(h_xhi,gammax3_int(4:6,:,:)) + h_ax3;
-% u_ax4 = pagemtimes(h_q,gammax4_int(1:3,:,:)) + pagemtimes(h_xhi,gammax4_int(4:6,:,:)) + h_ax4;
-% u_ax5 = pagemtimes(h_q,gammax5_int(1:3,:,:)) + pagemtimes(h_xhi,gammax5_int(4:6,:,:)) + h_ax5;
-% 
-% u_ax6 = pagemtimes(h_q,gammax6_int(1:3,:,:)) + pagemtimes(h_xhi,gammax6_int(4:6,:,:)) + h_ax1;
-% u_ax7 = pagemtimes(h_q,gammax7_int(1:3,:,:)) + pagemtimes(h_xhi,gammax7_int(4:6,:,:)) + h_ax2;
-% u_ax8 = pagemtimes(h_q,gammax8_int(1:3,:,:)) + pagemtimes(h_xhi,gammax8_int(4:6,:,:)) + h_ax3;
-% u_ax9 = pagemtimes(h_q,gammax9_int(1:3,:,:)) + pagemtimes(h_xhi,gammax9_int(4:6,:,:)) + h_ax4;
-% u_ax10 = pagemtimes(h_q,gammax10_int(1:3,:,:)) + pagemtimes(h_xhi,gammax10_int(4:6,:,:)) + h_ax5;
-% 
-% u_ax11 = pagemtimes(h_q,gammax11_int(1:3,:,:)) + pagemtimes(h_xhi,gammax11_int(4:6,:,:)) + h_ax1;
-% u_ax12 = pagemtimes(h_q,gammax12_int(1:3,:,:)) + pagemtimes(h_xhi,gammax12_int(4:6,:,:)) + h_ax2;
-% u_ax13 = pagemtimes(h_q,gammax13_int(1:3,:,:)) + pagemtimes(h_xhi,gammax13_int(4:6,:,:)) + h_ax3;
-% u_ax14 = pagemtimes(h_q,gammax14_int(1:3,:,:)) + pagemtimes(h_xhi,gammax14_int(4:6,:,:)) + h_ax4;
-% u_ax15 = pagemtimes(h_q,gammax15_int(1:3,:,:)) + pagemtimes(h_xhi,gammax15_int(4:6,:,:)) + h_ax5;
-% 
-% % for coefficients y
-% u_ay1 = pagemtimes(h_q,gammay1_int(1:3,:,:)) + pagemtimes(h_xhi,gammay1_int(4:6,:,:)) + h_ay1;
-% u_ay2 = pagemtimes(h_q,gammay2_int(1:3,:,:)) + pagemtimes(h_xhi,gammay2_int(4:6,:,:)) + h_ay2;
-% u_ay3 = pagemtimes(h_q,gammay3_int(1:3,:,:)) + pagemtimes(h_xhi,gammay3_int(4:6,:,:)) + h_ay3;
-% u_ay4 = pagemtimes(h_q,gammay4_int(1:3,:,:)) + pagemtimes(h_xhi,gammay4_int(4:6,:,:)) + h_ay4;
-% u_ay5 = pagemtimes(h_q,gammay5_int(1:3,:,:)) + pagemtimes(h_xhi,gammay5_int(4:6,:,:)) + h_ay5;
-% 
-% u_ay6 = pagemtimes(h_q,gammay6_int(1:3,:,:)) + pagemtimes(h_xhi,gammay6_int(4:6,:,:)) + h_ay1;
-% u_ay7 = pagemtimes(h_q,gammay7_int(1:3,:,:)) + pagemtimes(h_xhi,gammay7_int(4:6,:,:)) + h_ay2;
-% u_ay8 = pagemtimes(h_q,gammay8_int(1:3,:,:)) + pagemtimes(h_xhi,gammay8_int(4:6,:,:)) + h_ay3;
-% u_ay9 = pagemtimes(h_q,gammay9_int(1:3,:,:)) + pagemtimes(h_xhi,gammay9_int(4:6,:,:)) + h_ay4;
-% u_ay10 = pagemtimes(h_q,gammay10_int(1:3,:,:)) + pagemtimes(h_xhi,gammay10_int(4:6,:,:)) + h_ay5;
-% 
-% u_ay11 = pagemtimes(h_q,gammay11_int(1:3,:,:)) + pagemtimes(h_xhi,gammay11_int(4:6,:,:)) + h_ay1;
-% u_ay12 = pagemtimes(h_q,gammay12_int(1:3,:,:)) + pagemtimes(h_xhi,gammay12_int(4:6,:,:)) + h_ay2;
-% u_ay13 = pagemtimes(h_q,gammay13_int(1:3,:,:)) + pagemtimes(h_xhi,gammay13_int(4:6,:,:)) + h_ay3;
-% u_ay14 = pagemtimes(h_q,gammay14_int(1:3,:,:)) + pagemtimes(h_xhi,gammay14_int(4:6,:,:)) + h_ay4;
-% u_ay15 = pagemtimes(h_q,gammay15_int(1:3,:,:)) + pagemtimes(h_xhi,gammay15_int(4:6,:,:)) + h_ay5;
