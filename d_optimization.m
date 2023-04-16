@@ -93,7 +93,7 @@ title('Loss Function of a')
 xlabel('epochs'); ylabel("Norm of sens at tf");fontsize(fontSize,"points")
 
 %% Save optimized coefficients and new trajectory
-save('data/coeff_a_star',"ay_star","ay_star")
+save('data/coeff_a_star',"ax_star","ay_star")
 save('data/optimized_traj','opt_traj','opt_vel','opt_acc')
 toc
 

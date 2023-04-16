@@ -79,7 +79,7 @@ clear plot_function
 counter = 1;
 
 % Set linewidth and colors.
-linewidth = 5;
+linewidth = 3;
 colors = linspecer(12,'sequential');
 fontSize =16;
 
