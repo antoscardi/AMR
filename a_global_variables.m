@@ -80,8 +80,22 @@ counter = 1;
 
 % Set linewidth and colors.
 linewidth = 3;
-colors = linspecer(12,'sequential');
+colors = linspecer(12,'qualitative');
 fontSize =16;
 
+%1 -> blu
+%2 -> rosso
+%3 -> verde
+%4 -> arancione
+%5 -> viola
 
+% SIMPLER LINE COLOR EXAMPLE
+N = 3; X = linspace(0,pi*3,1000);
+C = linspecer(N,"qualitative")
+hold off;
+for ii=1:N
+Y = sin(X+2*ii*pi/N);
+plot(X,Y,'color',C(ii,:),'linewidth',3);
+hold on;
+end
 
