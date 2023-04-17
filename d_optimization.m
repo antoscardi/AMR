@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 0.1; k2 = 1; epochs = 10;
+k1 = 0.1; k2 = 1; epochs = 2;
 
 % Initialize loss function
 Loss = zeros(1,epochs);
@@ -19,6 +19,9 @@ initial_ay = aMatrix(:,2);
 
 % Get the number of rows 
 [grado, ~] = size(aMatrix);
+
+% Initialize the gradient vector and the identity matrix
+vx = zeros(grado,1); vy = zeros(grado,1); I = eye(grado);
 
 % Initialize a vector of the evolution of the parameters
 ax_evolution = zeros(grado,epochs); ax_evolution(:,1)= initial_ax;
@@ -51,13 +54,11 @@ sens_ai_Array = sensitivity_ai_integration_through_gamma(sens_hist,newCoeffMatri
                                                         delta,Nstep);
 
 %% Calculate vi for each x and y trajectory's coefficient which is the negative gradient of the cost function
-vx = zeros(grado,1);
 for i= 1:grado
     sensai_last = reshape(sens_ai_Array{i,1}(1:6,Nstep),2,[])';
     vx(i) = -trace(sens_last'*sensai_last);
 end
 
-vy = zeros(grado,1);
 for i= 1:grado
     sensai_last = reshape(sens_ai_Array{i,2}(1:6,Nstep),2,[])';
     vy(i) = -trace(sens_last'*sensai_last);
@@ -67,7 +68,6 @@ end
 Loss(n-1) = 0.5*trace(sens_last'*sens_last);
 
 % Update law of the optimization
-I = eye(grado);
 ax_new = ax_old + delta*(k1*pinv(M)*(dx-M*ax_evolution(:,n-1)) + k2*(I - pinv(M)*M)*vx);
 ay_new = ay_old + delta*(k1*pinv(M)*(dy-M*ay_evolution(:,n-1)) + k2*(I - pinv(M)*M)*vy);
 

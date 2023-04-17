@@ -2,12 +2,15 @@
 %sensitivty passed in the form of the vector)
 function didt=sensitivity_dot(~, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k)
     % Create matrixes from column vector
-    sens = [i(1) i(2);
-            i(3) i(4);
-            i(5) i(6)];
-    sensxhi = [i(7) i(8);
-               i(9) i(10);
-               i(11) i(12)];
+    %sens = [i(1) i(2);
+    %        i(3) i(4);
+    %       i(5) i(6)];
+    sens  = reshape(i(1:6),2,[])';
+
+    %sensxhi = [i(7) i(8);
+    %          i(9) i(10);
+    %          i(11) i(12)];
+    sensxhi  = reshape(i(7:12),2,[])';
     % Sensitivity component of the ODEs  
     dsens = f_p + f_q*sens + f_u*(h_q*sens + h_xhi*sensxhi);
     % sensitivity_xhi component of the ODEs

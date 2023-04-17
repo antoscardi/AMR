@@ -117,7 +117,7 @@ for i = 1:Ncoeff
         g_xhi = fg_xhi(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k));
 
         %% INTEGRATION OF GAMMA
-        [~, gammaint] = ode45(@(t,gammaint) gamma_dot(t,gammaint, f_q, f_u, g_q, g_xhi, h_q, h_xhi, varh_a_k, varg_a_k, k), [0 delta], gamma_k);
+        [~, gammaint] = ode45(@(t,gammaint) gamma_dot(gammaint, f_q, f_u, g_q, g_xhi, h_q, h_xhi, varh_a_k, varg_a_k, k), [0 delta], gamma_k);
         gamma_k = gammaint(end, :)'; 
         gamma_int(:,:,k) = gamma_k;
         
@@ -180,7 +180,7 @@ dhqa11(:,:,k) = dhq_a1x(params(2), params(1), timeVec(k), q_history(3,k), xhi_hi
 dhqa21(:,:,k) = dhq_a2x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
 dhqa31(:,:,k) = dhq_a3x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
 dhqa41(:,:,k) = dhq_a4x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa11(:,:,k) = dhq_a5x(params(2), params(1), q_history(3,k), xhi_history(1,k));
+dhqa51(:,:,k) = dhq_a5x(params(2), params(1), q_history(3,k), xhi_history(1,k));
 
 dhqa12(:,:,k) = dhq_a1y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
 dhqa22(:,:,k) = dhq_a2y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
