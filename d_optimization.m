@@ -7,8 +7,8 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-%k1 = 0.1; k2 = 1; epochs = 10;
-k1 = 0.5; k2 = 5; epochs = 3; % e' uguale alla situazione precedente
+k1 = 0.1; k2 = 1; epochs = 2;
+%k1 = 0.5; k2 = 5; epochs = 3; % e' uguale alla situazione precedente
 
 % Initialize loss function
 Loss = zeros(1,epochs);
@@ -25,6 +25,8 @@ initial_ay = aMatrix(:,2);
 ax_evolution = zeros(grado,epochs); ax_evolution(:,1)= initial_ax;
 ay_evolution = zeros(grado,epochs); ay_evolution(:,1)= initial_ay;
 
+counterColorTrajectory = 1;
+figure(15); hold on
 for n = 2:epochs+1
 ax_old = ax_evolution(:,n-1); ay_old = ay_evolution(:,n-1);
 newCoeffMatrix = [ax_old,ay_old];
@@ -74,6 +76,15 @@ ay_new = ay_old + delta*(k1*pinv(M)*(dy-M*ay_evolution(:,n-1)) + k2*(I - pinv(M)
 
 ax_evolution(:,n) = ax_new; ay_evolution(:,n) = ay_new;
 
+if counterColorTrajectory <= epochs && mod(n,2) == 0
+    plot(r_d(1,:),r_d((2),:),'Color',colors(counterColorTrajectory,:),'LineWidth',linewidth, 'LineStyle', '-.', 'DisplayName', 'Nominal Trajectory')
+    xlabel("x[m]"), ylabel('y[m]'), grid minor
+    title('Trajectory Variation for each epoch'),fontsize(fontSize,"points")
+end
+if counterColorTrajectory <= epochs && mod(n,2) ~= 0
+    plot(r_d(1,:),r_d((2),:),'Color',colors(counterColorTrajectory,:),'LineWidth',linewidth, 'DisplayName', 'Nominal Trajectory')
+end
+counterColorTrajectory = counterColorTrajectory + 1;
 end 
 
 %% Take the optimized trajectory as the last obtained in the optimization epochs:
