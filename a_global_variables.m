@@ -32,17 +32,17 @@ ki = 3;
 
 % Initial position and velocity
 initialPositionVec = [5 5];
-initialVelocityVec = [1 1];
+initialVelocityVec = [1 0.1];
 
 % Position and velocity of the two break points
-firstBreak = [18 20];
-secondBreak = [40 42];
+firstBreak = [40 10];
+secondBreak = [60 42];
 velocityFirstBreak = [3 3];
-velocitySecondBreak = [3.5 3.5];
+velocitySecondBreak = [2.5 2.5];
 
 % Final position and velocity.
-finalPositionVec = [62 63];
-finalVelocityVec = [2.5 2.5];
+finalPositionVec = [70 63];
+finalVelocityVec = [0.6 3];
 
 % Create dx and dy vectors
 dx = [initialPositionVec(1);
@@ -80,22 +80,17 @@ counter = 1;
 
 % Set linewidth and colors.
 linewidth = 3;
-colors = linspecer(12,'qualitative');
+colors = linspecer(12,'sequential');
 fontSize =16;
 
-%1 -> blu
-%2 -> rosso
-%3 -> verde
-%4 -> arancione
-%5 -> viola
+% % SIMPLER LINE COLOR EXAMPLE
+% N = 20; X = linspace(0,pi*3,1000);
+% C = linspecer(N,"qualitative")
+% hold off;
+% for ii=1:N
+% Y = sin(X+2*ii*pi/N);
+% plot(X,Y,'color',C(ii,:),'linewidth',3);
+% hold on;
+% end
 
-% SIMPLER LINE COLOR EXAMPLE
-N = 3; X = linspace(0,pi*3,1000);
-C = linspecer(N,"qualitative")
-hold off;
-for ii=1:N
-Y = sin(X+2*ii*pi/N);
-plot(X,Y,'color',C(ii,:),'linewidth',3);
-hold on;
-end
 

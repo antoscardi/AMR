@@ -180,7 +180,7 @@ dhqa11(:,:,k) = dhq_a1x(params(2), params(1), timeVec(k), q_history(3,k), xhi_hi
 dhqa21(:,:,k) = dhq_a2x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
 dhqa31(:,:,k) = dhq_a3x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
 dhqa41(:,:,k) = dhq_a4x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa11(:,:,k) = dhq_a5x(params(2), params(1), q_history(3,k), xhi_history(1,k));
+dhqa51(:,:,k) = dhq_a5x(params(2), params(1), q_history(3,k), xhi_history(1,k));
 
 dhqa12(:,:,k) = dhq_a1y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
 dhqa22(:,:,k) = dhq_a2y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
