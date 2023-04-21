@@ -80,7 +80,7 @@ counter = 1;
 
 % Set linewidth and colors.
 linewidth = 3;
-colors = linspecer(12,'sequential');
+colors = linspecer(12,'qualitative');
 fontSize =16;
 
 % % SIMPLER LINE COLOR EXAMPLE

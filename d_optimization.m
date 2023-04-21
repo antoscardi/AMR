@@ -33,6 +33,7 @@ counterColorTrajectory = 1;
 b=zeros(epochs);
 figure(15); hold on
 sensitivityArrayEpochs = cell(epochs,1);
+sensitivityAiArrayEpochs = cell(epochs,1);
 for n = 1:epochs
 ax_old = ax_evolution(:,n); ay_old = ay_evolution(:,n);
 newCoeffMatrix = [ax_old,ay_old];
@@ -60,6 +61,8 @@ sens_ai_Array = sensitivity_ai_integration_through_gamma(sens_hist,newCoeffMatri
                                                         q_history,xhi_history,u_history,...
                                                         r_d,dr_d,ddr_d,...
                                                         delta,Nstep);
+sensitivityAiArrayEpochs{n} = sens_ai_Array;
+
 %% Calculate vi for each x and y trajectory's coefficient which is the negative gradient of the cost function
 vx = zeros(grado,1);
 for i= 1:grado
@@ -123,59 +126,28 @@ hold off
 
 % Plot Sensitivity
 figure(17); hold on
-c=zeros(12,epochs);
 counterColorSens = 1;
-colorsOfDifferentSensitivities= linspecer(epochs,"qualitative");
+colorsOfDifferentSensitivities= linspecer((size(sens_hist,1)*epochs+1),"qualitative");
+sensAtEpoch = zeros(epochs,Nstep);
 for i=1:epochs
-    %plot(timeVec,sensitivityArrayEpochs{i}')
-    %hold on
-    if counterColorSens <= epochs && i == 1
-        c(:,i) = plot(timeVec,sensitivityArrayEpochs{i}','Color',colorsOfDifferentSensitivities(counterColorSens,:),'LineWidth',linewidth, 'LineStyle', '-', 'DisplayName', sprintf('Sensivity n: %d',counterColorSens));
-        %xlabel("x[m]"), ylabel('y[m]'), grid minor
-        title('Sensitivity evolution over time and over epochs')
-        xlabel('epochs'); ylabel("Sensitivity over time");fontsize(fontSize,"points")
-        %legend('-DynamicLegend');
-        legend('show');
-        drawnow;
-        legend(c(:,counterColorSens))
-    end
-    if counterColorSens <= epochs && i == 2
-        c(:,i) = plot(timeVec,sensitivityArrayEpochs{i}','Color',colorsOfDifferentSensitivities(counterColorSens,:),'LineWidth',linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('Sensivity n: %d',counterColorSens));
-        %plot(timeVec,sensitivityArrayEpochs{i}','Color',colorsOfDifferentSensitivities(counterColorSens,:),'LineWidth',linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('Sensivity n: %d',counterColorSens));
-        %xlabel("x[m]"), ylabel('y[m]'), grid minor
-        title('Sensitivity evolution over time and over epochs')
-        xlabel('epochs'); ylabel("Sensitivity over time");fontsize(fontSize,"points")
-        %legend('-DynamicLegend');
-        legend('show');
-        drawnow;
-        legend(c(:,counterColorSens))
-    end
-    if counterColorSens <= epochs && i == 3
-        c(:,i) = plot(timeVec,sensitivityArrayEpochs{i}','Color',colorsOfDifferentSensitivities(counterColorSens,:),'LineWidth',linewidth, 'LineStyle', ':', 'DisplayName', sprintf('Sensivity n: %d',counterColorSens));
-        %plot(timeVec,sensitivityArrayEpochs{i}','Color',colorsOfDifferentSensitivities(counterColorSens,:),'LineWidth',linewidth, 'LineStyle', ':', 'DisplayName', sprintf('Sensivity n: %d',counterColorSens));
-        %xlabel("x[m]"), ylabel('y[m]'), grid minor
-        title('Sensitivity evolution over time and over epochs')
-        xlabel('epochs'); ylabel("Sensitivity over time");fontsize(fontSize,"points")
-        %legend('-DynamicLegend');
-        legend('show');
-        drawnow;
-        legend(c(:,counterColorSens))
-    end
-    if counterColorSens <= epochs && i == 4
-        c(:,i) = plot(timeVec,sensitivityArrayEpochs{i}','Color',colorsOfDifferentSensitivities(counterColorSens,:),'LineWidth',linewidth, 'LineStyle', '--', 'DisplayName', sprintf('Sensivity n: %d',counterColorSens));
-        %plot(timeVec,sensitivityArrayEpochs{i}','Color',colorsOfDifferentSensitivities(counterColorSens,:),'LineWidth',linewidth, 'LineStyle', '--', 'DisplayName', sprintf('Sensivity n: %d',counterColorSens));
-        %xlabel("x[m]"), ylabel('y[m]'), grid minor
-        title('Sensitivity evolution over time and over epochs')
-        xlabel('epochs'); ylabel("Sensitivity over time");fontsize(fontSize,"points")
-        %legend('-DynamicLegend');
-        legend('show');
-        drawnow;
-        legend(c(:,counterColorSens))
+    sensAtEpoch = sensitivityArrayEpochs{i};
+    for k=1:size(sens_hist,1)
+        subplot(4,3,k)
+        plot(timeVec, sensAtEpoch(k,:),'Color',colorsOfDifferentSensitivities(counterColorSens,:),'LineWidth',linewidth);
+        title(sprintf('Sensitivity element number: %d',k))
+        hold on
+        counterColorSens = counterColorSens + 1;
     end
     counterColorSens = counterColorSens + 1;
 end
-% title('Sensitivity evolution over time and over epochs')
-% xlabel('epochs'); ylabel("Sensitivity over time");fontsize(fontSize,"points")
+hold off
+
+% % Plot Sensitivity respect to the coefficients a_i
+% counterColorSens = 1;
+% sensAiAtEpoch = zeros(size(sens_hist,1),1,Nstep);
+% [m,n] = size(sens_ai_Array);
+% sensAiArrayAtEpoch = cell(m,n);
+% colorsOfDifferentSensitivitiesAi= linspecer(m*n*epochs*size(sens_hist,1) + 100,"sequential");
 
 %% Save optimized coefficients and new trajectory
 save('data/coeff_a_star',"ax_star","ay_star")
