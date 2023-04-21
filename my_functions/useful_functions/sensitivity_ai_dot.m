@@ -1,22 +1,26 @@
 %% Integration function Ode
 %Function used in the integration of Sensitivity_ai  
-function djdt = integralSens_ai(t, j, dfqqgamma, dfquuai, sens, f_q, dfpqgamma, dfpuuai,dfuqgamma,dfuuuai,h_q, h_xhi, sens_xhi, f_u, dhqqgamma,dhqxhigammaxhi,hq_ai,dhxhiqgamma, dhxhixhigammaxhi, h_xhi_ai, dgqqgamma,dgqxhigammaxhi,g_q_ai,dgxhiqgamma,dgxhixhigammaxhi,g_xhi_ai, g_q, g_xhi)
+function djdt = sensitivity_ai_dot(t, j, dfqqgamma, dfquuai, sens, f_q, dfpqgamma, dfpuuai,dfuqgamma,dfuuuai,h_q, h_xhi, sens_xhi, f_u, dhqqgamma,dhqxhigammaxhi,hq_ai,dhxhiqgamma, dhxhixhigammaxhi, h_xhi_ai, dgqqgamma,dgqxhigammaxhi,g_q_ai,dgxhiqgamma,dgxhixhigammaxhi,g_xhi_ai, g_q, g_xhi)
     % Create matrixes from column vector
-    sensai = [j(1) j(2);
-            j(3) j(4);
-            j(5) j(6)];
+    %sensai = [j(1) j(2);
+    %       j(3) j(4);
+    %       j(5) j(6)]
+    sensai  = reshape(j(1:6),2,[])';
 
-    sensxhiai = [j(7) j(8);
-               j(9) j(10);
-               j(11) j(12)];
+    %sensxhiai = [j(7) j(8);
+    %           j(9) j(10);
+    %           j(11) j(12)];
+    sensxhiai = reshape(j(7:12),2,[])';
 
-    sens_mat = [sens(1) sens(2);
-               sens(3) sens(4);
-               sens(5) sens(6)];
-    
-    sensxhi_mat = [sens_xhi(1) sens_xhi(2);
-                   sens_xhi(3) sens_xhi(4);
-                   sens_xhi(5) sens_xhi(6)];
+    %sens_mat = [sens(1) sens(2);
+    %           sens(3) sens(4);
+    %           sens(5) sens(6)];
+    sens_mat  = reshape(sens(1:6),2,[])';
+
+    %sensxhi_mat = [sens_xhi(1) sens_xhi(2);
+    %               sens_xhi(3) sens_xhi(4);
+    %              sens_xhi(5) sens_xhi(6)];
+    sensxhi_mat = reshape(sens_xhi(1:6),2,[])';
     
     % Sensitivity component of the ODEs  
     dsensai = (dfqqgamma + dfquuai)*sens_mat + f_q*sensai + dfpqgamma + dfpuuai + (dfuqgamma + dfuuuai)*(h_q*sens_mat + h_xhi*sensxhi_mat) + f_u*((dhqqgamma + dhqxhigammaxhi + hq_ai)*sens_mat + (dhxhiqgamma + dhxhixhigammaxhi + h_xhi_ai)*sensxhi_mat + h_q*sensai + h_xhi*sensxhiai);

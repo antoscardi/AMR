@@ -1,17 +1,24 @@
-close all; clc;
-% IDEAL robot system uses the NOMINAL parameters of the robot
-params = [wheelRadius; 
-          wheelDistance];
+function [q_evolution,u_evolution,xhi_evolution,e_evolution] = simulation_loop(initialPositionVec,initialVelocityVec,...
+                                                                               delta,...
+                                                                               nominal_params, perturbed_params, doPerturbation,...
+                                                                               r_d, dr_d, ddr_d...
+                                                                               )
 
-%% Desired Trajectory Generation (Spline)
-[r_d,dr_d,ddr_d] = trajectory_generation(initialPositionVec, initialVelocityVec, firstBreak, secondBreak,...
-                                         finalPositionVec, finalVelocityVec,velocityFirstBreak, velocitySecondBreak,...
-                                         totalTime, timeVec, linewidth, colors );
+% Choose to have perturbed parameters or not. 
+if doPerturbation == true
+    params = perturbed_params;
+end
+if doPerturbation == false
+    params = nominal_params;
+end
+
+% Setting the Nstep to be the same as the size of the trajectory.
+[~,Nstep] = size(r_d);
 
 %% Inizializations
 % Initial state (x,y,theta)
 initialTheta = atan2(dr_d(2,1),dr_d(1,1));
-initialState = [initialPositionVec(1);initialPositionVec(2);initialTheta];
+initialState = [initialPositionVec(1); initialPositionVec(2); initialTheta];
 initialVelocity = sqrt_of_quadratics(initialVelocityVec);
 % Initial input (v,omega) through flatness
 [initialVelocity_flatness, initialAngularVelocity] = flatness(dr_d, ddr_d);
@@ -24,9 +31,9 @@ else
 end
 
 % u_k = [w_r; w_l].
-initialInput = [(initialVelocity + initialAngularVelocity*wheelDistance/2)/wheelRadius;
-                (initialVelocity - initialAngularVelocity*wheelDistance/2)/wheelRadius]; 
-
+initialInput = [(initialVelocity + initialAngularVelocity*nominal_params(2)/2)/nominal_params(1);
+                (initialVelocity - initialAngularVelocity*nominal_params(2)/2)/nominal_params(1)];
+   
 % u_history = [u0, u1, u2, ..., uN] dimension (2)x(Nstep)
 u_history = zeros(2, Nstep); u_history(:,1) = initialInput;
 % q_history = [q0, q1, q2, ..., qN] dimension (3)x(Nstep)
@@ -35,8 +42,8 @@ q_history = zeros(3, Nstep); q_history(:,1) = initialState;
 xhi_history = zeros(3, Nstep); xhi_history(:,1) = [initialVelocity;0.03;0.03];
 % Error
 e = zeros(2,Nstep); e_tot = zeros(Nstep,1); e_theta=zeros(Nstep,1);
-% Initial desired theta in teh trajectory
-desiredTheta_time= zeros(Nstep,1); desiredTheta_time(1,1)= initialTheta;
+% Initialize the desired theta of the trajectory
+desiredTheta_time = zeros(Nstep,1); desiredTheta_time(1,1) = initialTheta;
 
 %% IDEAL CONTROL obtained using the NOMINAL parameters inside the robot system.
 %  The system parameters are well-known and do not change.
@@ -50,7 +57,6 @@ for k=2:Nstep
     currentState = robot_system(oldInput,oldState,delta,params);
 
     % CONTROLLER block, to avoid error always set this to the nominal ones.
-    nominal_params = [wheelRadius; wheelDistance];
     oldDesiredPos = r_d(:,k-1); oldDesiredVel = dr_d(:,k-1); oldDesiredAcc = ddr_d(:,k-1);
     [currentInput,currentXhi] = controller(oldState,oldDesiredPos,oldDesiredVel,oldDesiredAcc,oldXhi,delta,nominal_params);
  
@@ -69,19 +75,8 @@ for k=2:Nstep
     e_theta(k) = abs(currentTheta_des- q_history(3,k));
 end
 
-%% Create and display video animation and plots.
-% Plot comparison between state variables (vector q) and desired state.
-plot_function([q_history(1,:); r_d(1,:)],'Comparison of x in time','x [m] ; x_des [m]', timeVec, linewidth, colors, counter) 
-plot_function([q_history(2,:); r_d(2,:)],'Comparison of y in time','y [m] ; y_des [m]', timeVec, linewidth, colors, counter) 
-plot_function([q_history(3,:); desiredTheta_time'],'Comparison of theta in time','theta [rad] ; theta_des [rad]', timeVec, linewidth, colors, counter)
-% Plot input (vector u).
-plot_function(u_history,'Input variation in time','wr [rad/s] ; wl [rad/s]', timeVec, linewidth, colors, counter)
-% Plot errors.
-plot_function([e;e_tot'; e_theta'],'Error variation over time','e_x [m]; e_y [m] ; e_tot [m]; e_theta [rad]',timeVec, linewidth, colors, counter)
-
-% The video function just needs the distance between the wheels in order to plot the robot.
-b_n = params(2); 
-video(q_history,r_d,b_n,timeVec,linewidth,delta, 'Ideal Control')
-
-% Save the ideal control data for the OPTIMIZATION.
-save('data/IDEALcontrol','u_history','q_history','xhi_history')
+q_evolution = q_history;
+xhi_evolution = xhi_history;
+u_evolution = u_history;
+e_evolution = [e',e_tot,e_theta];
+end 

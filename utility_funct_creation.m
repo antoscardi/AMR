@@ -3,7 +3,7 @@
 close all; clc;
 % Symbolic variables declaration 
 syms x_d y_d dx_d dy_d ddx_d ddy_d t x y theta b r wl wr xhi_v xhi_x xhi_y
-syms q [3 1], syms p [2 1], syms u [2 1] , syms xhi [3 1] 
+syms q [3 1], syms p [2 1], syms u [2 1], syms xhi [3 1] 
 syms r_d [2 1], syms dr_d [2 1], syms ddr_d [2 1]
 syms a1x a1y a2x a2y a3x a3y a4x a4y a5x a5y 
 
@@ -43,12 +43,26 @@ xhi_dot = [[1 0]*inv(A)*eta;
 % u = h(xhi,q,r_d,p)
 new_u = inv(S)*[xhi_v; 
                [0 1]*inv(A)*eta];
-
+               
 % Partial Derivatives for sensitivity
 f_p = jacobian(q_dot,p); f_q = jacobian(q_dot,q); f_u = jacobian(q_dot,u);
 h_q = jacobian(new_u,q); h_xhi = jacobian(new_u,xhi);
 g_q = jacobian(xhi_dot,q); g_xhi = jacobian(xhi_dot,xhi);
 
+%% Function creation
+% State and Control
+matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{q,u,p});
+matlabFunction(new_u,'File','auto_functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d,p});
+matlabFunction(xhi_dot,'File','auto_functions/xhi_dot','Vars',{q,xhi,r_d,dr_d,ddr_d});
+
+% Derivatives for sensitivity
+matlabFunction(f_p,'File','auto_functions/ff_p', 'Vars',{q,u,p});
+matlabFunction(f_q,'File','auto_functions/ff_q', 'Vars',{q,u,p});
+matlabFunction(f_u,'File','auto_functions/ff_u', 'Vars',{q,p});
+matlabFunction(h_q,'File','auto_functions/fh_q', 'Vars',{q,xhi,r_d,dr_d,ddr_d,p});
+matlabFunction(h_xhi,'File','auto_functions/fh_xhi', 'Vars', {q,xhi,r_d,dr_d,ddr_d, p});
+matlabFunction(g_q,'File','auto_functions/fg_q', 'Vars', {q,xhi,r_d,dr_d,ddr_d});
+matlabFunction(g_xhi,'File','auto_functions/fg_xhi','Vars',{q,xhi,r_d,dr_d,ddr_d});
 
 % Tensor product creation 
 syms g [3 1], syms u_ai [2 1], 
@@ -66,21 +80,6 @@ dg_q_q_gamma_ = tensor_product(g_q,q,g);
 dg_q_xhi_gammaxhi_ = tensor_product(g_q,xhi, g);
 dg_xhi_q_gamma_ = tensor_product(g_xhi,q,g);
 dg_xhi_xhi_gammaxhi_ = tensor_product(g_xhi,xhi,g);
-
-%% Function creation
-% State and Control
-matlabFunction(q_dot,'File','auto_functions/q_dot','Vars',{q,u,p});
-matlabFunction(new_u,'File','auto_functions/new_u','Vars',{q,xhi,r_d,dr_d,ddr_d,p});
-matlabFunction(xhi_dot,'File','auto_functions/xhi_dot','Vars',{q,xhi,r_d,dr_d,ddr_d});
-
-% Derivatives for sensitivity
-matlabFunction(f_p,'File','auto_functions/ff_p', 'Vars',{q,u,p});
-matlabFunction(f_q,'File','auto_functions/ff_q', 'Vars',{q,u,p});
-matlabFunction(f_u,'File','auto_functions/ff_u', 'Vars',{q,p});
-matlabFunction(h_q,'File','auto_functions/fh_q', 'Vars',{q,xhi,r_d,dr_d,ddr_d,p});
-matlabFunction(h_xhi,'File','auto_functions/fh_xhi', 'Vars', {q,xhi,r_d,dr_d,ddr_d, p});
-matlabFunction(g_q,'File','auto_functions/fg_q', 'Vars', {q,xhi,r_d,dr_d,ddr_d});
-matlabFunction(g_xhi,'File','auto_functions/fg_xhi','Vars',{q,xhi,r_d,dr_d,ddr_d});
 
 % Tensor Products
 matlabFunction(df_q_q_gamma_,'File','auto_functions/df_q_q_gamma','Vars',{g,p,u,q});
@@ -209,5 +208,3 @@ for i= 1:5
     func = my_jacobian(gxhi,ai);
     matlabFunction(func,'File',sprintf('auto_functions/dgxhi_a%dy', i));
 end
-
-
