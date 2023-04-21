@@ -7,13 +7,8 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 0.1; k2 = 1; epochs = 2;
-%   k1 = 0.1; k2 = 2.5; epochs = 16; % Loss aumenta ma E_OPT = 0.020
-%   k1 = 0.1; k2 = 3; epochs = 8/10; Funziona
-%   k1 = 0.5; k2 = 5; epochs = 3; % e' uguale alla situazione precedente
-%   k1 = 0.1; k2 = 3; epochs = 9; % Tutto okay
+k1 = 0.01; k2 = 0.1; epochs = 5;
 
-k1 = 0.5; k2 = 5; epochs = 2;
 % Initialize loss function
 Loss = zeros(1,epochs);
 
@@ -32,24 +27,28 @@ vx = zeros(grado,1); vy = zeros(grado,1); I = eye(grado);
 ax_evolution = zeros(grado,epochs); ax_evolution(:,1)= initial_ax;
 ay_evolution = zeros(grado,epochs); ay_evolution(:,1)= initial_ay;
 
+% Color definition for the different epochs
 colorsOfDifferentTrajectories = linspecer(epochs,"qualitative");
 counterColorTrajectory = 1;
-b=zeros(epochs);
+% Plot variable
+b = zeros(epochs);
 figure(15); hold on
 sensitivityArrayEpochs = cell(epochs,1);
 sensitivityAiArrayEpochs = cell(epochs,1);
+
+%% Optimization cycle 
 for n = 1:epochs
 ax_old = ax_evolution(:,n); ay_old = ay_evolution(:,n);
-newCoeffMatrix = [ax_old,ay_old];
+oldCoeffMatrix = [ax_old,ay_old];
 % Generate NEW trajectory
-[r_d,dr_d,ddr_d] = trajectory_generation(newCoeffMatrix, timeVec, totalTime,...
+[r_d,dr_d,ddr_d,theta_d] = trajectory_generation(oldCoeffMatrix, timeVec, totalTime,...
                                          linewidth, colors, false);
 
 % Running the simulation loop for every new trajectory, ALWAYS NOMINAL CASE
-[q_history,u_history,xhi_history,] = simulation_loop(initialPositionVec,initialVelocityVec,...
+[q_history,u_history,xhi_history,~] = simulation_loop(initialPositionVec,initialVelocityVec,...
                                                      delta,...
                                                      nominal_params, perturbed_params,false,...
-                                                     r_d,dr_d,ddr_d);
+                                                     r_d,dr_d,ddr_d,theta_d);
 
 % Sensitivity calculation 
 [sens_last, sens_hist] = sensitivity_integration(Nstep,nominal_params,...
@@ -60,7 +59,7 @@ newCoeffMatrix = [ax_old,ay_old];
 sensitivityArrayEpochs{n} = sens_hist;
 
 % Sensitivity_ai calculation, by calling the function gamma_integration
-sens_ai_Array = sensitivity_ai_integration_through_gamma(sens_hist,newCoeffMatrix,...
+sens_ai_Array = sensitivity_ai_integration_through_gamma(sens_hist,oldCoeffMatrix,...
                                                         nominal_params,timeVec,...
                                                         q_history,xhi_history,u_history,...
                                                         r_d,dr_d,ddr_d,...
@@ -68,12 +67,12 @@ sens_ai_Array = sensitivity_ai_integration_through_gamma(sens_hist,newCoeffMatri
 sensitivityAiArrayEpochs{n} = sens_ai_Array;
 
 %% Calculate vi for each x and y trajectory's coefficient which is the negative gradient of the cost function
-for i= 1:grado
+for i = 1:grado
     sensai_last = reshape(sens_ai_Array{i,1}(1:6,Nstep),2,[])';
     vx(i) = -trace(sens_last'*sensai_last);
 end
 
-for i= 1:grado
+for i = 1:grado
     sensai_last = reshape(sens_ai_Array{i,2}(1:6,Nstep),2,[])';
     vy(i) = -trace(sens_last'*sensai_last);
 end
@@ -91,7 +90,6 @@ if counterColorTrajectory <= epochs && mod(n,2) == 0
     b(counterColorTrajectory) = plot(r_d(1,:),r_d((2),:),'Color',colorsOfDifferentTrajectories(counterColorTrajectory,:),'LineWidth',linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('Trajectory n: %d',counterColorTrajectory));
     xlabel("x[m]"), ylabel('y[m]'), grid minor
     title('Trajectory Variation for each epoch'),fontsize(fontSize,"points")
-    %legend('-DynamicLegend');
     legend('show');
     drawnow;
     legend(b(1:counterColorTrajectory))
@@ -100,14 +98,15 @@ if counterColorTrajectory <= epochs && mod(n,2) ~= 0
     b(counterColorTrajectory) = plot(r_d(1,:),r_d((2),:),'Color',colorsOfDifferentTrajectories(counterColorTrajectory,:),'LineWidth',linewidth, 'DisplayName',sprintf('Trajectory n: %d',counterColorTrajectory));
     xlabel("x[m]"), ylabel('y[m]'), grid minor
     title('Trajectory Variation for each epoch'),fontsize(fontSize,"points")
-    %legend('-DynamicLegend');
     legend('show');
     drawnow;
     legend(b(1:counterColorTrajectory))
 end
 counterColorTrajectory = counterColorTrajectory + 1;
+disp(n)
 end 
 hold off
+
 %% Take the optimized trajectory as the last obtained in the optimization epochs:
 % One could also take the one that minimizes the loss (if it's not the last)
 ax_star = ax_evolution(:,epochs);
@@ -137,7 +136,7 @@ for i=1:epochs
         plot(timeVec, sensAtEpoch(k,:),'Color',colorsOfDifferentSensitivities(counterColorSens,:),'LineWidth',linewidth);
         title(sprintf('Sensitivity element number: %d',k))
         hold on
-        counterColorSens = counterColorSens + 1;
+        %counterColorSens = counterColorSens + 1;
     end
     counterColorSens = counterColorSens + 1;
 end

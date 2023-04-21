@@ -1,8 +1,7 @@
 function [q_evolution,u_evolution,xhi_evolution,e_evolution] = simulation_loop(initialPositionVec,initialVelocityVec,...
                                                                                delta,...
                                                                                nominal_params, perturbed_params, doPerturbation,...
-                                                                               r_d, dr_d, ddr_d...
-                                                                               )
+                                                                               r_d, dr_d, ddr_d,theta_d)
 
 % Choose to have perturbed parameters or not. 
 if doPerturbation == true
@@ -17,7 +16,7 @@ end
 
 %% Inizializations
 % Initial state (x,y,theta)
-initialTheta = atan2(dr_d(2,1),dr_d(1,1));
+initialTheta = theta_d(1);
 initialState = [initialPositionVec(1); initialPositionVec(2); initialTheta];
 initialVelocity = sqrt_of_quadratics(initialVelocityVec);
 % Initial input (v,omega) through flatness
@@ -42,8 +41,6 @@ q_history = zeros(3, Nstep); q_history(:,1) = initialState;
 xhi_history = zeros(3, Nstep); xhi_history(:,1) = [initialVelocity;0.03;0.03];
 % Error
 e = zeros(2,Nstep); e_tot = zeros(Nstep,1); e_theta=zeros(Nstep,1);
-% Initialize the desired theta of the trajectory
-desiredTheta_time = zeros(Nstep,1); desiredTheta_time(1,1) = initialTheta;
 
 %% IDEAL CONTROL obtained using the NOMINAL parameters inside the robot system.
 %  The system parameters are well-known and do not change.
@@ -69,10 +66,8 @@ for k=2:Nstep
     currentDesiredPos = r_d(:,k);
     e(:,k) = abs(currentDesiredPos - currentState(1:2));
     e_tot(k) = sqrt_of_quadratics(e(:,k));
+    e_theta(k) = abs(theta_d(k)- q_history(3,k));
 
-    currentTheta_des = atan2(dr_d(2,k),dr_d(1,k));
-    desiredTheta_time(k) = currentTheta_des;
-    e_theta(k) = abs(currentTheta_des- q_history(3,k));
 end
 
 q_evolution = q_history;

@@ -1,50 +1,47 @@
-function plot_function(data, title_name, labels_names, timeVec, linewidth, colors, counter)
+function plot_function(data, title_name, labels_names, lineNames, timeVec, linewidth, colors, counter)
     % Utility function for the stacked plots.
     persistent n
     if isempty(n)
         n = 0;
     end
     % The inserted string with the names of the labels is splitted and the number of "lines" of plots is counted.
-    splittedLabels = split(labels_names,';'); number = length(splittedLabels);   
+    splittedLabels = split(labels_names,';'); number = length(splittedLabels);
+    splittedLineNames = split(lineNames,';');  
     figure(n+5), hold off,
-    if size(data,2) > 3
-        D = milliseconds(0:2000)*10;
+    if size(data,1) > 4
+        len = length(timeVec) -1;
+        D = milliseconds(0:len)*10;
         TT = array2timetable(data,...
                            'RowTimes', D, ...
-                            'VariableNames', {'x_NOPT_PERT','y_NOPT_PERT','theta_NOPT_PERT','x_OPT_PERT', 'y_OPT_PERT', 'theta_OPT_PERT'});
-        s = stackedplot(TT, {[1,4],[2 5],[3 6]}, 'LineWidth',linewidth);
-        % Get axes handles
-        ax = flip(findobj(s.NodeChildren, 'Type','Axes')); % order: top to bottom
-        % Get line handles in axes
-        lines1 = flip(ax(1).Children); % order: top to bottom
-        lines2 = flip(ax(2).Children); % order: top to bottom
-        lines3 = flip(ax(3).Children); % order: top to bottom
-        % Color lines in selected axes
-        drawnow(); pause(.05) % required
-        lines1(1).Color = colors(1,:);
-        % lines1(2).Color = colors(2,:);
-        % lines2(1).Color = colors(3,:);
-        % lines2(2).Color = colors(4,:);
-        % lines3(1).Color = colors(5,:);
-        % lines3(2).Color = colors(6,:);
-        s.LineProperties(1).LineStyle={'-.','-'};
-        s.LineProperties(2).LineStyle={':','--'};
-        s.LineProperties(3).LineStyle={'-.',':'};
+                            'VariableNames',splittedLineNames);
+        s = stackedplot(TT, {[1,4],[2 5],[3 6]},'LineWidth',linewidth);
+        % Change the line style and Colors
+        s.LineProperties(1).LineStyle = {'-','-.'};
+        s.LineProperties(1).Color = colors(1:2,:);
+        s.LineProperties(2).LineStyle = {'-','-.'};
+        s.LineProperties(2).Color = colors(3:4,:);
+        s.LineProperties(3).LineStyle = {'-','-.'};
+        s.LineProperties(3).Color = colors(5:6,:);
+        % Set our labels
         s.DisplayLabels = splittedLabels;
+        % Update counter for the next time this function is called.
+        counter = counter + size(data,2);
+        n = n + 1;
     else
          s = stackedplot(timeVec, data', 'LineWidth',linewidth);
          % Adding the labels and the grid.
          s.DisplayLabels = splittedLabels;
+        % Changing color for each line of polt.
+        for i = counter:counter + number -1
+        s.LineProperties(i-counter+1).Color = colors(i,:);
+        end
+        % Update counters for the next time this function is called.
+        counter = counter + number; % for colors 
+        n = n + 1; % for figure number
     end
     grid on
     % Changing the size of all text and set title.
-    %fontsize(10, 'points');
+    fontsize(10, 'points');
     xlabel("time [s]"); s.Title = title_name;
-    % Changing color for each line of polt.
-    for i = counter:counter + number -1
-    s.LineProperties(i-counter+1).Color = colors(i,:);
-    end 
-    % Update counter for the next time this function is called.
-    counter = counter + number;
-    n = n + 1;
+   
 end 

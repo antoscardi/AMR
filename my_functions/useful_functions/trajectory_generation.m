@@ -1,5 +1,5 @@
-function [pos,vel,acc] = trajectory_generation(coeffMatrix, timeVec, totalTime,...
-                                               linewidth, colors, doPlotsSave)
+function [pos,vel,acc,theta_d] = trajectory_generation(coeffMatrix, timeVec, totalTime,...
+                                               linewidth, colors, doPlots)
 % Function that calculates the trajectory given a set of parameters.
 a_x = coeffMatrix(:,1);
 a_y = coeffMatrix(:,2);
@@ -27,10 +27,15 @@ pos = [ppval(polyx,timeVec); ppval(polyy,timeVec)];
 vel = [ppval(dpolyx,timeVec); ppval(dpolyy,timeVec)];
 acc = [ppval(ddpolyx,timeVec); ppval(ddpolyy,timeVec)];
 
-if doPlotsSave == true
-% Save variables for the optimization routine.
-save('data/desired_trajectory',"pos","vel","acc")
+% Calculate the desired theta, orientation of the robot on the trajectory
+len = length(vel);
+theta_d = zeros(len,1);
+for k = 1:len
+    theta_d(k) = atan2(vel(2,k),vel(1,k));
+end 
 
+if doPlots == true
+    
 %% Plots
 fontSize = 16;                 
 figure(1),
