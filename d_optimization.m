@@ -8,7 +8,12 @@ tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
 k1 = 0.1; k2 = 1; epochs = 2;
+%   k1 = 0.1; k2 = 2.5; epochs = 16; % Loss aumenta ma E_OPT = 0.020
+%   k1 = 0.1; k2 = 3; epochs = 8/10; Funziona
+%   k1 = 0.5; k2 = 5; epochs = 3; % e' uguale alla situazione precedente
+%   k1 = 0.1; k2 = 3; epochs = 9; % Tutto okay
 
+k1 = 0.5; k2 = 5; epochs = 2;
 % Initialize loss function
 Loss = zeros(1,epochs);
 
@@ -27,8 +32,14 @@ vx = zeros(grado,1); vy = zeros(grado,1); I = eye(grado);
 ax_evolution = zeros(grado,epochs); ax_evolution(:,1)= initial_ax;
 ay_evolution = zeros(grado,epochs); ay_evolution(:,1)= initial_ay;
 
-for n = 2:epochs+1
-ax_old = ax_evolution(:,n-1); ay_old = ay_evolution(:,n-1);
+colorsOfDifferentTrajectories = linspecer(epochs,"qualitative");
+counterColorTrajectory = 1;
+b=zeros(epochs);
+figure(15); hold on
+sensitivityArrayEpochs = cell(epochs,1);
+sensitivityAiArrayEpochs = cell(epochs,1);
+for n = 1:epochs
+ax_old = ax_evolution(:,n); ay_old = ay_evolution(:,n);
 newCoeffMatrix = [ax_old,ay_old];
 % Generate NEW trajectory
 [r_d,dr_d,ddr_d] = trajectory_generation(newCoeffMatrix, timeVec, totalTime,...
@@ -45,6 +56,8 @@ newCoeffMatrix = [ax_old,ay_old];
                                     q_history,xhi_history,u_history,...
                                     r_d,dr_d,ddr_d,...
                                     delta);
+% Saving the sensivity for the plot
+sensitivityArrayEpochs{n} = sens_hist;
 
 % Sensitivity_ai calculation, by calling the function gamma_integration
 sens_ai_Array = sensitivity_ai_integration_through_gamma(sens_hist,newCoeffMatrix,...
@@ -52,6 +65,7 @@ sens_ai_Array = sensitivity_ai_integration_through_gamma(sens_hist,newCoeffMatri
                                                         q_history,xhi_history,u_history,...
                                                         r_d,dr_d,ddr_d,...
                                                         delta,Nstep);
+sensitivityAiArrayEpochs{n} = sens_ai_Array;
 
 %% Calculate vi for each x and y trajectory's coefficient which is the negative gradient of the cost function
 for i= 1:grado
@@ -65,16 +79,35 @@ for i= 1:grado
 end
 
 % Calculate the loss function: as norm the trace of the sensitivity.
-Loss(n-1) = 0.5*trace(sens_last'*sens_last);
+Loss(n) = 0.5*trace(sens_last'*sens_last);
 
 % Update law of the optimization
-ax_new = ax_old + delta*(k1*pinv(M)*(dx-M*ax_evolution(:,n-1)) + k2*(I - pinv(M)*M)*vx);
-ay_new = ay_old + delta*(k1*pinv(M)*(dy-M*ay_evolution(:,n-1)) + k2*(I - pinv(M)*M)*vy);
+ax_new = ax_old + delta*(k1*pinv(M)*(dx-M*ax_evolution(:,n)) + k2*(I - pinv(M)*M)*vx);
+ay_new = ay_old + delta*(k1*pinv(M)*(dy-M*ay_evolution(:,n)) + k2*(I - pinv(M)*M)*vy);
 
-ax_evolution(:,n) = ax_new; ay_evolution(:,n) = ay_new;
+ax_evolution(:,n+1) = ax_new; ay_evolution(:,n+1) = ay_new;
 
+if counterColorTrajectory <= epochs && mod(n,2) == 0
+    b(counterColorTrajectory) = plot(r_d(1,:),r_d((2),:),'Color',colorsOfDifferentTrajectories(counterColorTrajectory,:),'LineWidth',linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('Trajectory n: %d',counterColorTrajectory));
+    xlabel("x[m]"), ylabel('y[m]'), grid minor
+    title('Trajectory Variation for each epoch'),fontsize(fontSize,"points")
+    %legend('-DynamicLegend');
+    legend('show');
+    drawnow;
+    legend(b(1:counterColorTrajectory))
+end
+if counterColorTrajectory <= epochs && mod(n,2) ~= 0
+    b(counterColorTrajectory) = plot(r_d(1,:),r_d((2),:),'Color',colorsOfDifferentTrajectories(counterColorTrajectory,:),'LineWidth',linewidth, 'DisplayName',sprintf('Trajectory n: %d',counterColorTrajectory));
+    xlabel("x[m]"), ylabel('y[m]'), grid minor
+    title('Trajectory Variation for each epoch'),fontsize(fontSize,"points")
+    %legend('-DynamicLegend');
+    legend('show');
+    drawnow;
+    legend(b(1:counterColorTrajectory))
+end
+counterColorTrajectory = counterColorTrajectory + 1;
 end 
-
+hold off
 %% Take the optimized trajectory as the last obtained in the optimization epochs:
 % One could also take the one that minimizes the loss (if it's not the last)
 ax_star = ax_evolution(:,epochs);
@@ -86,13 +119,39 @@ optimizedCoeffMatrix = [ax_star,ay_star];
                                                    linewidth, colors, true);
 
 % Plot Loss function
-figure(5)
+figure(5); hold on
 plot(1:epochs,Loss)
 title('Loss Function of a')
 xlabel('epochs'); ylabel("Norm of sens at tf");fontsize(fontSize,"points")
+hold off
+
+% Plot Sensitivity
+figure(17); hold on
+counterColorSens = 1;
+colorsOfDifferentSensitivities= linspecer((size(sens_hist,1)*epochs+1),"qualitative");
+sensAtEpoch = zeros(epochs,Nstep);
+for i=1:epochs
+    sensAtEpoch = sensitivityArrayEpochs{i};
+    for k=1:size(sens_hist,1)
+        subplot(4,3,k)
+        plot(timeVec, sensAtEpoch(k,:),'Color',colorsOfDifferentSensitivities(counterColorSens,:),'LineWidth',linewidth);
+        title(sprintf('Sensitivity element number: %d',k))
+        hold on
+        counterColorSens = counterColorSens + 1;
+    end
+    counterColorSens = counterColorSens + 1;
+end
+hold off
+
+% % Plot Sensitivity respect to the coefficients a_i
+% counterColorSens = 1;
+% sensAiAtEpoch = zeros(size(sens_hist,1),1,Nstep);
+% [m,n] = size(sens_ai_Array);
+% sensAiArrayAtEpoch = cell(m,n);
+% colorsOfDifferentSensitivitiesAi= linspecer(m*n*epochs*size(sens_hist,1) + 100,"sequential");
 
 %% Save optimized coefficients and new trajectory
-save('data/coeff_a_star',"ay_star","ay_star")
+save('data/coeff_a_star',"ax_star","ay_star")
 save('data/optimized_traj','opt_traj','opt_vel','opt_acc')
 toc
 

@@ -52,12 +52,12 @@ legend('velocity in x', 'velocity in y')
 title('Velocity varation in time'),fontsize(fontSize,"points"), hold off
 
 figure(3),
-plot(ppval(polyx,timeVec),ppval(polyy,timeVec),'Color',colors(3,:))
+plot(ppval(polyx,timeVec),ppval(polyy,timeVec),'Color',colors(3,:), 'LineWidth',linewidth)
 xlabel("x[m]"), ylabel('y[m]'), grid minor
 title('Trajectory'),fontsize(fontSize,"points")
 
 figure(4),
-plot(ppval(dpolyx,timeVec),ppval(dpolyy,timeVec),'Color',colors(4,:))
+plot(ppval(dpolyx,timeVec),ppval(dpolyy,timeVec),'Color',colors(4,:), 'LineWidth',linewidth)
 xlabel("xdot[m/s]"), ylabel('ydot[m/s]'), grid minor
 title('Velocity of the Trajectory'),fontsize(fontSize,"points")
 end 

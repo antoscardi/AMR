@@ -11,7 +11,6 @@ h_xhi = zeros(2,3); h_q = zeros(2,3);
 %% Computation of the Sensitivity
 % We do there the integration with the use of sensitivity_dot function present in my_function folder 
 sens_k = zeros(12,1); sens_int= zeros(12, Nstep);
-
 for k=1:Nstep
 
     % Creation of the vectors of the partial derivaatives needed in the integration of the Sensitivity
@@ -35,5 +34,4 @@ sensAtLastTimeInstant = [sens_int(1,Nstep) sens_int(2,Nstep);
                          sens_int(5,Nstep) sens_int(6,Nstep)];
 
 sensitivity_history = sens_int;
-
 end

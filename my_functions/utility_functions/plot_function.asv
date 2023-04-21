@@ -15,8 +15,10 @@ function plot_function(data, title_name, labels_names, timeVec, linewidth, color
         s = stackedplot(TT, {[1,4],[2 5],[3 6]}, 'LineWidth',linewidth);
         % Get axes handles
         ax = flip(findobj(s.NodeChildren, 'Type','Axes')); % order: top to bottom
+        hold(ax(1),'on'); 
         % Get line handles in axes
         lines1 = flip(ax(1).Children); % order: top to bottom
+
         lines2 = flip(ax(2).Children); % order: top to bottom
         lines3 = flip(ax(3).Children); % order: top to bottom
         % Color lines in selected axes

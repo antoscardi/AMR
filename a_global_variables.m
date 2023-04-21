@@ -79,9 +79,18 @@ clear plot_function
 counter = 1;
 
 % Set linewidth and colors.
-linewidth = 5;
-colors = linspecer(12,'sequential');
+linewidth = 3;
+colors = linspecer(12,'qualitative');
 fontSize =16;
 
+% % SIMPLER LINE COLOR EXAMPLE
+% N = 20; X = linspace(0,pi*3,1000);
+% C = linspecer(N,"qualitative")
+% hold off;
+% for ii=1:N
+% Y = sin(X+2*ii*pi/N);
+% plot(X,Y,'color',C(ii,:),'linewidth',3);
+% hold on;
+% end
 
 
