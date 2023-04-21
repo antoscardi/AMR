@@ -2,9 +2,9 @@ close all; clear; clc;
 %% HYPERPARAMETERS:
 % Nominal parameters of the robot 
 % Radius of the wheels [m].
-wheelRadius = 1.2;
+wheelRadius = 0.1;
 % Distance between the wheels [m].
-wheelDistance = 2.2;
+wheelDistance = 0.25;
 
 % NOMINAL parameters
 nominal_params = [wheelRadius; 
@@ -28,21 +28,21 @@ timeVec = 0:delta:totalTime;
 % Controller gains
 kv = 3;
 kp = 28; 
-ki = 3;
+ki = 0;
 
 % Initial position and velocity
 initialPositionVec = [5 5];
-initialVelocityVec = [1 1];
+initialVelocityVec = [0.1 1];
 
 % Position and velocity of the two break points
-firstBreak = [18 20];
-secondBreak = [40 42];
-velocityFirstBreak = [3 3];
-velocitySecondBreak = [3.5 3.5];
+firstBreak = [7 10];
+secondBreak = [12 14];
+velocityFirstBreak = [2 0.3];
+velocitySecondBreak = [2.1 0.1];
 
 % Final position and velocity.
-finalPositionVec = [62 63];
-finalVelocityVec = [2.5 2.5];
+finalPositionVec = [16 18];
+finalVelocityVec = [1.5 2];
 
 % Create dx and dy vectors
 dx = [initialPositionVec(1);

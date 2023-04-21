@@ -5,7 +5,6 @@ function djdt = sensitivity_ai_dot(t, j, dfqqgamma, dfquuai, sens, f_q, dfpqgamm
     %sensai = [j(1) j(2);
     %       j(3) j(4);
     %       j(5) j(6)]
-
     sensai  = reshape(j(1:6),2,[])';
 
     %sensxhiai = [j(7) j(8);

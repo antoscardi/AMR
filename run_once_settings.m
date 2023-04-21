@@ -30,5 +30,5 @@ for index = 1:length(index_interpreter)
 end
 
 % Generate colors
-contrast_colors = linspecer(2,'qualitative');
+contrast_colors = linspecer(5,'qualitative');
 set(groot,'DefaultAxesColorOrder',contrast_colors)

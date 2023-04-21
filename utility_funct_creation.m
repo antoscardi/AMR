@@ -43,7 +43,7 @@ xhi_dot = [[1 0]*inv(A)*eta;
 % u = h(xhi,q,r_d,p)
 new_u = inv(S)*[xhi_v; 
                [0 1]*inv(A)*eta];
-
+               
 % Partial Derivatives for sensitivity
 f_p = jacobian(q_dot,p); f_q = jacobian(q_dot,q); f_u = jacobian(q_dot,u);
 h_q = jacobian(new_u,q); h_xhi = jacobian(new_u,xhi);

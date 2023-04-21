@@ -45,7 +45,7 @@ function video(q, p, b_n, time, linewidth, delta, figureName)
         % Delay using the real time frequency
         multiplierToMAkeupforComputations = 2.7;
         if toc > delta*multiplierToMAkeupforComputations
-            %drawnow();
+            drawnow();
             tic;
         end
         if k<length(time)
