@@ -84,8 +84,8 @@ counter = 1;
 
 % Set linewidth and colors.
 linewidth = 2.5;
-colors = linspecer(6,'qualitative');
-fontSize =16;
+colors = linspecer(8,'qualitative');
+fontSize = 16;
 
 % SIMPLER LINE COLOR EXAMPLE
 N = 6; X = linspace(0,pi*3,1000);

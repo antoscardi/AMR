@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 0.01; k2 = 0.1; epochs = 5;
+k1 = 0.01; k2 = 0.1; epochs = 2;
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -33,7 +33,8 @@ colorsOfDifferentTrajectories = linspecer(epochs, "qualitative");
 counterColorTrajectory = 1;
 % Define a vector that contains the legend to be shown for plots
 b = zeros(epochs);
-figure(15); hold on
+figure(1); 
+hold on
 % Define a vector containing the sensitivity at each epoch
 sensitivityArrayEpochs = cell(epochs, 1);
 
@@ -84,7 +85,8 @@ for n = 1:epochs
     ax_new = ax_old + delta * (k1 * pinv(M) * (dx - M * ax_evolution(:, n)) + k2 * (I - pinv(M) * M) * vx);
     ay_new = ay_old + delta * (k1 * pinv(M) * (dy - M * ay_evolution(:, n)) + k2 * (I - pinv(M) * M) * vy);
 
-    ax_evolution(:, n + 1) = ax_new; ay_evolution(:, n + 1) = ay_new;
+    ax_evolution(:, n + 1) = ax_new; 
+    ay_evolution(:, n + 1) = ay_new;
 
     % Plot the trajectories with different lines and different colors
     if counterColorTrajectory <= epochs && mod(n, 2) == 0
@@ -117,19 +119,15 @@ ax_star = ax_evolution(:, epochs);
 ay_star = ay_evolution(:, epochs);
 optimizedCoeffMatrix = [ax_star, ay_star];
 
-%% Visualize optimized trajectory
-[opt_traj, opt_vel, opt_acc] = trajectory_generation(optimizedCoeffMatrix, timeVec, totalTime, ...
-    linewidth, colors, true);
-
 % Plot Loss function
-figure(5); hold on
+figure(2); hold on
 plot(1:epochs, Loss)
 title('Loss Function of a')
 xlabel('epochs'); ylabel("Norm of sens at tf"); fontsize(fontSize, "points")
 hold off
 
 % Plot Sensitivity
-figure(17); hold on
+figure(3); hold on
 % Define a counter to iterate the different colors of the different sensitivities for each epoch
 counterColorSens = 1;
 % Define the colors to be used for each epochs. 
@@ -158,7 +156,7 @@ for i = 1:epochs
     counterColorSens = counterColorSens + 20;
 end
 
-%% Save optimized coefficients and new trajectory
+%% Save optimized coefficients
 save('data/coeff_a_star', "ax_star", "ay_star")
-save('data/optimized_traj', 'opt_traj', 'opt_vel', 'opt_acc')
+
 toc

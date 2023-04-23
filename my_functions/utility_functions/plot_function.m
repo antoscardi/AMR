@@ -12,21 +12,42 @@ function plot_function(data, title_name, labels_names, lineNames, timeVec, linew
         len = length(timeVec) -1;
         D = milliseconds(0:len)*10;
         TT = array2timetable(data,...
-                           'RowTimes', D, ...
+                            'RowTimes', D, ...
                             'VariableNames',splittedLineNames);
-        s = stackedplot(TT, {[1,4],[2 5],[3 6]},'LineWidth',linewidth);
-        % Change the line style and Colors
-        s.LineProperties(1).LineStyle = {'-','-.'};
-        s.LineProperties(1).Color = colors(1:2,:);
-        s.LineProperties(2).LineStyle = {'-','-.'};
-        s.LineProperties(2).Color = colors(3:4,:);
-        s.LineProperties(3).LineStyle = {'-','-.'};
-        s.LineProperties(3).Color = colors(5:6,:);
-        % Set our labels
-        s.DisplayLabels = splittedLabels;
-        % Update counter for the next time this function is called.
-        counter = counter + size(data,2);
-        n = n + 1;
+        columns = width(TT);
+        if columns == 6
+            s = stackedplot(TT, {[1 4],[2 5],[3 6]},'LineWidth',linewidth);
+            % Change the line style and Colors
+            s.LineProperties(1).LineStyle = {'-','-.'};
+            s.LineProperties(1).Color = colors(1:2,:);
+            s.LineProperties(2).LineStyle = {'-','-.'};
+            s.LineProperties(2).Color = colors(3:4,:);
+            s.LineProperties(3).LineStyle = {'-','-.'};
+            s.LineProperties(3).Color = colors(5:6,:);
+            % Set our labels
+            s.DisplayLabels = splittedLabels;
+            % Update counter for the next time this function is called.
+            counter = counter + columns;
+            n = n + 1;
+        elseif columns == 8
+            s = stackedplot(TT, {[1 5],[2 6],[3 7],[4 8]},'LineWidth',linewidth);
+            % Change the line style and Colors
+            s.LineProperties(1).LineStyle = {'-','-.'};
+            s.LineProperties(1).Color = colors(1:2,:);
+            s.LineProperties(2).LineStyle = {'-','-.'};
+            s.LineProperties(2).Color = colors(3:4,:);
+            s.LineProperties(3).LineStyle = {'-','-.'};
+            s.LineProperties(3).Color = colors(5:6,:);
+            s.LineProperties(4).LineStyle = {'-','-.'};
+            s.LineProperties(4).Color = colors(7:8,:);
+            % Set our labels
+            s.DisplayLabels = splittedLabels;
+            % Update counter for the next time this function is called.
+            counter = counter + columns;
+            n = n + 1;
+        else 
+            disp("error")
+        end 
     else
          s = stackedplot(timeVec, data', 'LineWidth',linewidth);
          % Adding the labels and the grid.
