@@ -132,7 +132,8 @@ hold off
 figure(17); hold on
 % Define a counter to iterate the different colors of the different sensitivities for each epoch
 counterColorSens = 1;
-% Define the colors to be used for each era
+% Define the colors to be used for each epochs. 
+% NOTE: change the quantity of colors refered to the number of iteration epochs
 colorsOfDifferentSensitivities = linspecer(100, "qualitative");
 % Define a support vector to get the value of the sensitivity at each epoch
 sensAtEpoch = zeros(epochs, Nstep);
