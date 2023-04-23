@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 1; k2 = 0.2; epochs = 32;
+k1 = 0.01; k2 = 0.1; epochs = 4;
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -28,15 +28,15 @@ ax_evolution = zeros(grado, epochs); ax_evolution(:, 1) = initial_ax;
 ay_evolution = zeros(grado, epochs); ay_evolution(:, 1) = initial_ay;
 
 % Color definition for the different epochs
-colorsOfDifferentTrajectories = linspecer(epochs, "qualitative");
+colorsOfDifferentTrajectories = linspecer(40, 'qualitative');
 % Define a counter to iterate over the colors to be chosen for the various trajectories
 counterColorTrajectory = 1;
 % Define a vector that contains the legend to be shown for plots
 b = zeros(epochs);
-figure(1); 
-hold on
+figure(15); hold on
 % Define a vector containing the sensitivity at each epoch
 sensitivityArrayEpochs = cell(epochs, 1);
+counterForLegend = 1;
 
 %% Optimization cycle
 for n = 1:epochs
@@ -85,30 +85,28 @@ for n = 1:epochs
     ax_new = ax_old + delta * (k1 * pinv(M) * (dx - M * ax_evolution(:, n)) + k2 * (I - pinv(M) * M) * vx);
     ay_new = ay_old + delta * (k1 * pinv(M) * (dy - M * ay_evolution(:, n)) + k2 * (I - pinv(M) * M) * vy);
 
-    ax_evolution(:, n + 1) = ax_new; 
-    ay_evolution(:, n + 1) = ay_new;
+    ax_evolution(:, n + 1) = ax_new; ay_evolution(:, n + 1) = ay_new;
 
     % Plot the trajectories with different lines and different colors
-    if counterColorTrajectory <= epochs && mod(n, 2) == 0
-        b(counterColorTrajectory) = plot(r_d(1, :), r_d((2), :), 'Color', colorsOfDifferentTrajectories(counterColorTrajectory, :), 'LineWidth', linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('Trajectory n: %d', counterColorTrajectory));
+    if counterForLegend <= epochs && mod(n, 2) == 0
+        b(counterForLegend) = plot(r_d(1, :), r_d((2), :), 'Color', colorsOfDifferentTrajectories(counterColorTrajectory, :), 'LineWidth', linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('Trajectory n: %d', counterForLegend));
         xlabel("x[m]"), ylabel('y[m]'), grid minor
         title('Trajectory Variation for each epoch'), fontsize(fontSize, "points")
         legend('show');
         drawnow;
-        legend(b(1:counterColorTrajectory))
+        legend(b(1:counterForLegend))
     end
 
-    if counterColorTrajectory <= epochs && mod(n, 2) ~= 0
-        b(counterColorTrajectory) = plot(r_d(1, :), r_d((2), :), 'Color', colorsOfDifferentTrajectories(counterColorTrajectory, :), 'LineWidth', linewidth, 'DisplayName', sprintf('Trajectory n: %d', counterColorTrajectory));
+    if counterForLegend <= epochs && mod(n, 2) ~= 0
+        b(counterForLegend) = plot(r_d(1, :), r_d((2), :), 'Color', colorsOfDifferentTrajectories(counterColorTrajectory, :), 'LineWidth', linewidth, 'DisplayName', sprintf('Trajectory n: %d', counterForLegend));
         xlabel("x[m]"), ylabel('y[m]'), grid minor
         title('Trajectory Variation for each epoch'), fontsize(fontSize, "points")
         legend('show');
         drawnow;
-        legend(b(1:counterColorTrajectory))
+        legend(b(1:counterForLegend))
     end
-
+    counterForLegend = counterForLegend + 1;
     counterColorTrajectory = counterColorTrajectory + 1;
-    disp(n)
 end
 
 hold off
@@ -119,44 +117,44 @@ ax_star = ax_evolution(:, epochs);
 ay_star = ay_evolution(:, epochs);
 optimizedCoeffMatrix = [ax_star, ay_star];
 
+%% Visualize optimized trajectory
+[opt_traj, opt_vel, opt_acc] = trajectory_generation(optimizedCoeffMatrix, timeVec, totalTime, ...
+    linewidth, colors, true);
+
 % Plot Loss function
-figure(2); hold on
+figure(5); hold on
 plot(1:epochs, Loss)
 title('Loss Function of a')
 xlabel('epochs'); ylabel("Norm of sens at tf"); fontsize(fontSize, "points")
 hold off
 
 % Plot Sensitivity
-figure(3); hold on
+figure(17); hold on
 % Define a counter to iterate the different colors of the different sensitivities for each epoch
 counterColorSens = 1;
-% Define the colors to be used for each epochs. 
+% Define the colors to be used for each era
 % NOTE: change the quantity of colors refered to the number of iteration epochs
-colorsOfDifferentSensitivities = linspecer(100, "qualitative");
+colorsOfDifferentSensitivities = linspecer(epochs*20, "qualitative");
 % Define a support vector to get the value of the sensitivity at each epoch
 sensAtEpoch = zeros(epochs, Nstep);
-% Define a support vector that contains the legend
-plot_handles = [];
 % Define a counter to print the legend of the various elements of sensibility and sensitivity for each epoch
 counterLegend = 1;
-
 for i = 1:epochs
     sensAtEpoch = sensitivityArrayEpochs{i};
 
-    for k = 1:size(sens_hist, 1)
-        subplot(4, 3, k);
-        plot_handles(counterLegend) = plot(timeVec, sensAtEpoch(k, :), 'Color', colorsOfDifferentSensitivities(counterColorSens, :), 'LineWidth', linewidth, 'DisplayName', ['Sens n:' num2str(k) ', at Epoch' num2str(i)]);
+    for k = 1:size(sens_hist, 1)/2
+        subplot(3, 2, k);
+        plot(timeVec, sensAtEpoch(k, :), 'Color', colorsOfDifferentSensitivities(counterColorSens, :), 'LineWidth', linewidth);%'DisplayName', ['Sens n:' num2str(k) ', at Epoch' num2str(i)]);
         title(['Sens n:' num2str(k)])
         hold on
-        counterLegend = counterLegend + 1;
-        legend(plot_handles(1:counterLegend - 1));
-        legend('show')
+        %counterColorSens = counterColorSens + 1;
     end
-
-    counterColorSens = counterColorSens + 20;
+    counterColorSens = counterColorSens + 10;
+    % Define a support vector that contains the legend
+    lgd{i} = sprintf('Sens at epoch n:%d',i);
 end
-
-%% Save optimized coefficients
+legend(lgd)
+%% Save optimized coefficients and new trajectory
 save('data/coeff_a_star', "ax_star", "ay_star")
-
+save('data/optimized_traj', 'opt_traj', 'opt_vel', 'opt_acc')
 toc
