@@ -34,11 +34,9 @@ ki = 0;
 initialPositionVec = [2 1];
 initialVelocityVec = [1 1];
 
-% Position and velocity of the two break points
+% Position of the two break points
 firstBreak = [7 2];
 secondBreak = [9 7];
-velocityFirstBreak = [2 0.3];
-velocitySecondBreak = [2.1 0.1];
 
 % Final position and velocity.
 finalPositionVec = [10 10];
@@ -49,14 +47,12 @@ dx = [initialPositionVec(1);
       initialVelocityVec(1);
            0;
            0;
-     %velocityFirstBreak(1);
-          0;
+           0;
      firstBreak(1);
            0;
            0;
      secondBreak(1);
           0;
-     %velocitySecondBreak(1);
      finalPositionVec(1);
      finalVelocityVec(1)];
 
@@ -64,13 +60,11 @@ dy = [initialPositionVec(2);
       initialVelocityVec(2);
            0;
            0;
-      %velocityFirstBreak(2);
            0;
       firstBreak(2);
            0;
            0;
       secondBreak(2);
-      %velocitySecondBreak(2);
            0;
       finalPositionVec(2);
       finalVelocityVec(2)]; 
