@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 1; k2 = 0.2; epochs = 30;
+k1 = 1; k2 = 0.2; epochs = 32;
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -28,7 +28,7 @@ ax_evolution = zeros(grado, epochs); ax_evolution(:, 1) = initial_ax;
 ay_evolution = zeros(grado, epochs); ay_evolution(:, 1) = initial_ay;
 
 % Color definition for the different epochs
-colorsOfDifferentTrajectories = linspecer(40,'sequential');
+colorsOfDifferentTrajectories = linspecer(epochs,'sequential');
 % Define a counter to iterate over the colors to be chosen for the various trajectories
 counterColorTrajectory = 1;
 % Define a vector that contains the legend to be shown for plots
@@ -117,10 +117,6 @@ ax_star = ax_evolution(:, epochs);
 ay_star = ay_evolution(:, epochs);
 optimizedCoeffMatrix = [ax_star, ay_star];
 
-%% Visualize optimized trajectory
-[opt_traj, opt_vel, opt_acc] = trajectory_generation(optimizedCoeffMatrix, timeVec, totalTime, ...
-    linewidth, colors, true);
-
 % Plot Loss function
 figure(5); hold on
 plot(1:epochs, Loss)
@@ -134,7 +130,7 @@ figure(17); hold on
 counterColorSens = 1;
 % Define the colors to be used for each era
 % NOTE: change the quantity of colors refered to the number of iteration epochs
-colorsOfDifferentSensitivities = linspecer(epochs*20, "sequential");
+colorsOfDifferentSensitivities = linspecer(epochs*10, "sequential");
 % Define a support vector to get the value of the sensitivity at each epoch
 sensAtEpoch = zeros(epochs, Nstep);
 % Define a counter to print the legend of the various elements of sensibility and sensitivity for each epoch
@@ -155,5 +151,5 @@ end
 legend(lgd)
 %% Save optimized coefficients and new trajectory
 save('data/coeff_a_star', "ax_star", "ay_star")
-save('data/optimized_traj', 'opt_traj', 'opt_vel', 'opt_acc')
+
 toc
