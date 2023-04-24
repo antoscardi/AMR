@@ -1,4 +1,4 @@
-function [currentInput, currentXhi] = controller(oldState,desiredPos,oldDesiredVel,oldDesiredAcc,oldXhi,delta,nominal_params,k)
+function [currentInput, currentXhi] = controller(oldState,desiredPos,oldDesiredVel,oldDesiredAcc,oldXhi,delta,nominal_params)
     %% Controller block which takes as input the current state of the robot system and outputs the new input
     % commands at time step k+1 in order to control the robot.
     % Inside this block the functions are ALWAYS evaluated using the NOMINAL prameters of the robot

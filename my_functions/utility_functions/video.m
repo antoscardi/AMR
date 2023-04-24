@@ -9,7 +9,7 @@ function video(q, p, b_n, time, linewidth, delta, figureName)
     ylim([min(min(p(2,:),min(q(2,:))))-1 max(max(p(2,:),max(q(2,:))))+3])
     
     % Plot the entire desired trajectory at the beginning
-    desired = plot(p(1,:), p(2,:),'Color',colors(3,:),'Parent',Axes);
+    plot(p(1,:), p(2,:),'Color',colors(3,:),'Parent',Axes);
     
     % Setting variables
     R = b_n/2;
@@ -23,7 +23,7 @@ function video(q, p, b_n, time, linewidth, delta, figureName)
     % Use the proxy objects in the legend.
     % Use the proxy objects in the legend.
     legend('desired trajectory','robot trajectory','unycicle orientation');
-    %fontsize(fontSize, 'points'),
+    fontsize(fontSize, 'points'),
     
     % Iterating through the length of the time array
     tic;

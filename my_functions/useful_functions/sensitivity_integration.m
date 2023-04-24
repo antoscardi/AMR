@@ -2,11 +2,10 @@ function [sensAtLastTimeInstant, sensitivity_history] = sensitivity_integration(
                                                                      q_history,xhi_history,u_history,...
                                                                      p,dp,ddp,...
                                                                      delta)
+                                                                     
 % In this case we are substituting parameters within the functions we created, 
 % so we get the elements to create the sensitivity.
-f_q = zeros(3,3);   f_p = zeros(3,2);    f_u = zeros(3,2); 
-g_q = zeros(3,3);   g_xhi = zeros(3,3); 
-h_xhi = zeros(2,3); h_q = zeros(2,3);
+%f_q = zeros(3,3); f_p = zeros(3,2); f_u = zeros(3,2); g_q = zeros(3,3); g_xhi = zeros(3,3); h_xhi = zeros(2,3); h_q = zeros(2,3);
 
 %% Computation of the Sensitivity
 % We do there the integration with the use of sensitivity_dot function present in my_function folder 
@@ -23,7 +22,7 @@ for k=1:Nstep
     g_xhi = fg_xhi(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
 
     % Integration through ode45
-    [t_s, i] = ode45(@(t,i) sensitivity_dot(t, i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi, k), [0 delta], sens_k);
+    [~, i] = ode45(@(t,i) sensitivity_dot( i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi), [0 delta], sens_k);
     sens_k= i(end, :)'; sens_int(:,k) = sens_k;
 end
 

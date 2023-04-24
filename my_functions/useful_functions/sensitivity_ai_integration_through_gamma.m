@@ -2,7 +2,7 @@ function allSensitivitiesInOneArray = sensitivity_ai_integration_through_gamma(s
                                                   params,timeVec,...
                                                   q_history,xhi_history,u_history,...
                                                   desired_traj,dp,ddp,...
-                                                  delta,Nstep);
+                                                  delta,Nstep)
 % Get the number of coefficients
 [Ncoeff,ncolumns] = size(CoeffMatrix);
 
@@ -91,7 +91,8 @@ for i = 1:Ncoeff
         varg_a = eval(g_a_name);
         
         % Initialize gamma_k and the u-ai vec which change at every Nstep.
-        gamma_k = zeros(6,1); gamma_int = zeros(6,1,Nstep); u_ai = zeros(2,1);
+        gamma_k = zeros(6,1); gamma_int = zeros(6,1,Nstep); 
+        %u_ai = zeros(2,1);
 
         % Initialize tensor products evolution in time
         dfqqgamma_hist = zeros(3,3,Nstep); 
@@ -117,7 +118,7 @@ for i = 1:Ncoeff
         g_xhi = fg_xhi(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k));
 
         %% INTEGRATION OF GAMMA
-        [~, gammaint] = ode45(@(t,gammaint) gamma_dot(gammaint, f_q, f_u, g_q, g_xhi, h_q, h_xhi, varh_a_k, varg_a_k, k), [0 delta], gamma_k);
+        [~, gammaint] = ode45(@(t,gammaint) gamma_dot(gammaint, f_q, f_u, g_q, g_xhi, h_q, h_xhi, varh_a_k, varg_a_k), [0 delta], gamma_k);
         gamma_k = gammaint(end, :)'; 
         gamma_int(:,:,k) = gamma_k;
         
