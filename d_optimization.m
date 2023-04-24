@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 1; k2 = 0.2; epochs = 32;
+k1 = 1; k2 = 0.2; epochs = 28;
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -40,6 +40,7 @@ counterForLegend = 1;
 
 %% Optimization cycle
 for n = 1:epochs
+    disp(n),
     ax_old = ax_evolution(:, n); ay_old = ay_evolution(:, n);
     oldCoeffMatrix = [ax_old, ay_old];
     % Generate NEW trajectory
@@ -130,7 +131,9 @@ figure(17); hold on
 counterColorSens = 1;
 % Define the colors to be used for each era
 % NOTE: change the quantity of colors refered to the number of iteration epochs
-colorsOfDifferentSensitivities = linspecer(epochs*10, "sequential");
+multiplier = 5;
+%colorsOfDifferentSensitivities = linspecer(epochs*multiplier, "sequential");
+colorsOfDifferentSensitivities = linspecer(epochs, "sequential");
 % Define a support vector to get the value of the sensitivity at each epoch
 sensAtEpoch = zeros(epochs, Nstep);
 % Define a counter to print the legend of the various elements of sensibility and sensitivity for each epoch
@@ -144,7 +147,8 @@ for i = 1:epochs
         title(['Sens n:' num2str(k)])
         hold on
     end
-    counterColorSens = counterColorSens + 10;
+    %counterColorSens = counterColorSens + multiplier;
+    counterColorSens = counterColorSens + 1;
     % Define a support vector that contains the legend
     lgd{i} = sprintf('Sens at epoch n:%d',i);
 end
