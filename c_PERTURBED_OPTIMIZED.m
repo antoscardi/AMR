@@ -17,7 +17,7 @@ optimizMatrix = [ax, ay];
     linewidth, colors, false);
 %% GENERATE OPTIMIZED TRAJECTORY
 [posOpt, velOpt, accOpt, thetaOpt] = trajectory_generation(optimizMatrix, timeVec, totalTime, ...
-    linewidth, colors, false);
+    linewidth, colors, true);
 
 %% GENERATION OF OPTIMIZED TRAJECTORY WITH PERTURBED PARAMETERS
 [q_OPT_PERT, ~, ~, e_OPT_PERT] = simulation_loop(initialPositionVec, initialVelocityVec, ...
@@ -82,7 +82,7 @@ for i = 1:Nstep
 end
 
 plot_function([e_OPT_PerturbedVSNominal',eTot_OPT_PerturbedVSNominal,e_NOPT_PerturbedVSNominal',eTot_NOPT_PerturbedVSNominal],...
-    'Difference between the state variables, perturbed - nominal, on the OPTIMAL and NON-OPTIMAL trajectory', ...
+    'Difference between the state variables, nominal - perturbed, on the OPTIMAL and NON-OPTIMAL trajectory', ...
     'e_x = x_nom - x_pert [m]; e_y = y_nom - y_pert [m];e_theta = theta_nom - theta_pert [m]; e_tot_OPT = q_NOM - q_PERT [m]', ...
     'e_x_OPT;e_y_OPT;e_theta_OPT;e_tot_OPT;e_x_NOPT;e_y_NOPT;e_theta_NOPT;e_tot_NOPT', ...
     timeVec, linewidth, colors, counter)
@@ -94,8 +94,12 @@ theta_nopt = e_NOPT_PerturbedVSNominal(3,Nstep);
 x_opt = e_OPT_PerturbedVSNominal(1,Nstep);
 y_opt = e_OPT_PerturbedVSNominal(2,Nstep);
 theta_opt = e_OPT_PerturbedVSNominal(3,Nstep);
-performance = sqrt( x_opt^2 + y_opt^2 + theta_opt^2)/sqrt( x_nopt^2 + y_nopt^2 + theta_nopt^2);
+performance = sqrt(x_nopt^2 + y_nopt^2 + theta_nopt^2)/sqrt(x_opt^2 + y_opt^2 + theta_opt^2);
 strg = ['The total difference al all the states in the optimal case is ', sprintf('%1.1f',performance),' times smaller than in the non optimal one.'];
+disp(strg)
+% Difference only on x and y withouth theta
+perf_xy = eTot_NOPT_PerturbedVSNominal(Nstep)/eTot_OPT_PerturbedVSNominal(Nstep);
+strg = ['The difference on x and y in the optimal case is ', sprintf('%1.1f',perf_xy),' times smaller than in the non optimal one.'];
 disp(strg)
 
 % Error between the state vectors of the optimal and not-optimal trajectory, in the PERTURBED parameters.
@@ -110,7 +114,7 @@ end
 e_Nominal_NOPTvsOPT = zeros(3, Nstep); eTot_Nominal_NOPTvsOPT = zeros(Nstep, 1);
 
 for i = 1:Nstep
-    error_Nominal_NOPTvsOPT(:, i) = abs(q_NOPT_NOM(:, i) - q_OPT_NOM(:, i));
+    e_Nominal_NOPTvsOPT(:, i) = abs(q_NOPT_NOM(:, i) - q_OPT_NOM(:, i));
     eTot_Nominal_NOPTvsOPT(i) = sqrt_of_quadratics(e_Nominal_NOPTvsOPT(:, i));
 end
 

@@ -52,7 +52,7 @@ dx = [initialPositionVec(1);
            0;
            0;
      secondBreak(1);
-          0;
+           0;
      finalPositionVec(1);
      finalVelocityVec(1)];
 

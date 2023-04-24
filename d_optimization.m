@@ -147,7 +147,6 @@ for i = 1:epochs
         title(['Sens n:' num2str(k)])
         hold on
     end
-    %counterColorSens = counterColorSens + multiplier;
     counterColorSens = counterColorSens + 1;
     % Define a support vector that contains the legend
     lgd{i} = sprintf('Sens at epoch n:%d',i);
