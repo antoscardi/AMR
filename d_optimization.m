@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 1; k2 = 0.2; epochs = 28;
+k1 = 3; k2 = 0.1; epochs = 37; %3.4 cm di errore
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -138,13 +138,14 @@ colorsOfDifferentSensitivities = linspecer(epochs, "sequential");
 sensAtEpoch = zeros(epochs, Nstep);
 % Define a counter to print the legend of the various elements of sensibility and sensitivity for each epoch
 counterLegend = 1;
+string = ["dx/dr"; "dx/db"; "dy/dr"; "dy/db"; "dtheta/r"; "dtheta/db"]
 for i = 1:epochs
     sensAtEpoch = sensitivityArrayEpochs{i};
 
     for k = 1:size(sens_hist, 1)/2
         subplot(3, 2, k);
         plot(timeVec, sensAtEpoch(k, :), 'Color', colorsOfDifferentSensitivities(counterColorSens, :), 'LineWidth', linewidth);%'DisplayName', ['Sens n:' num2str(k) ', at Epoch' num2str(i)]);
-        title(['Sens n:' num2str(k)])
+        title([string(k)])
         hold on
     end
     counterColorSens = counterColorSens + 1;
