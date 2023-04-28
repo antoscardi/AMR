@@ -1,7 +1,7 @@
 function [sensAtLastTimeInstant, sensitivity_history] = sensitivity_integration(Nstep,nominal_params,...
                                                                      q_history,xhi_history,u_history,...
                                                                      p,dp,ddp,...
-                                                                     delta)
+                                                                     kv,ki,kp, delta)
                                                                      
 % In this case we are substituting parameters within the functions we created, 
 % so we get the elements to create the sensitivity.
@@ -16,10 +16,10 @@ for k=1:Nstep
     f_p = ff_p(q_history(:,k),u_history(:,k),nominal_params);
     f_q = ff_q(q_history(:,k),u_history(:,k),nominal_params);
     f_u = ff_u(q_history(:,k),nominal_params);
-    h_q = fh_q(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k),nominal_params);
-    h_xhi = fh_xhi(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k),nominal_params);
-    g_q = fg_q(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
-    g_xhi = fg_xhi(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k));
+    h_q = fh_q(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k),nominal_params,kv,ki,kp);
+    h_xhi = fh_xhi(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k),nominal_params,kv,ki,kp);
+    g_q = fg_q(q_history(:,k),xhi_history(:,k),p(:,k),dp(:,k),ddp(:,k),kv,ki,kp);
+    g_xhi = fg_xhi(q_history(:,k),kv,ki,kp);
 
     % Integration through ode45
     [~, i] = ode45(@(t,i) sensitivity_dot( i, f_q, f_p, f_u, g_q, g_xhi, h_q, h_xhi), [0 delta], sens_k);

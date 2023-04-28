@@ -22,16 +22,16 @@ g_a51 = zeros(3,1,Nstep);  g_a52 = zeros(3,1,Nstep);
 
 for k = 1:Nstep
 % Creation of the matrix needed in the integration of the Gamma
-h_a11(:,:,k) = h_a_1x(q_history(:,k),timeVec(k),xhi_history(:,k), params);
-h_a12(:,:,k) = h_a_1y(q_history(:,k),timeVec(k),xhi_history(:,k), params);
-h_a21(:,:,k) = h_a_2x(q_history(:,k),timeVec(k),xhi_history(:,k), params);
-h_a22(:,:,k) = h_a_2y(q_history(:,k),timeVec(k),xhi_history(:,k), params);
-h_a31(:,:,k) = h_a_3x(q_history(:,k),timeVec(k),xhi_history(:,k), params);
-h_a32(:,:,k) = h_a_3y(q_history(:,k),timeVec(k),xhi_history(:,k), params);
-h_a41(:,:,k) = h_a_4x(q_history(:,k),timeVec(k),xhi_history(:,k), params);
-h_a42(:,:,k) = h_a_4y(q_history(:,k),timeVec(k),xhi_history(:,k), params);
-h_a51(:,:,k) = h_a_5x(q_history(:,k),timeVec(k),xhi_history(:,k), params);
-h_a52(:,:,k) = h_a_5y(q_history(:,k),timeVec(k),xhi_history(:,k), params);
+h_a11(:,:,k) = h_a_1x(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
+h_a12(:,:,k) = h_a_1y(q_history(:,k),timeVec(k),xhi_history(:,k), params, kv,kp);
+h_a21(:,:,k) = h_a_2x(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
+h_a22(:,:,k) = h_a_2y(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
+h_a31(:,:,k) = h_a_3x(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
+h_a32(:,:,k) = h_a_3y(q_history(:,k),timeVec(k),xhi_history(:,k), paramskv,kp);
+h_a41(:,:,k) = h_a_4x(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
+h_a42(:,:,k) = h_a_4y(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
+h_a51(:,:,k) = h_a_5x(q_history(:,k),timeVec(k),xhi_history(:,k), params,kp);
+h_a52(:,:,k) = h_a_5y(q_history(:,k),timeVec(k),xhi_history(:,k), params,kp);
 
 g_a11(:,:,k) = g_a_1x(q_history(:,k),timeVec(k));
 g_a12(:,:,k) = g_a_1y(q_history(:,k),timeVec(k));

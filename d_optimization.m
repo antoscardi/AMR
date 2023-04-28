@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 0.01; k2 = 0.1; epochs = 92; %3.4 cm di errore
+k1 = 3; k2 = 0.1; epochs = 37; %3.4 cm di errore
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -51,13 +51,13 @@ for n = 1:epochs
     [q_history, u_history, xhi_history, ~] = simulation_loop(initialPositionVec, initialVelocityVec, ...
         delta, ...
         nominal_params, perturbed_params, false, ...
-        r_d, dr_d, ddr_d, theta_d);
+        r_d, dr_d, ddr_d, theta_d,kv,ki,kp);
 
     % Sensitivity calculation
     [sens_last, sens_hist] = sensitivity_integration(Nstep, nominal_params, ...
         q_history, xhi_history, u_history, ...
         r_d, dr_d, ddr_d, ...
-        delta);
+        kv,ki,kp,delta);
     % Saving the sensivity for the plot
     sensitivityArrayEpochs{n} = sens_hist;
 
@@ -81,12 +81,12 @@ for n = 1:epochs
 
     % Calculate the loss function: as norm the trace of the sensitivity.
     Loss(n) = 0.5 * trace(sens_last' * sens_last);
-  
+
     % Update law of the optimization
     ax_new = ax_old + delta * (k1 * pinv(M) * (dx - M * ax_evolution(:, n)) + k2 * (I - pinv(M) * M) * vx);
     ay_new = ay_old + delta * (k1 * pinv(M) * (dy - M * ay_evolution(:, n)) + k2 * (I - pinv(M) * M) * vy);
 
-    ax_evolution(:,n+1) = ax_new; ay_evolution(:,n+1) = ay_new;
+    ax_evolution(:, n + 1) = ax_new; ay_evolution(:, n + 1) = ay_new;
 
     % Plot the trajectories with different lines and different colors
     if counterForLegend <= epochs && mod(n, 2) == 0
@@ -138,7 +138,7 @@ colorsOfDifferentSensitivities = linspecer(epochs, "sequential");
 sensAtEpoch = zeros(epochs, Nstep);
 % Define a counter to print the legend of the various elements of sensibility and sensitivity for each epoch
 counterLegend = 1;
-string = ["dx/dr"; "dx/db"; "dy/dr"; "dy/db"; "dtheta/r"; "dtheta/db"];
+string = ["dx/dr"; "dx/db"; "dy/dr"; "dy/db"; "dtheta/r"; "dtheta/db"]
 for i = 1:epochs
     sensAtEpoch = sensitivityArrayEpochs{i};
 

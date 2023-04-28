@@ -1,7 +1,7 @@
 function [q_evolution,u_evolution,xhi_evolution,e_evolution] = simulation_loop(initialPositionVec,initialVelocityVec,...
                                                                                delta,...
                                                                                nominal_params, perturbed_params, doPerturbation,...
-                                                                               r_d, dr_d, ddr_d,theta_d)
+                                                                               r_d, dr_d, ddr_d,theta_d, kv,ki,kp)
 
 % Choose to have perturbed parameters or not. 
 if doPerturbation == true
@@ -51,11 +51,11 @@ for k=2:Nstep
     oldState = q_history(:,k-1);
     oldXhi = xhi_history(:,k-1);
     % IDEAL robot system outputs the next state of the system.
-    currentState = robot_system(oldInput,oldState,delta,params);
+    currentState = robot_system(oldInput,oldState,delta,params,kv,ki,kp);
 
     % CONTROLLER block, to avoid error always set this to the nominal ones.
     oldDesiredPos = r_d(:,k-1); oldDesiredVel = dr_d(:,k-1); oldDesiredAcc = ddr_d(:,k-1);
-    [currentInput,currentXhi] = controller(oldState,oldDesiredPos,oldDesiredVel,oldDesiredAcc,oldXhi,delta,nominal_params);
+    [currentInput,currentXhi] = controller(oldState,oldDesiredPos,oldDesiredVel,oldDesiredAcc,oldXhi,delta,nominal_params,kv,ki,kp);
  
     % Save q_k+1,u_k+1 and xhi_k+1 as last columns.
     q_history(:,k) = currentState;

@@ -83,11 +83,11 @@ fontSize = 16;
 
 % SIMPLER LINE COLOR EXAMPLE
 N = 6; X = linspace(0,pi*3,1000);
-hold off;
+%hold off;
 for ii=1:N
 Y = sin(X+2*ii*pi/N);
-plot(X,Y,'color',colors(ii,:),'linewidth',linewidth);
-hold on;
+%plot(X,Y,'color',colors(ii,:),'linewidth',linewidth);
+%hold on;
 end
 
 
