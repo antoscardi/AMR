@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 3; k2 = 0.1; epochs = 37; %3.4 cm di errore
+k1 = 3; k2 = 0.1; epochs = 10; %3.4 cm di errore
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -66,7 +66,7 @@ for n = 1:epochs
         nominal_params, timeVec, ...
         q_history, xhi_history, u_history, ...
         r_d, dr_d, ddr_d, ...
-        delta, Nstep);
+        kv,ki,kp,delta, Nstep);
 
     %% Calculate vi for each x and y trajectory's coefficient which is the negative gradient of the cost function
     for i = 1:grado
@@ -138,7 +138,7 @@ colorsOfDifferentSensitivities = linspecer(epochs, "sequential");
 sensAtEpoch = zeros(epochs, Nstep);
 % Define a counter to print the legend of the various elements of sensibility and sensitivity for each epoch
 counterLegend = 1;
-string = ["dx/dr"; "dx/db"; "dy/dr"; "dy/db"; "dtheta/r"; "dtheta/db"]
+string = ["dx/dr"; "dx/db"; "dy/dr"; "dy/db"; "dtheta/r"; "dtheta/db"];
 for i = 1:epochs
     sensAtEpoch = sensitivityArrayEpochs{i};
 

@@ -18,6 +18,19 @@ optimizMatrix = [ax, ay];
 %% GENERATE OPTIMIZED TRAJECTORY
 [posOpt, velOpt, accOpt, thetaOpt] = trajectory_generation(optimizMatrix, timeVec, totalTime, ...
     linewidth, colors, true);
+
+%% GENERATION OF NOT-OPTIMIZED TRAJECTORY WITH NOMINAL PARAMETERS
+[q_NOPT_NOM, ~, ~, e_NOPT_NOM] = simulation_loop(initialPositionVec, initialVelocityVec, ...
+    delta, ...
+    nominal_params, perturbed_params, false, ...
+    posNonOpt, velNonOpt, accNonOpt, thetaNonOpt, kv,ki,kp);
+%% GENERATION OF OPTIMIZED TRAJECTORY WITH NOMINAL PARAMETERS
+[q_OPT_NOM, ~, ~, e_OPT_NOM] = simulation_loop(initialPositionVec, initialVelocityVec, ...
+    delta, ...
+    nominal_params, perturbed_params, false, ...
+    posOpt, velOpt, accOpt, thetaOpt, kv,ki,kp);
+
+
 %% GENERATION OF OPTIMAL TRAJECTORY VARYING THE PERTURBED PARAMETERS
 b = zeros(21);
 counterTrajForLegend = 1;
@@ -30,17 +43,27 @@ legend('show');
 drawnow;
 legend(b(1:counterTrajForLegend))
 per_params = zeros(2,20);
+err_vec = zeros(4, 20);
+
+e_nopt=zeros(3,20); e_opt=zeros(3,20);
 for i=1:20
+
     counterTrajForLegend = counterTrajForLegend + 1;
-    var_r = randi([80,120])/100
-    var_b = randi([80,120])/100
+    var_r = randi([80,120])/100;
+    var_b = randi([80,120])/100;
     per_params(:,i) = [var_r*wheelRadius;
-                       var_b*wheelDistance]
-%% GENERATION OF OPTIMIZED TRAJECTORY WITH PERTURBED PARAMETERS
-[q_OPT_PERT, ~, ~, e_OPT_PERT] = simulation_loop(initialPositionVec, initialVelocityVec, ...
+                       var_b*wheelDistance];
+    %% GENERATION OF OPTIMIZED TRAJECTORY WITH PERTURBED PARAMETERS
+    [q_OPT_PERT, ~, ~, e_OPT_PERT] = simulation_loop(initialPositionVec, initialVelocityVec, ...
     delta, ...
     nominal_params, per_params(:,i), true, ...
-    posOpt, velOpt, accOpt, thetaOpt);
+    posOpt, velOpt, accOpt, thetaOpt, kv, ki, kp);
+    
+    err_vec(1,i)=e_OPT_PERT(end,3);
+    err_vec(2,i)=e_OPT_PERT(end,4);
+    e_opt(:,i)=abs(q_OPT_NOM(:,end)-q_OPT_PERT(:,end));
+
+
 % Plot the trajectories with different lines and different colors
     if mod(i, 2) == 0
         b(counterTrajForLegend) = plot(q_OPT_PERT(1, :), q_OPT_PERT(2, :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('Trajectory n: %d', counterTrajForLegend));
@@ -60,6 +83,7 @@ for i=1:20
     end
 end
 hold off
+
 %% GENERATION OF NON - OPTIMAL TRAJECTORY VARYING THE PERTURBED PARAMETERS
 bk = zeros(21);
 counterTrajForLegend = 1;
@@ -74,11 +98,17 @@ legend(bk(1:counterTrajForLegend))
 
 for j=1:20
    counterTrajForLegend = counterTrajForLegend + 1;
+
    %% GENERATION OF NOT-OPTIMIZED TRAJECTORY WITH PERTURBED PARAMETERS
    [q_NOPT_PERT, ~, ~, e_NOPT_PERT] = simulation_loop(initialPositionVec, initialVelocityVec, ...
     delta, ...
     nominal_params, per_params(:,j), true, ...
-    posNonOpt, velNonOpt, accNonOpt, thetaNonOpt);
+    posNonOpt, velNonOpt, accNonOpt, thetaNonOpt, kv,ki,kp);
+
+   err_vec(3,j)= e_NOPT_PERT(end,4);
+   err_vec(4,j)= e_NOPT_PERT(end,3);
+   e_nopt(:,j)=abs(q_NOPT_NOM(:,end)-q_NOPT_PERT(:,end));
+
    % Plot the trajectories with different lines and different colors
     if mod(j, 2) == 0
         bk(counterTrajForLegend) = plot(q_NOPT_PERT(1, :), q_NOPT_PERT(2, :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('Trajectory n: %d', counterTrajForLegend));
@@ -99,16 +129,6 @@ for j=1:20
 end
 hold off
 
-%% GENERATION OF NOT-OPTIMIZED TRAJECTORY WITH NOMINAL PARAMETERS
-[q_NOPT_NOM, ~, ~, e_NOPT_NOM] = simulation_loop(initialPositionVec, initialVelocityVec, ...
-    delta, ...
-    nominal_params, perturbed_params, false, ...
-    posNonOpt, velNonOpt, accNonOpt, thetaNonOpt);
-%% GENERATION OF OPTIMIZED TRAJECTORY WITH NOMINAL PARAMETERS
-[q_OPT_NOM, ~, ~, e_OPT_NOM] = simulation_loop(initialPositionVec, initialVelocityVec, ...
-    delta, ...
-    nominal_params, perturbed_params, false, ...
-    posOpt, velOpt, accOpt, thetaOpt);
 
 %% Plotting the errors
 %Plot the errors comparison with the PERTURBED parameters
@@ -165,7 +185,7 @@ x_opt = e_OPT_PerturbedVSNominal(1,Nstep);
 y_opt = e_OPT_PerturbedVSNominal(2,Nstep);
 theta_opt = e_OPT_PerturbedVSNominal(3,Nstep);
 performance = sqrt(x_nopt^2 + y_nopt^2 + theta_nopt^2)/sqrt(x_opt^2 + y_opt^2 + theta_opt^2);
-strg = ['The total difference of all the states in the optimal case is ', sprintf('%1.1f',performance),' times smaller than in the non optimal one.'];
+strg = ['The total difference al all the states in the optimal case is ', sprintf('%1.1f',performance),' times smaller than in the non optimal one.'];
 disp(strg)
 % Difference only on x and y withouth theta
 perf_xy = eTot_NOPT_PerturbedVSNominal(Nstep)/eTot_OPT_PerturbedVSNominal(Nstep);
@@ -193,6 +213,13 @@ plot_function([e_Perturbed_NOPTvsOPT',eTot_Perturbed_NOPTvsOPT,e_Nominal_NOPTvsO
     'e_x = x_nopt - x_opt [m]; e_y = y_nopt - y_opt [m];e_theta = theta_nopt - theta_opt [m]; e_tot_OPT = q_NOPT - q_OPT [m]', ...
     'e_x_PERT;e_y_PERT;e_theta_PERT;e_tot_PERT;e_x_NOM;e_y_NOM;e_theta_NOM;e_tot_NOM',...
     timeVec, linewidth, colors, counter)
+
+disp(err_vec)
+disp(e_opt)
+strg = ['La media del errore nel caso ottimo è :', sprintf('%1.5f',mean(e_opt,'all'))];
+disp(strg);
+strg = ['La media del errore nel caso NON ottimo è:', sprintf('%1.5f',mean(e_nopt,'all'))];
+disp(strg );
 
 %% Videos
 b_n = perturbed_params(2);

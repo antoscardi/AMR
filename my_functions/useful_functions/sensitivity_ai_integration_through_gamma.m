@@ -2,7 +2,7 @@ function allSensitivitiesInOneArray = sensitivity_ai_integration_through_gamma(s
                                                   params,timeVec,...
                                                   q_history,xhi_history,u_history,...
                                                   desired_traj,dp,ddp,...
-                                                  delta,Nstep)
+                                                  kv,ki,kp,delta,Nstep)
 % Get the number of coefficients
 [Ncoeff,ncolumns] = size(CoeffMatrix);
 
@@ -27,22 +27,22 @@ h_a12(:,:,k) = h_a_1y(q_history(:,k),timeVec(k),xhi_history(:,k), params, kv,kp)
 h_a21(:,:,k) = h_a_2x(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
 h_a22(:,:,k) = h_a_2y(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
 h_a31(:,:,k) = h_a_3x(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
-h_a32(:,:,k) = h_a_3y(q_history(:,k),timeVec(k),xhi_history(:,k), paramskv,kp);
+h_a32(:,:,k) = h_a_3y(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
 h_a41(:,:,k) = h_a_4x(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
 h_a42(:,:,k) = h_a_4y(q_history(:,k),timeVec(k),xhi_history(:,k), params,kv,kp);
-h_a51(:,:,k) = h_a_5x(q_history(:,k),timeVec(k),xhi_history(:,k), params,kp);
-h_a52(:,:,k) = h_a_5y(q_history(:,k),timeVec(k),xhi_history(:,k), params,kp);
+h_a51(:,:,k) = h_a_5x(q_history(:,k),xhi_history(:,k), params,kp);
+h_a52(:,:,k) = h_a_5y(q_history(:,k),xhi_history(:,k), params,kp);
 
-g_a11(:,:,k) = g_a_1x(q_history(:,k),timeVec(k));
-g_a12(:,:,k) = g_a_1y(q_history(:,k),timeVec(k));
-g_a21(:,:,k) = g_a_2x(q_history(:,k),timeVec(k));
-g_a22(:,:,k) = g_a_2y(q_history(:,k),timeVec(k));
-g_a31(:,:,k) = g_a_3x(q_history(:,k),timeVec(k));
-g_a32(:,:,k) = g_a_3y(q_history(:,k),timeVec(k));
-g_a41(:,:,k) = g_a_4x(q_history(:,k),timeVec(k));
-g_a42(:,:,k) = g_a_4y(q_history(:,k),timeVec(k));
-g_a51(:,:,k) = g_a_5x(q_history(:,k),timeVec(k));
-g_a52(:,:,k) = g_a_5y(q_history(:,k),timeVec(k));
+g_a11(:,:,k) = g_a_1x(q_history(:,k),timeVec(k),kv,kp);
+g_a12(:,:,k) = g_a_1y(q_history(:,k),timeVec(k),kv,kp);
+g_a21(:,:,k) = g_a_2x(q_history(:,k),timeVec(k),kv,kp);
+g_a22(:,:,k) = g_a_2y(q_history(:,k),timeVec(k),kv,kp);
+g_a31(:,:,k) = g_a_3x(q_history(:,k),timeVec(k),kv,kp);
+g_a32(:,:,k) = g_a_3y(q_history(:,k),timeVec(k),kv,kp);
+g_a41(:,:,k) = g_a_4x(q_history(:,k),timeVec(k),kv,kp);
+g_a42(:,:,k) = g_a_4y(q_history(:,k),timeVec(k),kv,kp);
+g_a51(:,:,k) = g_a_5x(q_history(:,k),kp);
+g_a52(:,:,k) = g_a_5y(q_history(:,k),kp);
 end
 
 %% GAMMA vectors calculation with respect to each a coefficient and TENSOR PRODUCTS.
@@ -112,10 +112,10 @@ for i = 1:Ncoeff
         % Creation of the vectors of the partial derivaatives 
         f_q = ff_q(q_history(:,k),u_history(:,k),params);
         f_u = ff_u(q_history(:,k),params);
-        h_q = fh_q(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),params);
-        h_xhi = fh_xhi(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),params);
-        g_q = fg_q(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k));
-        g_xhi = fg_xhi(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k));
+        h_q = fh_q(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),params,kv,ki,kp);
+        h_xhi = fh_xhi(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),params,kv,ki,kp);
+        g_q = fg_q(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),kv,ki,kp);
+        g_xhi = fg_xhi(q_history(:,k),kv,ki,kp);
 
         %% INTEGRATION OF GAMMA
         [~, gammaint] = ode45(@(t,gammaint) gamma_dot(gammaint, f_q, f_u, g_q, g_xhi, h_q, h_xhi, varh_a_k, varg_a_k), [0 delta], gamma_k);
@@ -133,13 +133,13 @@ for i = 1:Ncoeff
         dfqqgamma_hist(:,:,k) = df_q_q_gamma(gamma, params(1:2),u_history(:,k),q_history(:,k));
         dfpqgamma_hist(:,:,k) = df_p_q_gamma(gamma, u_history(:,k), q_history(:,k));
         dfuqgamma_hist(:,:,k) = df_u_q_gamma(gamma, params(1:2), q_history(:,k));
-        dhqqgamma_hist(:,:,k) = dh_q_q_gamma(gamma,q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k), params);
-        dhqxhigammaxhi_hist(:,:,k) =dh_q_xhi_gammaxhi(gammaxhi,q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k), params);
-        dhxhiqgamma_hist(:,:,k) =dh_xhi_q_gamma(gamma,q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k), params);
-        dhxhixhigammaxhi_hist(:,:,k) = dh_xhi_xhi_gammaxhi(gammaxhi,q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k), params);
-        dgqqgamma_hist(:,:,k) = dg_q_q_gamma(gamma,q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k));
-        dgqxhigammaxhi_hist(:, :, k) = dg_q_xhi_gammaxhi(gammaxhi,q_history(:,k));
-        dgxhiqgamma_hist(:,:,k) = dg_xhi_q_gamma(gamma,q_history(:,k));
+        dhqqgamma_hist(:,:,k) = dh_q_q_gamma(gamma,q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k), params,kv,ki,kp);
+        dhqxhigammaxhi_hist(:,:,k) =dh_q_xhi_gammaxhi(gammaxhi,q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k), params,kv,ki,kp);
+        dhxhiqgamma_hist(:,:,k) =dh_xhi_q_gamma(gamma,q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k), params,kv,ki,kp);
+        dhxhixhigammaxhi_hist(:,:,k) = dh_xhi_xhi_gammaxhi(gammaxhi,q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k), params,kv,ki,kp);
+        dgqqgamma_hist(:,:,k) = dg_q_q_gamma(gamma,q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),kv,ki,kp);
+        dgqxhigammaxhi_hist(:, :, k) = dg_q_xhi_gammaxhi(gammaxhi,q_history(:,k),kv,ki,kp);
+        dgxhiqgamma_hist(:,:,k) = dg_xhi_q_gamma(gamma,q_history(:,k),kv,ki,kp);
         dgxhixhigammaxhi_hist(:,:,k) = dg_xhi_xhi_gammaxhi();
         % With respect to u
         dfquuai_hist(:, :, k) = df_q_u_uai(q_history(:,k), u_ai, params);
@@ -177,40 +177,40 @@ dgqa11 = zeros(3,3,Nstep); dgqa12 = zeros(3,3,Nstep); dgqa21 = zeros(3,3,Nstep);
 dgxhia11 = zeros(3,3,Nstep); dgxhia12 = zeros(3,3,Nstep); dgxhia21 = zeros(3,3,Nstep); dgxhia22 = zeros(3,3,Nstep); dgxhia31 = zeros(3,3,Nstep); dgxhia32 = zeros(3,3,Nstep); dgxhia41 = zeros(3,3,Nstep); dgxhia42 = zeros(3,3,Nstep); dgxhia51 = zeros(3,3,Nstep); dgxhia52 = zeros(3,3,Nstep);
 
 for k=1:Nstep
-dhqa11(:,:,k) = dhq_a1x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa21(:,:,k) = dhq_a2x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa31(:,:,k) = dhq_a3x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa41(:,:,k) = dhq_a4x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa51(:,:,k) = dhq_a5x(params(2), params(1), q_history(3,k), xhi_history(1,k));
+dhqa11(:,:,k) = dhq_a1x(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhqa21(:,:,k) = dhq_a2x(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhqa31(:,:,k) = dhq_a3x(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhqa41(:,:,k) = dhq_a4x(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhqa51(:,:,k) = dhq_a5x(params(2), kp, params(1), q_history(3,k), xhi_history(1,k));
 
-dhqa12(:,:,k) = dhq_a1y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa22(:,:,k) = dhq_a2y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa32(:,:,k) = dhq_a3y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa42(:,:,k) = dhq_a4y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa52(:,:,k) = dhq_a5y(params(2), params(1), q_history(3,k), xhi_history(1,k));
+dhqa12(:,:,k) = dhq_a1y(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhqa22(:,:,k) = dhq_a2y(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhqa32(:,:,k) = dhq_a3y(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhqa42(:,:,k) = dhq_a4y(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhqa52(:,:,k) = dhq_a5y(params(2), kp, params(1), q_history(3,k), xhi_history(1,k));
 
-dhxhia11(:,:,k) = dhxhi_a1x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhxhia21(:,:,k) = dhxhi_a2x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhxhia31(:,:,k) = dhxhi_a3x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhxhia41(:,:,k) = dhxhi_a4x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhxhia51(:,:,k) = dhxhi_a5x(params(2), params(1), q_history(3,k), xhi_history(1,k));
+dhxhia11(:,:,k) = dhxhi_a1x(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhxhia21(:,:,k) = dhxhi_a2x(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhxhia31(:,:,k) = dhxhi_a3x(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhxhia41(:,:,k) = dhxhi_a4x(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhxhia51(:,:,k) = dhxhi_a5x(params(2), kp, params(1), q_history(3,k), xhi_history(1,k));
 
-dhxhia12(:,:,k) = dhxhi_a1y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhxhia22(:,:,k) = dhxhi_a2y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhxhia32(:,:,k) = dhxhi_a3y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhxhia42(:,:,k) = dhxhi_a4y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhxhia52(:,:,k) = dhxhi_a5y(params(2), params(1), q_history(3,k), xhi_history(1,k));
+dhxhia12(:,:,k) = dhxhi_a1y(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhxhia22(:,:,k) = dhxhi_a2y(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhxhia32(:,:,k) = dhxhi_a3y(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhxhia42(:,:,k) = dhxhi_a4y(params(2), kp, kv, params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhxhia52(:,:,k) = dhxhi_a5y(params(2), kp, params(1), q_history(3,k), xhi_history(1,k));
 
-dgqa11(:,:,k) = dgq_a1x(timeVec(k), q_history(3,k));
-dgqa21(:,:,k) = dgq_a2x(timeVec(k), q_history(3,k));
-dgqa31(:,:,k) = dgq_a3x(timeVec(k), q_history(3,k));
-dgqa41(:,:,k) = dgq_a4x(timeVec(k), q_history(3,k));
-dgqa51(:,:,k) = dgq_a5x(q_history(3,k));
-dgqa12(:,:,k) = dgq_a1y(timeVec(k), q_history(3,k));
-dgqa22(:,:,k) = dgq_a2y(timeVec(k), q_history(3,k));
-dgqa32(:,:,k) = dgq_a3y(timeVec(k), q_history(3,k));
-dgqa42(:,:,k) = dgq_a4y(timeVec(k), q_history(3,k));
-dgqa52(:,:,k) = dgq_a5y(q_history(3,k));
+dgqa11(:,:,k) = dgq_a1x(kp, kv, timeVec(k), q_history(3,k));
+dgqa21(:,:,k) = dgq_a2x(kp, kv, timeVec(k), q_history(3,k));
+dgqa31(:,:,k) = dgq_a3x(kp, kv, timeVec(k), q_history(3,k));
+dgqa41(:,:,k) = dgq_a4x(kp, kv, timeVec(k), q_history(3,k));
+dgqa51(:,:,k) = dgq_a5x(kp, q_history(3,k));
+dgqa12(:,:,k) = dgq_a1y(kp, kv, timeVec(k), q_history(3,k));
+dgqa22(:,:,k) = dgq_a2y(kp, kv, timeVec(k), q_history(3,k));
+dgqa32(:,:,k) = dgq_a3y(kp, kv, timeVec(k), q_history(3,k));
+dgqa42(:,:,k) = dgq_a4y(kp, kv, timeVec(k), q_history(3,k));
+dgqa52(:,:,k) = dgq_a5y(kp, q_history(3,k));
 
 dgxhia11(:,:,k)=dgxhi_a1x();
 dgxhia21(:,:,k)=dgxhi_a2x();
@@ -245,10 +245,10 @@ for i = 1:Ncoeff
             % The first derivatives needed here as well
             f_q = ff_q(q_history(:,k),u_history(:,k),params);
             f_u = ff_u(q_history(:,k),params);
-            h_q = fh_q(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),params);
-            h_xhi = fh_xhi(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),params);
-            g_q = fg_q(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k));
-            g_xhi = fg_xhi(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k));
+            h_q = fh_q(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),params,kv,ki,kp);
+            h_xhi = fh_xhi(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),params,kv,ki,kp);
+            g_q = fg_q(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k),kv,ki,kp);
+            g_xhi = fg_xhi(q_history(:,k),kv,ki,kp);
 
             % Sensitivity_ai integration
             [~, sensai] = ode45(@(t,sensai) sensitivity_ai_dot(t,sensai,dfqqgammaArray{i,j}(:,:,k),dfquuaiArray{i,j}(:,:,k),sens_int(1:6,k),...

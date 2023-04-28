@@ -124,7 +124,7 @@ xhi_dot = [[1 0]*inv(A)*eta;
            r_d - q(1:2)];
 
 new_u = inv(S)*[xhi_v; 
-               [0 1]*inv(A)*eta];
+               [0 1]*inv(A)*eta]
 
 % Partial Derivatives for gamma
 h_a_1x_ = jacobian(new_u,a1x) 
