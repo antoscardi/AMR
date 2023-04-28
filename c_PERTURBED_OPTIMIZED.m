@@ -52,18 +52,6 @@ plot_function([e_NOPT_NOM,e_OPT_NOM], 'Errors with NOMINAL parameters, Optimalvs
     'ex NOPT;ey NOPT;etot NOPT;e_theta NOPT;ex OPT;ey OPT;etot OPT;e_theta OPT', ...
     timeVec, linewidth, colors, counter)
 
-%% Plot the states
-% Plot the comparison between the state evolution in the optimal and not optimal case, with the PERTURBED parameters
-%plot_function([q_NOPT_PERT', q_OPT_PERT'],'Comparison between NOT OPTIMAL and OPTIMAL state evolution, PERTURBED case', ...
-%    'x [m] ; y [m]; theta [rad]', ...
-%   'x NON OPT ;y NON OPT ;theta NON OPT;x OPT;y OPT;theta OPT', ...
-%   timeVec, linewidth, colors, counter)
-% Plot the comparison between the state evolution in the optimal and not optimal case with with the NOMINAL parameters
-%plot_function([q_NOPT_NOM', q_OPT_NOM'], 'Comparison between NOT OPTIMAL and OPTIMAL state evolution, NOMINAL case', ...
-%    'x [m] ; y [m]; theta [rad]', ...
-%   'x NON OPT ;y NON OPT ;theta NON OPT;x OPT;y OPT;theta OPT', ...
-%   timeVec, linewidth, colors, counter)
-
 %% Calculating the error between the state evolution in the optimal and not optimal case, considering the perturbed or the nominal parameters
 % Error between the state vectors with the perturbed and nominal parameters, in the optimal case.
 e_OPT_PerturbedVSNominal = zeros(3, Nstep); eTot_OPT_PerturbedVSNominal = zeros(Nstep, 1);
@@ -101,28 +89,6 @@ disp(strg)
 perf_xy = eTot_NOPT_PerturbedVSNominal(Nstep)/eTot_OPT_PerturbedVSNominal(Nstep);
 strg = ['The difference on x and y in the optimal case is ', sprintf('%1.1f',perf_xy),' times smaller than in the non optimal one.'];
 disp(strg)
-
-% Error between the state vectors of the optimal and not-optimal trajectory, in the PERTURBED parameters.
-e_Perturbed_NOPTvsOPT = zeros(3, Nstep); eTot_Perturbed_NOPTvsOPT = zeros(Nstep, 1);
-
-for i = 1:Nstep
-    e_Perturbed_NOPTvsOPT(:, i) = abs(q_NOPT_PERT(:, i) - q_OPT_PERT(:, i));
-    eTot_Perturbed_NOPTvsOPT(i) = sqrt_of_quadratics(e_Perturbed_NOPTvsOPT(:, i));
-end
-
-% Error between the state vectors of the optimal and not-optimal trajectory, in the NOMINAL parameters.
-e_Nominal_NOPTvsOPT = zeros(3, Nstep); eTot_Nominal_NOPTvsOPT = zeros(Nstep, 1);
-
-for i = 1:Nstep
-    e_Nominal_NOPTvsOPT(:, i) = abs(q_NOPT_NOM(:, i) - q_OPT_NOM(:, i));
-    eTot_Nominal_NOPTvsOPT(i) = sqrt_of_quadratics(e_Nominal_NOPTvsOPT(:, i));
-end
-
-plot_function([e_Perturbed_NOPTvsOPT',eTot_Perturbed_NOPTvsOPT,e_Nominal_NOPTvsOPT', eTot_Nominal_NOPTvsOPT],...
-    'Difference between the state variables nonOptimal - optimal, in the NOMINAL and PERTURBED parameters', ...
-    'e_x = x_nopt - x_opt [m]; e_y = y_nopt - y_opt [m];e_theta = theta_nopt - theta_opt [m]; e_tot_OPT = q_NOPT - q_OPT [m]', ...
-    'e_x_PERT;e_y_PERT;e_theta_PERT;e_tot_PERT;e_x_NOM;e_y_NOM;e_theta_NOM;e_tot_NOM',...
-    timeVec, linewidth, colors, counter)
 
 %% Videos
 b_n = perturbed_params(2);

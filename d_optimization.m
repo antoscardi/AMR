@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 1; k2 = 0.2; epochs = 28;
+k1 = 1; k2 = 0.4; epochs = 7; h = 0.01;
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -79,12 +79,12 @@ for n = 1:epochs
         vy(i) = -trace(sens_last' * sensai_last);
     end
 
-    % Calculate the loss function: as norm the trace of the sensitivity.
+    % Calculate the loss function: as norm of the trace of the sensitivity.
     Loss(n) = 0.5 * trace(sens_last' * sens_last);
 
     % Update law of the optimization
-    ax_new = ax_old + delta * (k1 * pinv(M) * (dx - M * ax_evolution(:, n)) + k2 * (I - pinv(M) * M) * vx);
-    ay_new = ay_old + delta * (k1 * pinv(M) * (dy - M * ay_evolution(:, n)) + k2 * (I - pinv(M) * M) * vy);
+    ax_new = ax_old + h * (k1 * pinv(M) * (dx - M * ax_evolution(:, n)) + k2 * (I - pinv(M) * M) * vx);
+    ay_new = ay_old + h * (k1 * pinv(M) * (dy - M * ay_evolution(:, n)) + k2 * (I - pinv(M) * M) * vy);
 
     ax_evolution(:, n + 1) = ax_new; ay_evolution(:, n + 1) = ay_new;
 

@@ -39,8 +39,8 @@ g_a21(:,:,k) = g_a_2x(q_history(:,k),timeVec(k));
 g_a22(:,:,k) = g_a_2y(q_history(:,k),timeVec(k));
 g_a31(:,:,k) = g_a_3x(q_history(:,k),timeVec(k));
 g_a32(:,:,k) = g_a_3y(q_history(:,k),timeVec(k));
-g_a41(:,:,k) = g_a_4x(q_history(:,k),timeVec(k));
-g_a42(:,:,k) = g_a_4y(q_history(:,k),timeVec(k));
+g_a41(:,:,k) = g_a_4x(q_history(:,k));
+g_a42(:,:,k) = g_a_4y(q_history(:,k));
 g_a51(:,:,k) = g_a_5x(q_history(:,k),timeVec(k));
 g_a52(:,:,k) = g_a_5y(q_history(:,k),timeVec(k));
 end
@@ -180,13 +180,13 @@ for k=1:Nstep
 dhqa11(:,:,k) = dhq_a1x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
 dhqa21(:,:,k) = dhq_a2x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
 dhqa31(:,:,k) = dhq_a3x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa41(:,:,k) = dhq_a4x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhqa41(:,:,k) = dhq_a4x(params(2), params(1), q_history(3,k), xhi_history(1,k));
 dhqa51(:,:,k) = dhq_a5x(params(2), params(1), q_history(3,k), xhi_history(1,k));
 
 dhqa12(:,:,k) = dhq_a1y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
 dhqa22(:,:,k) = dhq_a2y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
 dhqa32(:,:,k) = dhq_a3y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
-dhqa42(:,:,k) = dhq_a4y(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
+dhqa42(:,:,k) = dhq_a4y(params(2), params(1), q_history(3,k), xhi_history(1,k));
 dhqa52(:,:,k) = dhq_a5y(params(2), params(1), q_history(3,k), xhi_history(1,k));
 
 dhxhia11(:,:,k) = dhxhi_a1x(params(2), params(1), timeVec(k), q_history(3,k), xhi_history(1,k));
@@ -240,7 +240,7 @@ for i = 1:Ncoeff
         dhq = eval(sprintf('dhqa%d%d', z,j)); 
         dhxhi = eval(sprintf('dhxhia%d%d', z,j));
 
-        for k=1:Nstep
+        for k=1:Nstep-1
 
             % The first derivatives needed here as well
             f_q = ff_q(q_history(:,k),u_history(:,k),params);
@@ -251,15 +251,22 @@ for i = 1:Ncoeff
             g_xhi = fg_xhi(q_history(:,k),xhi_history(:,k),desired_traj(:,k),dp(:,k),ddp(:,k));
 
             % Sensitivity_ai integration
-            [~, sensai] = ode45(@(t,sensai) sensitivity_ai_dot(t,sensai,dfqqgammaArray{i,j}(:,:,k),dfquuaiArray{i,j}(:,:,k),sens_int(1:6,k),...
+            %[~, sensai] = ode45(@(t,sensai) sensitivity_ai_dot(t,sensai,dfqqgammaArray{i,j}(:,:,k),dfquuaiArray{i,j}(:,:,k),sens_int(1:6,k),...
+            %f_q ,dfpqgammaArray{i,j}(:,:,k),dfpuuaiArray{i,j}(:,:,k),dfuqgammaArray{i,j}(:,:,k),dfuuuaiArray{i,j}(:,:,k),...
+            %h_q,h_xhi, sens_int(7:12,k), f_u,dhqqgammaArray{i,j}(:,:,k),dhqxhigammaxhiArray{i,j}(:,:,k),...
+            %dhq(:,:,k),dhxhiqgammaArray{i,j}(:,:,k), dhxhixhigammaxhiArray{i,j}(:,:,k),dhxhi(:,:,k),dgqqgammaArray{i}(:,:,k),...
+            %dgqxhigammaxhiArray{i,j}(:,:,k),dgq(:,:,k),dgxhiqgammaArray{i,j}(:,:,k),...
+            %dgxhixhigammaxhiArray{i,j}(:,:,k),dgxhi(:,:,k), g_q, g_xhi), [0 delta],sens_k);
+
+            %sens_k = sensai(end, :)'; 
+            %sensai_int(:,:,k) = sens_k;
+            sensai_int(:,:,k+1) = sensai_int(:,:,k) + delta*sensitivity_ai_dot(sensai_int(:,:,k),dfqqgammaArray{i,j}(:,:,k),dfquuaiArray{i,j}(:,:,k),sens_int(1:6,k),...
             f_q ,dfpqgammaArray{i,j}(:,:,k),dfpuuaiArray{i,j}(:,:,k),dfuqgammaArray{i,j}(:,:,k),dfuuuaiArray{i,j}(:,:,k),...
             h_q,h_xhi, sens_int(7:12,k), f_u,dhqqgammaArray{i,j}(:,:,k),dhqxhigammaxhiArray{i,j}(:,:,k),...
             dhq(:,:,k),dhxhiqgammaArray{i,j}(:,:,k), dhxhixhigammaxhiArray{i,j}(:,:,k),dhxhi(:,:,k),dgqqgammaArray{i}(:,:,k),...
             dgqxhigammaxhiArray{i,j}(:,:,k),dgq(:,:,k),dgxhiqgammaArray{i,j}(:,:,k),...
-            dgxhixhigammaxhiArray{i,j}(:,:,k),dgxhi(:,:,k), g_q, g_xhi), [0 delta],sens_k);
+            dgxhixhigammaxhiArray{i,j}(:,:,k),dgxhi(:,:,k), g_q, g_xhi);
 
-            sens_k = sensai(end, :)'; 
-            sensai_int(:,:,k) = sens_k;
         end
         sensaiCellArray{i,j} = sensai_int;
     end

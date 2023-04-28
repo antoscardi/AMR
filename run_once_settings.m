@@ -1,4 +1,4 @@
-close all; clear; clc;
+nclose all; clear; clc;
 % Create data folder
 if ~exist('../AMR/data', 'dir')
        mkdir ../AMR data

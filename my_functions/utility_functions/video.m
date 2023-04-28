@@ -43,7 +43,7 @@ function video(q, p, b_n, time, linewidth, delta, figureName)
         set(th, 'String', sprintf('Trajectory\nTime: %0.2f sec', time(k)));
     
         % Delay using the real time frequency
-        multiplierToMAkeupforComputations = 2.7;
+        multiplierToMAkeupforComputations = 2;
         if toc > delta*multiplierToMAkeupforComputations
             drawnow();
             tic;

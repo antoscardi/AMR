@@ -17,7 +17,7 @@ perturbed_params = [wheelRadius*0.8;
 % Simulation time [s]
 totalTime = 5;
 % Control frequency [Hz]
-f = 100;
+f = 2000;
 % Time step [s]
 delta = 1/f;
 % Total number of steps
@@ -42,7 +42,7 @@ secondBreak = [9 7];
 finalPositionVec = [10 10];
 finalVelocityVec = [1 1];
 
-% Create dx and dy vectors
+% Create dx and dy vectors1.5 
 dx = [initialPositionVec(1);
       initialVelocityVec(1);
            0;
