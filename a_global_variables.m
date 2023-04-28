@@ -17,7 +17,7 @@ perturbed_params = [wheelRadius*0.8;
 % Simulation time [s]
 totalTime = 5;
 % Control frequency [Hz]
-f = 100;
+f = 500;
 % Time step [s]
 delta = 1/f;
 % Total number of steps
@@ -26,8 +26,8 @@ Nstep = totalTime*f+1;
 timeVec = 0:delta:totalTime;
 
 % Controller gains
-kv = 4;
-kp = 42; 
+kv = 3;
+kp = 30; 
 ki = 0;
 
 % Initial position and velocity

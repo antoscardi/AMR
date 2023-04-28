@@ -234,13 +234,13 @@ for i = 1:Ncoeff
         z=1;
     end
     for j = 1:ncolumns
-        sens_k = zeros(12,1); sensai_int = zeros(12,1,Nstep); 
+        sensai_int = zeros(12,1,Nstep); 
         dgq = eval(sprintf('dgqa%d%d', z,j)); 
         dgxhi = eval(sprintf('dgxhia%d%d', z,j)); 
         dhq = eval(sprintf('dhqa%d%d', z,j)); 
         dhxhi = eval(sprintf('dhxhia%d%d', z,j));
 
-        for k=1:Nstep
+        for k=1:Nstep-1
 
             % The first derivatives needed here as well
             f_q = ff_q(q_history(:,k),u_history(:,k),params);
@@ -251,15 +251,12 @@ for i = 1:Ncoeff
             g_xhi = fg_xhi(q_history(:,k),kv,ki,kp);
 
             % Sensitivity_ai integration
-            [~, sensai] = ode45(@(t,sensai) sensitivity_ai_dot(t,sensai,dfqqgammaArray{i,j}(:,:,k),dfquuaiArray{i,j}(:,:,k),sens_int(1:6,k),...
+            sensai_int(:,:,k+1) = sensai_int(:,:,k) + delta*sensitivity_ai_dot(sensai_int(:,:,k),dfqqgammaArray{i,j}(:,:,k),dfquuaiArray{i,j}(:,:,k),sens_int(1:6,k),...
             f_q ,dfpqgammaArray{i,j}(:,:,k),dfpuuaiArray{i,j}(:,:,k),dfuqgammaArray{i,j}(:,:,k),dfuuuaiArray{i,j}(:,:,k),...
             h_q,h_xhi, sens_int(7:12,k), f_u,dhqqgammaArray{i,j}(:,:,k),dhqxhigammaxhiArray{i,j}(:,:,k),...
             dhq(:,:,k),dhxhiqgammaArray{i,j}(:,:,k), dhxhixhigammaxhiArray{i,j}(:,:,k),dhxhi(:,:,k),dgqqgammaArray{i}(:,:,k),...
             dgqxhigammaxhiArray{i,j}(:,:,k),dgq(:,:,k),dgxhiqgammaArray{i,j}(:,:,k),...
-            dgxhixhigammaxhiArray{i,j}(:,:,k),dgxhi(:,:,k), g_q, g_xhi), [0 delta],sens_k);
-
-            sens_k = sensai(end, :)'; 
-            sensai_int(:,:,k) = sens_k;
+            dgxhixhigammaxhiArray{i,j}(:,:,k),dgxhi(:,:,k), g_q, g_xhi);
         end
         sensaiCellArray{i,j} = sensai_int;
     end

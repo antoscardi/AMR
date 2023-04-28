@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 3; k2 = 0.5; epochs = 10; h = 0.005;
+k1 = 3; k2 = 0.1; epochs = 10; h = 0.009;
 
 % Initialize loss function
 Loss = zeros(1, epochs);
