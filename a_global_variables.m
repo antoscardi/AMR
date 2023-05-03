@@ -26,9 +26,21 @@ Nstep = totalTime*f+1;
 timeVec = 0:delta:totalTime;
 
 % Controller gains 
-% kv = 4;
-% kp = 42; 
-% ki = 0;
+kv = 3;
+kp = 30; 
+ki = 0;
+
+% Initial position and velocity
+initialPositionVec = [0 0];
+initialVelocityVec = [0.1 0.1];
+
+% Position of the two break points
+firstBreak = [1 3];
+secondBreak = [5 2];
+
+% Final position and velocity.
+finalPositionVec = [8 5];
+finalVelocityVec = [0.1 1];
 
 %Controller with integral action
 % kv = 3;
@@ -48,22 +60,22 @@ timeVec = 0:delta:totalTime;
 % finalVelocityVec = [1 1];
 
 %% Control gains Antonio
-kv = 6; %6
-kp = 150; %60
-ki = 0;
+% kv = 6; %6
+% kp = 150; %60
+% ki = 0;
 
 %% Traiettoria Antonio
-% Initial position and velocity
-initialPositionVec = [0 0];
-initialVelocityVec = [1 1];
-
-% Position of the two break points
-firstBreak = [1 3];
-secondBreak = [5 1];
-
-% Final position and velocity.
-finalPositionVec = [8 5];
-finalVelocityVec = [2 2.5];
+% % Initial position and velocity
+% initialPositionVec = [0 0];
+% initialVelocityVec = [1 1];
+% 
+% % Position of the two break points
+% firstBreak = [1 3];
+% secondBreak = [5 1];
+% 
+% % Final position and velocity.
+% finalPositionVec = [8 5];
+% finalVelocityVec = [2 2.5];
 
 % Create dx and dy vectors
 dx = [initialPositionVec(1);

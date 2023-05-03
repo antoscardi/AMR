@@ -19,7 +19,7 @@ addpath ../AMR/my_functions/useful_functions
 % Set settings for all plots
 defaultLinewidth = 1.5;
 set(groot,'defaultLineLineWidth', defaultLinewidth)
-set(groot,'defaultAxesTitleFontSizeMultiplier',3)
+set(groot,'defaultAxesTitleFontSizeMultiplier',2)
 set(groot,'defaultfigureposition',[100 100 540 400])
 set(groot,'defaultLegendAutoUpdate','off')
 

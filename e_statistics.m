@@ -1,4 +1,4 @@
-close all; clc;
+close all; clc; 
 
 fileCoeff = 'data/coeff_a_star';
 dataCoefficients = load(fileCoeff, 'ax_star', 'ay_star');
