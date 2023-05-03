@@ -157,7 +157,7 @@ function plot_function(data, title_name, main_label,labels_names, lineNames, sta
         s.DisplayLabels = splittedLabels;
         % Font of the stackedplot
         s.FontSize = stackedfont;
-        s.Xlabel = '';
+        s.XLabel = '';
         % Update figures counter n
         n = n + 1;
         grid on
