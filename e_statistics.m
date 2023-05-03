@@ -5,6 +5,7 @@ dataCoefficients = load(fileCoeff, 'ax_star', 'ay_star');
 ax = dataCoefficients.ax_star;
 ay = dataCoefficients.ay_star;
 
+
 %% GENERATION OF THE COEFFICIENT RELATED TO OPTIMAL TRAJECTORY
 optimizMatrix = [ax, ay];
 
@@ -45,13 +46,14 @@ legend(vectorForOptStateLegend(1:counterTrajForLegend))
 per_params = zeros(2,20);
 err_vec = zeros(4, 20);
 
-e_nopt=zeros(3,20); e_opt=zeros(3,20);
+e_nopt=zeros(3,21); e_opt=zeros(3,21);
 for i=1:21
     counterTrajForLegend = counterTrajForLegend + 1;
     var_r = randi([80,120])/100;
     var_b = randi([80,120])/100;
     per_params(:,i) = [var_r*wheelRadius;
                        var_b*wheelDistance];
+
     %% GENERATION OF OPTIMIZED TRAJECTORY WITH PERTURBED PARAMETERS
     [q_OPT_PERT, ~, ~, e_OPT_PERT] = simulation_loop(initialPositionVec, initialVelocityVec, ...
     delta, ...
@@ -125,7 +127,33 @@ for j=1:21
     end
 end
 
-% disp(err_vec)
+our_mean_opt_tot=0; our_mean_nopt_tot=0; our_mean_opt_theta=0; our_mean_nopt_theta=0;
+paper_mean_opt=0; paper_mean_nopt=0;
+for c=1:21
+    %Our statistic
+    our_mean_opt_tot = our_mean_opt_tot + sqrt_of_quadratics(e_opt(:,c));
+    our_mean_nopt_tot = our_mean_nopt_tot + sqrt_of_quadratics(e_nopt(:,c));
+    our_mean_opt_theta = our_mean_opt_theta + e_opt(3,c);
+    our_mean_nopt_theta = our_mean_nopt_theta + e_nopt(3,c);
+
+    %Paper statistic
+    paper_mean_opt= paper_mean_opt + sqrt(e_opt(1,c)^2 + e_opt(2,c)^2+e_opt(3,c)^2);
+    paper_mean_nopt= paper_mean_nopt + sqrt(e_nopt(1,c)^2 + e_nopt(2,c)^2+e_nopt(3,c)^2);
+end
+strg = ['Our mean_tot in the opt case is:', sprintf('%1.5f',(our_mean_opt_tot/21))]; 
+disp(strg)
+strg = ['Our mean_tot in the Nopt case is:', sprintf('%1.5f',(our_mean_nopt_tot/21))]; 
+disp(strg)
+strg = ['Our mean of theta in the opt case is:', sprintf('%1.5f',(our_mean_opt_theta/21))]; 
+disp(strg)
+strg = ['Our mean of theta in the Nopt case is:', sprintf('%1.5f',(our_mean_nopt_theta/21))]; 
+disp(strg)
+strg = ['Paper mean in the Nopt case is:', sprintf('%1.5f',(paper_mean_nopt/21))]; 
+disp(strg)
+strg = ['Paper mean in the opt case is:', sprintf('%1.5f',(paper_mean_opt/21))]; 
+disp(strg)
+
+%disp(err_vec)
 % disp(e_opt)
 % strg = ['La media del errore nel caso ottimo è :', sprintf('%1.5f',mean(e_opt,'all'))];
 % disp(strg);

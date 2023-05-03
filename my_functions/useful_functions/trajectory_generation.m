@@ -64,7 +64,17 @@ yline(0,'LineStyle','--','Color','k','LineWidth',1.5)
 xlabel("x[m]"), ylabel('y[m]'), grid minor
 title('Trajectory'),fontsize(fontSize,"points")
 
+res=zeros(1,2501);
+for i=1:2501
+    res(:,i)= sqrt_of_quadratics(vel(:,i));
+end
 figure(4),
+plot(timeVec, res','Color',colors(4,:), 'LineWidth',linewidth)
+%plot(ppval(dpolyx,timeVec),ppval(dpolyy,timeVec),'Color',colors(4,:), 'LineWidth',linewidth)
+xlabel("xdot[m/s]"), ylabel('ydot[m/s]'), grid minor
+title('Velocity of the Trajectory in time'),fontsize(fontSize,"points")
+
+figure(5),
 plot(ppval(dpolyx,timeVec),ppval(dpolyy,timeVec),'Color',colors(4,:), 'LineWidth',linewidth)
 xlabel("xdot[m/s]"), ylabel('ydot[m/s]'), grid minor
 title('Velocity of the Trajectory'),fontsize(fontSize,"points")
