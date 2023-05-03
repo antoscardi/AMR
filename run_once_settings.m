@@ -19,7 +19,7 @@ addpath ../AMR/my_functions/useful_functions
 % Set settings for all plots
 defaultLinewidth = 1.5;
 set(groot,'defaultLineLineWidth', defaultLinewidth)
-set(groot,'defaultAxesTitleFontSizeMultiplier',1.8)
+set(groot,'defaultAxesTitleFontSizeMultiplier',3)
 set(groot,'defaultfigureposition',[100 100 540 400])
 set(groot,'defaultLegendAutoUpdate','off')
 
@@ -27,7 +27,7 @@ set(groot,'defaultLegendAutoUpdate','off')
 list_factory = fieldnames(get(groot,'factory'));
 index_interpreter = find(contains(list_factory,'Interpreter'));
 for index = 1:length(index_interpreter)
-    set(groot, strrep(list_factory{index_interpreter(index)},'factory','default') ,'Latex');
+    set(groot, strrep(list_factory{index_interpreter(index)},'factory','default') ,'latex');
 end
 
 % Generate colors

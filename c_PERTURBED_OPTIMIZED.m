@@ -43,14 +43,16 @@ optimizMatrix = [ax, ay];
 %% Plotting the errors
 %Plot the errors comparison with the PERTURBED parameters
 plot_function([e_NOPT_PERT,e_OPT_PERT], 'Errors with PERTURBED parameters, OptimalvsNonOptimal trajectory tracking', ...
+    '\bf{Error = q_{des} -  q_{robot}}',...
     'e_x [m];e_y [m];e_tot [m];e_theta [rad]',...
     'ex NOPT;ey NOPT;etot NOPT;e_theta NOPT;ex OPT;ey OPT;etot OPT;e_theta OPT', ...
-    timeVec, linewidth, colors, counter)
+    timeVec, linewidth, colors,f)
 %Plot the errors comparison with the NOMINAL parameters
 plot_function([e_NOPT_NOM,e_OPT_NOM], 'Errors with NOMINAL parameters, OptimalvsNonOptimal trajectory tracking', ...
+    '\bf{Error = q_{des} -  q_{robot}}',...
     'e_x [m];e_y [m];e_tot [m];e_theta [rad]',...
     'ex NOPT;ey NOPT;etot NOPT;e_theta NOPT;ex OPT;ey OPT;etot OPT;e_theta OPT', ...
-    timeVec, linewidth, colors, counter)
+    timeVec, linewidth, colors,f)
 
 %% Calculating the error between the state evolution in the optimal and not optimal case, considering the perturbed or the nominal parameters
 % Error between the state vectors with the perturbed and nominal parameters, in the optimal case.
@@ -71,9 +73,10 @@ end
 
 plot_function([e_OPT_PerturbedVSNominal',eTot_OPT_PerturbedVSNominal,e_NOPT_PerturbedVSNominal',eTot_NOPT_PerturbedVSNominal],...
     'Difference between the state variables, nominal - perturbed, on the OPTIMAL and NON-OPTIMAL trajectory', ...
-    'e_x = x_nom - x_pert [m]; e_y = y_nom - y_pert [m];e_theta = theta_nom - theta_pert [m]; e_tot_OPT = q_NOM - q_PERT [m]', ...
+    '\bf{Error = q_{nom} -  q_{pert}}',...
+    'e_x  [m]; e_y  [m];e_theta [m]; e_tot_OPT = q_NOM - q_PERT [m]', ...
     'e_x_OPT;e_y_OPT;e_theta_OPT;e_tot_OPT;e_x_NOPT;e_y_NOPT;e_theta_NOPT;e_tot_NOPT', ...
-    timeVec, linewidth, colors, counter)
+    timeVec, linewidth, colors,f)
 
 %% Final difference of all components non-optimal/optimal
 x_nopt = e_NOPT_PerturbedVSNominal(1,Nstep);
@@ -84,6 +87,7 @@ y_opt = e_OPT_PerturbedVSNominal(2,Nstep);
 theta_opt = e_OPT_PerturbedVSNominal(3,Nstep);
 performance = sqrt(x_nopt^2 + y_nopt^2 + theta_nopt^2)/sqrt(x_opt^2 + y_opt^2 + theta_opt^2);
 strg = ['The total difference al all the states in the optimal case is ', sprintf('%1.1f',performance),' times smaller than in the non optimal one.'];
+disp("PAPER ERRORS:")
 disp(strg)
 % Difference only on x and y withouth theta
 perf_xy = eTot_NOPT_PerturbedVSNominal(Nstep)/eTot_OPT_PerturbedVSNominal(Nstep);
@@ -99,6 +103,7 @@ ey_opt = e_OPT_PERT(Nstep,2);
 etheta_opt = e_OPT_PERT(Nstep,4);
 eperformance = sqrt(ex_nopt^2 + ey_nopt^2 + etheta_nopt^2)/sqrt(ex_opt^2 + ey_opt^2 + etheta_opt^2);
 strg = ['The total difference al all the states in the optimal case is ', sprintf('%1.1f',eperformance),' times smaller than in the non optimal one.'];
+disp("OUR ERRORS:")
 disp(strg)
 % Difference only on x and y withouth theta
 eperf_xy = e_NOPT_PERT(Nstep,3)/e_OPT_PERT(Nstep,3);

@@ -17,17 +17,16 @@ doPlots = true;
                                                       nominal_params, perturbed_params, doPerturbation,...
                                                       r_d,dr_d,ddr_d,theta_d, kv, ki, kp);
 
-
 %% Create and display video animation and plots.
 % Plot comparison between state variables (vector q) and desired state.
-plot_function([q_history',r_d',theta_d],'State comparison robot vs desired',...
+plot_function([q_history',r_d',theta_d],'State evolution in time','\bf\it{q_{des} vs q_{robot}}',...
                                 'x [m] ; y [m]; theta [rad]',...
                                 'x robot;y robot;theta robot;x desired;y desired;theta desired',...
-                                 timeVec, linewidth, colors, counter) 
+                                 timeVec, linewidth, colors,f) 
 % Plot input (vector u).
-plot_function(u_history,'Input variation in time','wr [rad/s] ; wl [rad/s]','',timeVec, linewidth, colors, counter)
+plot_function(u_history','Input given at each time step','\bf{\omega [rad/s]}','right wheel;left wheel','',timeVec, linewidth, colors,f)
 % Plot errors.
-plot_function(e','Error variation over time','e_x [m] ; e_y [m] ; e_tot [m]; e_theta [rad]','',timeVec, linewidth, colors, counter)
+plot_function(e,'Error evolution in time','\bf{Error = q_{des} -  q_{robot}}','x [m]; y[m];$e_{tot}$;$\theta$','x;y',timeVec, linewidth, colors,f)
 
 % The video function just needs the distance between the wheels in order to plot the robot.
 b_n = nominal_params(2); % we are using the nominal params

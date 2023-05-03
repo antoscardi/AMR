@@ -31,16 +31,16 @@ kp = 30;
 ki = 0;
 
 % Initial position and velocity
-initialPositionVec = [2 1];
-initialVelocityVec = [1 1];
+initialPositionVec = [0 0];
+initialVelocityVec = [0.1 0.1];
 
 % Position of the two break points
-firstBreak = [7 2];
-secondBreak = [9 7];
+firstBreak = [1 3];
+secondBreak = [5 2];
 
 % Final position and velocity.
-finalPositionVec = [10 10];
-finalVelocityVec = [1 1];
+finalPositionVec = [8 5];
+finalVelocityVec = [0.1 1];
 
 % Create dx and dy vectors
 dx = [initialPositionVec(1);
