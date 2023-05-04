@@ -40,7 +40,7 @@ secondBreak = [5 2];
 
 % Final position and velocity.
 finalPositionVec = [8 5];
-finalVelocityVec = [0.1 1];
+finalVelocityVec = [0.8 0.8];
 
 %Controller with integral action
 % kv = 3;

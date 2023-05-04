@@ -37,8 +37,9 @@ end
 if doPlots == true
     
 %% Plots
-fontSize = 16;                 
+fontSize = 18; linewidth = 3;                 
 figure(1),
+fontsize(fontSize,"points")
 fnplt(polyx,linewidth), hold on
 fnplt(polyy,linewidth)
 xline(breaks(2) ,'LineStyle','--','Color','k','LineWidth',1.5),grid minor
@@ -46,9 +47,11 @@ xline(breaks(3) ,'LineStyle','--','Color','k','LineWidth',1.5)
 yline(0,'LineStyle','--','Color','k','LineWidth',1.5)
 xlabel('time [sec]'), ylabel('trajecory [m]')
 legend('trajectory in x', 'trajectory in y')
-title('Trajectory varation in time'),fontsize(fontSize,"points"), hold off
+fontsize(fontSize,"points")
+title('Trajectory varation in time'), hold off
 
 figure(2),
+fontsize(fontSize,"points")
 fnplt(dpolyx,linewidth), hold on
 fnplt(dpolyy,linewidth)
 xline(breaks(2) ,'LineStyle','--','Color','k','LineWidth',1.5),grid minor
@@ -56,28 +59,37 @@ xline(breaks(3),'LineStyle','--','Color','k','LineWidth',1.5)
 yline(0,'LineStyle','--','Color','k','LineWidth',1.5)
 xlabel("time [sec]"), ylabel('velocity [m/s]')
 legend('velocity in x', 'velocity in y')
-title('Velocity varation in time'),fontsize(fontSize,"points"), hold off
+fontsize(fontSize,"points")
+title('Velocities of the Trajectory varation in time'), hold off
 
 figure(3),
 plot(ppval(polyx,timeVec),ppval(polyy,timeVec),'Color',colors(3,:), 'LineWidth',linewidth)
 yline(0,'LineStyle','--','Color','k','LineWidth',1.5)
-xlabel("x[m]"), ylabel('y[m]'), grid minor
-title('Trajectory'),fontsize(fontSize,"points")
+xlabel("x[m]"), ylabel('y[m]'), grid on
+fontsize(fontSize,"points")
+title('Desired Trajectory')
+
 
 res=zeros(1,2501);
 for i=1:2501
     res(:,i)= sqrt_of_quadratics(vel(:,i));
 end
-figure(4),
+figure(4),grid on
 plot(timeVec, res','Color',colors(4,:), 'LineWidth',linewidth)
-%plot(ppval(dpolyx,timeVec),ppval(dpolyy,timeVec),'Color',colors(4,:), 'LineWidth',linewidth)
-xlabel("xdot[m/s]"), ylabel('ydot[m/s]'), grid minor
-title('Velocity of the Trajectory in time'),fontsize(fontSize,"points")
+xlabel("time [s]"), ylabel('velocity [m/s]'), grid minor
+xline(breaks(2) ,'LineStyle','--','Color','k','LineWidth',1.5)
+xline(breaks(3),'LineStyle','--','Color','k','LineWidth',1.5)
+yline(0,'LineStyle','--','Color','k','LineWidth',1.5)
+fontsize(fontSize,"points")
+title('Velocity of the Trajectory variation in time')
+subtitle('$ v = \sqrt{v_{x}^2 + v_{y}^2}$')
+
 
 figure(5),
-plot(ppval(dpolyx,timeVec),ppval(dpolyy,timeVec),'Color',colors(4,:), 'LineWidth',linewidth)
-xlabel("xdot[m/s]"), ylabel('ydot[m/s]'), grid minor
-title('Velocity of the Trajectory'),fontsize(fontSize,"points")
+plot(ppval(dpolyx,timeVec),ppval(dpolyy,timeVec),'Color',colors(5,:), 'LineWidth',linewidth)
+xlabel("xdot[m/s]"), ylabel('ydot[m/s]'), grid on
+fontsize(fontSize,"points")
+title('Velocity of the Trajectory')
 end 
 
 end 

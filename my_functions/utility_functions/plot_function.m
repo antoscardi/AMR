@@ -1,6 +1,6 @@
 function plot_function(data, title_name, main_label,labels_names, lineNames, stackedtitle,timeVec, linewidth, colors,f)
     % Utility function for the stacked plots.
-    font = 15; stackedfont = 11.5;
+    font = 18; stackedfont = 12;
 
     % Diminish linewidth for better comparison
     linewidth = linewidth - 1;
@@ -51,7 +51,7 @@ function plot_function(data, title_name, main_label,labels_names, lineNames, sta
     big_label = ylabel(t,main_label);
     % Changing the size of all text and set title.
     xlabel(t,"\bf{time [s]}",'fontsize',font); 
-    title(t,strcat('\bf{',title_name,'}'),'FontSize',font);
+    title(t,strcat('\bf{',title_name,'}'),'FontSize',font+1);
     big_label.FontSize = font;
 
     elseif numberOflines == 3
@@ -83,7 +83,7 @@ function plot_function(data, title_name, main_label,labels_names, lineNames, sta
     big_label = ylabel(t,main_label);
     % Changing the size of all text and set title.
     xlabel(t,"\bf{time [s]}",'fontsize',font); 
-    title(t,strcat('\bf{',title_name,'}'),'FontSize',font);
+    title(t,strcat('\bf{',title_name,'}'),'FontSize',font+1);
     big_label.FontSize = font;
  
     elseif numberOflines == 4
@@ -128,7 +128,7 @@ function plot_function(data, title_name, main_label,labels_names, lineNames, sta
 
     big_label = ylabel(t,main_label);
     % Changing the size of all text and set title.
-    title(t,strcat('\bf{',title_name,'}'),'FontSize',font);
+    title(t,strcat('\bf{',title_name,'}'),'FontSize',font+1);
     big_label.FontSize = font;
        
 
@@ -164,7 +164,7 @@ function plot_function(data, title_name, main_label,labels_names, lineNames, sta
     big_label = ylabel(t,main_label);
     % Changing the size of all text and set title.
     xlabel(t,"\bf{time [s]}",'fontsize',font); 
-    title(t,strcat('\bf{',title_name,'}'),'FontSize',font);
+    title(t,strcat('\bf{',title_name,'}'),'FontSize',font+1);
     big_label.FontSize = font;
 
     elseif numberOflines == 8
@@ -243,7 +243,7 @@ function plot_function(data, title_name, main_label,labels_names, lineNames, sta
     big_label = ylabel(t,main_label);
     % Changing the size of all text and set title.
     %xlabel(t,"\bf{time [s]}",'fontsize',font); 
-    title(t,strcat('\bf{',title_name,'}'),'FontSize',font);
+    title(t,strcat('\bf{',title_name,'}'),'FontSize',font+1);
     big_label.FontSize = font;
 
     else 
