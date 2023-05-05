@@ -26,13 +26,14 @@ Nstep = totalTime*f+1;
 timeVec = 0:delta:totalTime;
 
 % Controller gains 
-kv = 3;
-kp = 30; 
-ki = 0;
+kv = 5;
+kp = 42; 
+ki = 30;
 
 % Initial position and velocity
 initialPositionVec = [0 0];
-initialVelocityVec = [0.1 0.1];
+initialVelocityVec = [0.2 0.2];
+
 
 % Position of the two break points
 firstBreak = [1 3];
@@ -40,7 +41,10 @@ secondBreak = [5 2];
 
 % Final position and velocity.
 finalPositionVec = [8 5];
-finalVelocityVec = [0.8 0.8];
+finalVelocityVec = [2 2];
+
+% PTOVA CHE OTTIMIZZA 18/20
+% finalVelocityVec = [2.5 2.5];
 
 %Controller with integral action
 % kv = 3;
@@ -114,7 +118,7 @@ counter = 1;
 % Set linewidth and colors.
 linewidth = 2.5;
 colors = linspecer(8,'qualitative');
-fontSize = 16;
+fontSize = 20;
 
 % SIMPLER LINE COLOR EXAMPLE
 N = 6; X = linspace(0,pi*3,1000);

@@ -1,10 +1,15 @@
 close all; clc; 
+%% INIZIALIZE RANDOM SEED FOR REPRODUCTION
+rng('default');
+rng(42);
 
 fileCoeff = 'data/coeff_a_star';
 dataCoefficients = load(fileCoeff, 'ax_star', 'ay_star');
 ax = dataCoefficients.ax_star;
 ay = dataCoefficients.ay_star;
 
+%% SETTING THE NUMBER OF PERTURBATIONS OF THE PARAMETERS
+numberOfPerturbations = 20;
 
 %% GENERATION OF THE COEFFICIENT RELATED TO OPTIMAL TRAJECTORY
 optimizMatrix = [ax, ay];
@@ -14,7 +19,7 @@ optimizMatrix = [ax, ay];
 
 %% GENERATE OPTIMIZED TRAJECTORY
 [posOpt, velOpt, accOpt, thetaOpt] = trajectory_generation(optimizMatrix, timeVec, totalTime, ...
-    linewidth, colors, true);
+    linewidth, colors, false);
 
 %% GENERATION OF OPTIMIZED TRAJECTORY WITH NOMINAL PARAMETERS
 [q_OPT_NOM, ~, ~, e_OPT_NOM] = simulation_loop(initialPositionVec, initialVelocityVec, ...
@@ -33,26 +38,31 @@ optimizMatrix = [ax, ay];
 
 hold off
 %% GENERATION OF OPTIMAL STATES ROBOT
-figure(70); hold on
-vectorForOptStateLegend = zeros(22,1);
+fig1 = figure(120); hold on
+vectorForOptStateLegend = zeros(numberOfPerturbations+1,1);
 counterTrajForLegend = 1;
-colorsOfDifferentTrajectories = linspecer(25,'sequential');
-vectorForOptStateLegend(counterTrajForLegend) = plot(posOpt(1, :), posOpt(2, :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', 4.5, 'DisplayName', sprintf('Trajectory Optimal'));
-xlabel("x[m]"), ylabel('y[m]'), grid minor
-title('State Variation'), fontsize(fontSize, "points")
+colorsOfDifferentTrajectories = linspecer(numberOfPerturbations+10,'sequential');
+vectorForOptStateLegend(counterTrajForLegend) = plot( posOpt(1, :), posOpt(2, :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', 4.5, 'DisplayName', sprintf('Trajectory Optimal'));
+xlabel("x [m]"), ylabel('y [m]','Rotation',0), grid on
+title('Unicycle State Optimal Trajectory Tracking variation w.r.t. parameters:')
+subtitle('parameters sampled randomly from uniform distribution: $p \sim \mathcal{U}_{(0.8p,1.2p)}$')
+fontsize(fontSize, "points")
 legend('show');
 drawnow;
 legend(vectorForOptStateLegend(1:counterTrajForLegend))
-per_params = zeros(2,20);
-err_vec = zeros(4, 20);
+per_params = zeros(2,numberOfPerturbations);
+err_vec = zeros(4, numberOfPerturbations);
 
-e_nopt=zeros(3,21); e_opt=zeros(3,21);
-for i=1:21
+e_nopt=zeros(3,numberOfPerturbations); e_opt=zeros(3,numberOfPerturbations);
+for i=1:numberOfPerturbations
+    set(0,'CurrentFigure',fig1);
     counterTrajForLegend = counterTrajForLegend + 1;
     var_r = randi([80,120])/100;
     var_b = randi([80,120])/100;
     per_params(:,i) = [var_r*wheelRadius;
                        var_b*wheelDistance];
+    var_total = [var_r;
+                 var_b];
 
     %% GENERATION OF OPTIMIZED TRAJECTORY WITH PERTURBED PARAMETERS
     [q_OPT_PERT, ~, ~, e_OPT_PERT] = simulation_loop(initialPositionVec, initialVelocityVec, ...
@@ -66,37 +76,37 @@ for i=1:21
 
 % Plot the trajectories with different lines and different colors
     if mod(i, 2) == 0
-        vectorForOptStateLegend(counterTrajForLegend) = plot(q_OPT_PERT(1, :), q_OPT_PERT(2, :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('State variation n: %d', counterTrajForLegend));
-        xlabel("x[m]"), ylabel('y[m]'), grid on
-        title('State variation:'), fontsize(fontSize, "points")
+        vectorForOptStateLegend(counterTrajForLegend) = plot(q_OPT_PERT(1, :), q_OPT_PERT(2, :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('State variation n: %d', i));
         legend('show');
         drawnow;
-        legend(vectorForOptStateLegend(1:counterTrajForLegend))
+        legend(vectorForOptStateLegend(1:counterTrajForLegend),'FontSize',15)
     end
     if mod(i, 2) ~= 0
-        vectorForOptStateLegend(counterTrajForLegend) = plot(q_OPT_PERT(1, :), q_OPT_PERT((2), :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', linewidth, 'DisplayName', sprintf('State variation n: %d', counterTrajForLegend));
-        xlabel("x[m]"), ylabel('y[m]'), grid on
-        title('State variation:'), fontsize(fontSize, "points")
+        vectorForOptStateLegend(counterTrajForLegend) = plot(q_OPT_PERT(1, :), q_OPT_PERT((2), :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', linewidth, 'DisplayName', sprintf('State variation n: %d', i));
         legend('show');
         drawnow;
-        legend(vectorForOptStateLegend(1:counterTrajForLegend))
+        legend(vectorForOptStateLegend(1:counterTrajForLegend),'FontSize',15)
     end
+    
 end
 hold off
 
 %% GENERATION OF NON-OPTIMAL STATES ROBOT
-figure(65); hold on
-vectorForNotOptimalStateLegend = zeros(22);
+fig2 = figure(100); hold on
+vectorForNotOptimalStateLegend = zeros(numberOfPerturbations+1,1);
 counterTrajForLegendNotOpt = 1;
-colorsOfDifferentTrajectoriesNotOpt = linspecer(25,'sequential');
+colorsOfDifferentTrajectoriesNotOpt = linspecer(numberOfPerturbations+10,'sequential');
 vectorForNotOptimalStateLegend(counterTrajForLegendNotOpt) = plot(posNonOpt(1, :), posNonOpt(2, :), 'Color', colorsOfDifferentTrajectoriesNotOpt(counterTrajForLegendNotOpt, :), 'LineWidth', 4.5, 'DisplayName', sprintf('Trajectory not Optimal'));
-xlabel("x[m]"), ylabel('y[m]'), grid minor
-title('State variation'), fontsize(fontSize, "points")
+title('Unicycle State Non-Optimal Trajectory Tracking variation w.r.t. parameters:')
+subtitle('parameters sampled randomly from uniform distribution: $p \sim \mathcal{U}_{(0.8p,1.2p)}$')
+xlabel("x [m]"), ylabel('y [m]','Rotation',0), grid on
+fontsize(fontSize, "points")
 legend('show');
 drawnow;
 legend(vectorForNotOptimalStateLegend(1:counterTrajForLegendNotOpt))
 
-for j=1:21
+for j=1:numberOfPerturbations
+   set(0,'CurrentFigure',fig2);
    counterTrajForLegendNotOpt = counterTrajForLegendNotOpt + 1;
    %% GENERATION OF NOT-OPTIMIZED TRAJECTORY WITH PERTURBED PARAMETERS
    [q_NOPT_PERT, ~, ~, e_NOPT_PERT] = simulation_loop(initialPositionVec, initialVelocityVec, ...
@@ -110,52 +120,65 @@ for j=1:21
 
    % Plot the trajectories with different lines and different colors
     if mod(j, 2) == 0
-        vectorForNotOptimalStateLegend(counterTrajForLegendNotOpt) = plot(q_NOPT_PERT(1, :), q_NOPT_PERT(2, :), 'Color', colorsOfDifferentTrajectoriesNotOpt(counterTrajForLegendNotOpt, :), 'LineWidth', linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('State variation n: %d', counterTrajForLegendNotOpt));
-        xlabel("x[m]"), ylabel('y[m]'), grid on
-        title('State Variation'), fontsize(fontSize, "points")
+        vectorForNotOptimalStateLegend(counterTrajForLegendNotOpt) = plot(q_NOPT_PERT(1, :), q_NOPT_PERT(2, :), 'Color', colorsOfDifferentTrajectoriesNotOpt(counterTrajForLegendNotOpt, :), 'LineWidth', linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('State variation n: %d', j));
         legend('show');
         drawnow;
-        legend(vectorForNotOptimalStateLegend(1:counterTrajForLegendNotOpt))
+        legend(vectorForNotOptimalStateLegend(1:counterTrajForLegendNotOpt),'FontSize',15)
     end
     if mod(j, 2) ~= 0
-        vectorForNotOptimalStateLegend(counterTrajForLegendNotOpt) = plot(q_NOPT_PERT(1, :), q_NOPT_PERT((2), :), 'Color', colorsOfDifferentTrajectoriesNotOpt(counterTrajForLegendNotOpt, :), 'LineWidth', linewidth, 'DisplayName', sprintf('State variation n: %d', counterTrajForLegendNotOpt));
-        xlabel("x[m]"), ylabel('y[m]'), grid on
-        title('State Variation'), fontsize(fontSize, "points")
+        vectorForNotOptimalStateLegend(counterTrajForLegendNotOpt) = plot(q_NOPT_PERT(1, :), q_NOPT_PERT((2), :), 'Color', colorsOfDifferentTrajectoriesNotOpt(counterTrajForLegendNotOpt, :), 'LineWidth', linewidth, 'DisplayName', sprintf('State variation n: %d', j));
         legend('show');
         drawnow;
-        legend(vectorForNotOptimalStateLegend(1:counterTrajForLegendNotOpt))
+        legend(vectorForNotOptimalStateLegend(1:counterTrajForLegendNotOpt),'FontSize',15)
     end
 end
 
-our_mean_opt_tot=0; our_mean_nopt_tot=0; our_mean_opt_theta=0; our_mean_nopt_theta=0;
-paper_mean_opt=0; paper_mean_nopt=0;
-for c=1:21
-    %Our statistic
-    our_mean_opt_tot = our_mean_opt_tot + sqrt_of_quadratics(e_opt(:,c));
-    our_mean_nopt_tot = our_mean_nopt_tot + sqrt_of_quadratics(e_nopt(:,c));
-    our_mean_opt_theta = our_mean_opt_theta + e_opt(3,c);
-    our_mean_nopt_theta = our_mean_nopt_theta + e_nopt(3,c);
-
-    %Paper statistic
-    paper_mean_opt= paper_mean_opt + sqrt(e_opt(1,c)^2 + e_opt(2,c)^2+e_opt(3,c)^2);
-    paper_mean_nopt= paper_mean_nopt + sqrt(e_nopt(1,c)^2 + e_nopt(2,c)^2+e_nopt(3,c)^2);
+all_our_errors_opt_tot = zeros(1,numberOfPerturbations); all_our_errors_nopt_tot = zeros(1,numberOfPerturbations); all_our_errors_theta_opt = zeros(1,numberOfPerturbations); all_our_errors_theta_nopt = zeros(1,numberOfPerturbations);
+all_paper_errors_opt = zeros(1,numberOfPerturbations); all_paper_errors_nopt = zeros(1,numberOfPerturbations); 
+for z = 1:numberOfPerturbations
+    all_our_errors_opt_tot(z) = sqrt_of_quadratics(e_opt(:,z));
+    all_our_errors_nopt_tot(z) = sqrt_of_quadratics(e_nopt(:,z));
+    all_our_errors_theta_opt(z) = e_opt(3,z);
+    all_our_errors_theta_nopt(z) = e_nopt(3,z);
+    all_paper_errors_opt(z) = sqrt(e_opt(1,z)^2 + e_opt(2,z)^2+e_opt(3,z)^2);
+    all_paper_errors_nopt(z) = sqrt(e_nopt(1,z)^2 + e_nopt(2,z)^2+e_nopt(3,z)^2);
 end
-strg = ['Our mean_tot in the opt case is:', sprintf('%1.5f',(our_mean_opt_tot/21))]; 
+our_std_opt = std(all_our_errors_opt_tot);
+our_std_nopt = std(all_our_errors_nopt_tot);
+our_std_theta_opt = std(all_our_errors_theta_opt);
+our_std_theta_nopt = std(all_our_errors_theta_nopt);
+paper_std_errors_opt = std(all_paper_errors_opt);
+paper_std_errors_nopt = std(all_paper_errors_nopt);
+
+our_mean_opt_tot = mean(all_our_errors_opt_tot);
+our_mean_nopt_tot = mean(all_our_errors_nopt_tot);
+our_mean_opt_theta = mean(all_our_errors_theta_opt);
+our_mean_nopt_theta = mean(all_our_errors_theta_nopt);
+paper_mean_opt = mean(all_paper_errors_opt);
+paper_mean_nopt = mean(all_paper_errors_nopt);
+
+strg = ['Our mean_tot in the opt case is:', sprintf('%1.5f',(our_mean_opt_tot))]; 
 disp(strg)
-strg = ['Our mean_tot in the Nopt case is:', sprintf('%1.5f',(our_mean_nopt_tot/21))]; 
+strg = ['Our mean_tot in the Nopt case is:', sprintf('%1.5f',(our_mean_nopt_tot))]; 
 disp(strg)
-strg = ['Our mean of theta in the opt case is:', sprintf('%1.5f',(our_mean_opt_theta/21))]; 
+strg = ['Our mean of theta in the opt case is:', sprintf('%1.5f',(our_mean_opt_theta))]; 
 disp(strg)
-strg = ['Our mean of theta in the Nopt case is:', sprintf('%1.5f',(our_mean_nopt_theta/21))]; 
+strg = ['Our mean of theta in the Nopt case is:', sprintf('%1.5f',(our_mean_nopt_theta))]; 
 disp(strg)
-strg = ['Paper mean in the Nopt case is:', sprintf('%1.5f',(paper_mean_nopt/21))]; 
+strg = ['Paper mean in the Nopt case is:', sprintf('%1.5f',(paper_mean_nopt))]; 
 disp(strg)
-strg = ['Paper mean in the opt case is:', sprintf('%1.5f',(paper_mean_opt/21))]; 
+strg = ['Paper mean in the opt case is:', sprintf('%1.5f',(paper_mean_opt))]; 
 disp(strg)
 
-%disp(err_vec)
-% disp(e_opt)
-% strg = ['La media del errore nel caso ottimo è :', sprintf('%1.5f',mean(e_opt,'all'))];
-% disp(strg);
-% strg = ['La media del errore nel caso NON ottimo è:', sprintf('%1.5f',mean(e_nopt,'all'))];
-% disp(strg );
+strg = ['Our standard deviation tot in the opt case is:', sprintf('%1.5f',(our_std_opt))]; 
+disp(strg)
+strg = ['Our standard deviation tot in the Nopt case is:', sprintf('%1.5f',(our_std_nopt))]; 
+disp(strg)
+strg = ['Our standard deviation of theta in the opt case is:', sprintf('%1.5f',(our_std_theta_opt))]; 
+disp(strg)
+strg = ['Our standard deviation of theta in the Nopt case is:', sprintf('%1.5f',(our_std_theta_nopt))]; 
+disp(strg)
+strg = ['Paper standard deviation in the opt case is:', sprintf('%1.5f',(paper_std_errors_opt))]; 
+disp(strg)
+strg = ['Paper standard deviation in the Nopt case is:', sprintf('%1.5f',(paper_std_errors_nopt))]; 
+disp(strg)

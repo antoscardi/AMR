@@ -174,7 +174,7 @@ function plot_function(data, title_name, main_label,labels_names, lineNames, sta
         'RowTimes', D, ...
         'VariableNames',{splittedLineNames{1};splittedLineNames{5};splittedLineNames{2};splittedLineNames{6};...
                          'zero line';'zero line '});
-        s = stackedplot(TT, {[1 3 5],[2 4 6]},'LineWidth',linewidth);
+        s = stackedplot(TT, {[1 2 5],[3 4 6]},'LineWidth',linewidth);
         % Change the line style and Colors
         s.LineProperties(1).LineStyle = {'-','-.','--'};
         s.LineProperties(1).Color = [colors(1:2,:);[0 0 0]];
