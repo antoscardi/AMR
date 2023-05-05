@@ -34,7 +34,7 @@ optimizMatrix = [ax, ay];
 hold off
 %% GENERATION OF OPTIMAL STATES ROBOT
 figure(70); hold on
-vectorForOptStateLegend = zeros(22);
+vectorForOptStateLegend = zeros(22,1);
 counterTrajForLegend = 1;
 colorsOfDifferentTrajectories = linspecer(25,'sequential');
 vectorForOptStateLegend(counterTrajForLegend) = plot(posOpt(1, :), posOpt(2, :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', 4.5, 'DisplayName', sprintf('Trajectory Optimal'));
@@ -67,7 +67,7 @@ for i=1:21
 % Plot the trajectories with different lines and different colors
     if mod(i, 2) == 0
         vectorForOptStateLegend(counterTrajForLegend) = plot(q_OPT_PERT(1, :), q_OPT_PERT(2, :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('State variation n: %d', counterTrajForLegend));
-        xlabel("x[m]"), ylabel('y[m]'), grid minor
+        xlabel("x[m]"), ylabel('y[m]'), grid on
         title('State variation:'), fontsize(fontSize, "points")
         legend('show');
         drawnow;
@@ -75,7 +75,7 @@ for i=1:21
     end
     if mod(i, 2) ~= 0
         vectorForOptStateLegend(counterTrajForLegend) = plot(q_OPT_PERT(1, :), q_OPT_PERT((2), :), 'Color', colorsOfDifferentTrajectories(counterTrajForLegend, :), 'LineWidth', linewidth, 'DisplayName', sprintf('State variation n: %d', counterTrajForLegend));
-        xlabel("x[m]"), ylabel('y[m]'), grid minor
+        xlabel("x[m]"), ylabel('y[m]'), grid on
         title('State variation:'), fontsize(fontSize, "points")
         legend('show');
         drawnow;
@@ -111,7 +111,7 @@ for j=1:21
    % Plot the trajectories with different lines and different colors
     if mod(j, 2) == 0
         vectorForNotOptimalStateLegend(counterTrajForLegendNotOpt) = plot(q_NOPT_PERT(1, :), q_NOPT_PERT(2, :), 'Color', colorsOfDifferentTrajectoriesNotOpt(counterTrajForLegendNotOpt, :), 'LineWidth', linewidth, 'LineStyle', '-.', 'DisplayName', sprintf('State variation n: %d', counterTrajForLegendNotOpt));
-        xlabel("x[m]"), ylabel('y[m]'), grid minor
+        xlabel("x[m]"), ylabel('y[m]'), grid on
         title('State Variation'), fontsize(fontSize, "points")
         legend('show');
         drawnow;
@@ -119,7 +119,7 @@ for j=1:21
     end
     if mod(j, 2) ~= 0
         vectorForNotOptimalStateLegend(counterTrajForLegendNotOpt) = plot(q_NOPT_PERT(1, :), q_NOPT_PERT((2), :), 'Color', colorsOfDifferentTrajectoriesNotOpt(counterTrajForLegendNotOpt, :), 'LineWidth', linewidth, 'DisplayName', sprintf('State variation n: %d', counterTrajForLegendNotOpt));
-        xlabel("x[m]"), ylabel('y[m]'), grid minor
+        xlabel("x[m]"), ylabel('y[m]'), grid on
         title('State Variation'), fontsize(fontSize, "points")
         legend('show');
         drawnow;

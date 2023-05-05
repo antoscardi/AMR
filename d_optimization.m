@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 3; k2 = 0.6; epochs = 2; h = 0.0005;
+k1 = 3; k2 = 0.6; epochs = 100; h = 0.0005;
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -103,11 +103,11 @@ for n = 1:epochs
         legend(b(1:counterForLegend))
     end
     xlabel("x[m]"), ylabel('y[m]','Rotation',0), grid on
-    title('Trajectory Variation in each epoch'), fontsize(fig1, scale=1.2)  % 120%
+    title('Trajectory Variation in each epoch'),
     counterForLegend = counterForLegend + 1;
     counterColorTrajectory = counterColorTrajectory + 1;
 end
-
+fontsize(fig1, scale=1.2)  % 120%
 hold off
 
 %% Take the optimized trajectory as the last obtained in the optimization epochs:

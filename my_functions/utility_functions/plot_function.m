@@ -20,7 +20,7 @@ function plot_function(data, title_name, main_label,labels_names, lineNames, sta
     yMin = yMin - 0.1*yMin;
     yMax = yMax + 0.1*yMax;
 
-    fig = figure(n+5);
+    fig = figure(n+6);
     hold off,  
     D = seconds(0:len)/f;
     numberOflines = size(data,2);
