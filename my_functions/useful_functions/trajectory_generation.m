@@ -67,7 +67,7 @@ subtitle('variation in time'), hold off
 figure(3),
 plot(ppval(polyx,timeVec),ppval(polyy,timeVec),'Color',colors(3,:), 'LineWidth',linewidth)
 yline(0,'LineStyle','--','Color','k','LineWidth',1.5)
-xlabel("x[m]"), ylabel('y[m]','Rotation',0), grid on
+xlabel("x[m]"), ylabel('y[m]','Rotation',0), grid minor
 fontsize(fontSize,"points")
 title('Trajectory')
 subtitle('variation in x and y')
@@ -79,7 +79,7 @@ for i=1:2501
 end
 figure(4),grid on
 plot(timeVec, res','Color',colors(4,:), 'LineWidth',linewidth)
-xlabel("time [s]"), ylabel('velocity [m/s]','Rotation',0), grid on
+xlabel("time [s]"), ylabel('velocity [m/s]','Rotation',0), grid minor
 xline(breaks(2) ,'LineStyle','--','Color',"#D95319",'LineWidth',2)
 xline(breaks(3) ,'LineStyle','--','Color','#7E2F8E','LineWidth',2)
 yline(0,'LineStyle','--','Color','k','LineWidth',2)
@@ -92,7 +92,7 @@ title('Velocity of the Trajectory')
 
 figure(5),
 plot(ppval(dpolyx,timeVec),ppval(dpolyy,timeVec),'Color',colors(5,:), 'LineWidth',linewidth)
-xlabel("$\dot{x} [m/s]$"), ylabel('$\dot{y} [m/s]$','Rotation',0), grid on
+xlabel("$\dot{x} [m/s]$"), ylabel('$\dot{y} [m/s]$','Rotation',0), grid minor
 fontsize(fontSize,"points")
 title('Velocity of the Trajectory')
 subtitle(' variation in  $\dot{x}$ and  $\dot{y}$ ')

@@ -26,9 +26,9 @@ Nstep = totalTime*f+1;
 timeVec = 0:delta:totalTime;
 
 % Controller gains 
-kv = 5;
-kp = 42; 
-ki = 30;
+kv = 3;
+kp = 20; 
+ki = 10;
 
 % Initial position and velocity
 initialPositionVec = [0 0];
@@ -37,11 +37,11 @@ initialVelocityVec = [0.2 0.2];
 
 % Position of the two break points
 firstBreak = [1 3];
-secondBreak = [5 2];
+secondBreak = [6 2];
 
 % Final position and velocity.
 finalPositionVec = [8 5];
-finalVelocityVec = [2 2];
+finalVelocityVec = [1 1];
 
 % PTOVA CHE OTTIMIZZA 18/20
 % finalVelocityVec = [2.5 2.5];
