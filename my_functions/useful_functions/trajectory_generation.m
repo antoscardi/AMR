@@ -37,7 +37,7 @@ end
 if doPlots == true
     
 %% Plots
-fontSize = 20; linewidth = 3;                 
+fontSize = 15; linewidth = 3;                 
 figure(1),
 fnplt(polyx,linewidth), hold on
 fnplt(polyy,linewidth)
@@ -47,8 +47,8 @@ yline(0,'LineStyle','--','Color','k','LineWidth',2)
 xlabel('time [sec]'), ylabel('trajecory [m]','Rotation',0)
 legend('trajectory in x', 'trajectory in y','first break', 'second break', 'zero line')
 fontsize(fontSize,"points")
-title('Trajectory')
-subtitle('variation in time'), hold off
+title('Trajectory','FontSize', 12)
+subtitle('variation in time','FontSize', 12), hold off
 
 figure(2),
 fnplt(dpolyx,linewidth), hold on
@@ -59,16 +59,16 @@ yline(0,'LineStyle','--','Color','k','LineWidth',2)
 xlabel("time [sec]"), ylabel('velocity [m/s]','Rotation',0)
 legend('$\dot{x}$','$\dot{y}$','first break', 'second break', 'zero line')
 fontsize(fontSize,"points")
-title('Velocities of the Trajectory')
-subtitle('variation in time'), hold off
+title('Velocities of the Trajectory','FontSize', 12)
+subtitle('variation in time','FontSize', 12), hold off
 
 figure(3),
 plot(ppval(polyx,timeVec),ppval(polyy,timeVec),'Color',colors(3,:), 'LineWidth',linewidth)
 yline(0,'LineStyle','--','Color','k','LineWidth',1.5)
 xlabel("x[m]"), ylabel('y[m]','Rotation',0), grid minor
 fontsize(fontSize,"points")
-title('Trajectory')
-subtitle('variation in x and y')
+title('Trajectory','FontSize', 12)
+subtitle('variation in x and y','FontSize', 12)
 
 
 res=zeros(1,2501);
@@ -84,7 +84,7 @@ yline(0,'LineStyle','--','Color','k','LineWidth',2)
 legend ('$\it{v}$','first break', 'second break', 'zero line')
 subtitle({'variation in time','$ v = \sqrt{v_{x}^2 + v_{y}^2}$'})
 fontsize(fontSize,"points")
-title('Velocity of the Trajectory')
+title('Velocity of the Trajectory','FontSize', 12)
 
 
 
@@ -92,8 +92,10 @@ figure(5),
 plot(ppval(dpolyx,timeVec),ppval(dpolyy,timeVec),'Color',colors(5,:), 'LineWidth',linewidth)
 xlabel("$\dot{x} [m/s]$"), ylabel('$\dot{y} [m/s]$','Rotation',0), grid minor
 fontsize(fontSize,"points")
-title('Velocity of the Trajectory')
-subtitle(' variation in  $\dot{x}$ and  $\dot{y}$ ')
+title('Velocity of the Trajectory','FontSize', 12)
+subtitle(' variation in  $\dot{x}$ and  $\dot{y}$ ','FontSize', 12)
 end 
 
 end 
+
+
