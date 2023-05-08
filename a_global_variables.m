@@ -27,17 +27,17 @@ timeVec = 0:delta:totalTime;
 
 % Controller gains 
 kv = 3;
-kp = 20; 
-ki = 10;
+kp = 30; 
+ki = 25;
 
 % Initial position and velocity
 initialPositionVec = [0 0];
-initialVelocityVec = [0.2 0.2];
+initialVelocityVec = [0.1 0.1];
 
 
 % Position of the two break points
 firstBreak = [1 3];
-secondBreak = [6 2];
+secondBreak = [5 2];
 
 % Final position and velocity.
 finalPositionVec = [8 5];

@@ -39,7 +39,6 @@ if doPlots == true
 %% Plots
 fontSize = 20; linewidth = 3;                 
 figure(1),
-fontsize(fontSize,"points")
 fnplt(polyx,linewidth), hold on
 fnplt(polyy,linewidth)
 xline(breaks(2) ,'LineStyle','--','Color',"#D95319",'LineWidth',2),grid minor
@@ -52,7 +51,6 @@ title('Trajectory')
 subtitle('variation in time'), hold off
 
 figure(2),
-fontsize(fontSize,"points")
 fnplt(dpolyx,linewidth), hold on
 fnplt(dpolyy,linewidth)
 xline(breaks(2) ,'LineStyle','--','Color',"#D95319",'LineWidth',2),grid minor

@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 3; k2 = 0.6; epochs = 100; h = 0.0005;
+k1 = 1; k2 = 1; epochs = 15; h = 0.0001;
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -139,7 +139,7 @@ multiplier = 5;
 %colorsOfDifferentSensitivities = linspecer(epochs*multiplier, "sequential");
 colorsOfDifferentSensitivities = linspecer(epochs, "sequential");
 
-string = ["$\partial x/\partial r$"; "$\partial x/\partial b$"; "$\partial y/\partial r$"; "$\partial y/\partial b$"; "$\partial \theta/\partial b$"; "$\partial \theta/\partial b$"];
+string = ["$\partial x/\partial r$"; "$\partial x/\partial b$"; "$\partial y/\partial r$"; "$\partial y/\partial b$"; "$\partial \theta/\partial r$"; "$\partial \theta/\partial b$"];
 
 tlo = tiledlayout(3,2);
 
