@@ -28,7 +28,7 @@ timeVec = 0:delta:totalTime;
 % Controller gains 
 kv = 3;
 kp = 34; 
-ki = 0;
+ki = 2;
 
 % Initial position and velocity
 initialPositionVec = [0 0];
