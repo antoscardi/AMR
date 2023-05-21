@@ -7,7 +7,7 @@ close all; clc;
 tic
 %% OPTIMIZATION CYCLE
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 1; k2 = 0.7; epochs = 100; h = 0.0005;
+k1 = 1; k2 = 0.4; epochs = 50; h = delta;
 
 % Initialize loss function
 Loss = zeros(1, epochs);
@@ -34,6 +34,7 @@ counterColorTrajectory = 1;
 % Define a vector that contains the legend to be shown for plots
 b = zeros(epochs);
 fig1 = figure(15); hold on
+set(gcf, 'Position', get(0, 'Screensize'));
 % Define a vector containing the sensitivity at each epoch
 sensitivityArrayEpochs = cell(epochs, 1);
 counterForLegend = 1;
@@ -103,6 +104,7 @@ for n = 1:epochs
         legend(b(1:counterForLegend))
     end
     xlabel("x[m]"), ylabel('y[m]','Rotation',0), grid on
+    axis equal
     title('Trajectory Variation in each epoch'),
     counterForLegend = counterForLegend + 1;
     counterColorTrajectory = counterColorTrajectory + 1;
@@ -118,6 +120,7 @@ optimizedCoeffMatrix = [ax_star, ay_star];
 
 % Plot Loss function
 fig = figure(5);
+set(gcf, 'Position', get(0, 'Screensize'));
 plot(1:epochs, Loss,'LineWidth',3),hold on
 yline(0,'LineStyle','--','Color','k','LineWidth',1.5)
 title('\bf{Loss Function variation in each epoch}')
@@ -132,6 +135,7 @@ fontsize(fig, scale=1.2)  % 120%
 
 % Plot Sensitivity
 fig3 = figure(17); hold on
+set(gcf, 'Position', get(0, 'Screensize'));
 
 % Define the colors to be used for each era
 % NOTE: change the quantity of colors refered to the number of iteration epochs

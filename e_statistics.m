@@ -39,6 +39,7 @@ optimizMatrix = [ax, ay];
 hold off
 %% GENERATION OF OPTIMAL STATES ROBOT
 fig1 = figure(120); hold on
+set(gcf, 'Position', get(0, 'Screensize'));
 vectorForOptStateLegend = zeros(numberOfPerturbations+1,1);
 counterTrajForLegend = 1;
 colorsOfDifferentTrajectories = linspecer(numberOfPerturbations+10,'sequential');
@@ -62,7 +63,7 @@ for i=1:numberOfPerturbations
     per_params(:,i) = [var_r*wheelRadius;
                        var_b*wheelDistance];
     var_total = [var_r;
-                 var_b];
+                 var_b]
 
     %% GENERATION OF OPTIMIZED TRAJECTORY WITH PERTURBED PARAMETERS
     [q_OPT_PERT, ~, ~, e_OPT_PERT] = simulation_loop(initialPositionVec, initialVelocityVec, ...
@@ -92,7 +93,8 @@ end
 hold off
 
 %% GENERATION OF NON-OPTIMAL STATES ROBOT
-fig2 = figure(100); hold on
+fig2 = figure(100); hold 
+set(gcf, 'Position', get(0, 'Screensize'));
 vectorForNotOptimalStateLegend = zeros(numberOfPerturbations+1,1);
 counterTrajForLegendNotOpt = 1;
 colorsOfDifferentTrajectoriesNotOpt = linspecer(numberOfPerturbations+10,'sequential');
