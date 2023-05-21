@@ -99,14 +99,14 @@ function plot_function(data, title_name, main_label,labels_names, lineNames, sta
     yline(0,'LineStyle','--','Color','k','LineWidth',1)
     ylabel('\boldmath{$e_{x} [m]$}','FontSize',font,'Rotation',0)
     xlabel('time [s]','FontSize',font)
-    legend(splittedLabels{1},'zero line','FontSize',stackedfont+2)
+    legend(splittedLabels{1},'zero line','FontSize',stackedfont+4.5)
     ylim([yMin13 yMax13])
     nexttile
     plot(timeVec,data(:,2),'Color',colors(2,:)),grid on
     yline(0,'LineStyle','--','Color','k','LineWidth',1)
     ylabel('\boldmath{$e_{y} [m]$}','FontSize',font,'Rotation',0)
     xlabel('time [s]','FontSize',font)
-    legend(splittedLabels{2},'zero line','FontSize',stackedfont+2)
+    legend(splittedLabels{2},'zero line','FontSize',stackedfont+4.5)
     ylim([yMin13 yMax13])
 
     nexttile
@@ -114,14 +114,14 @@ function plot_function(data, title_name, main_label,labels_names, lineNames, sta
         yline(0,'LineStyle','--','Color','k','LineWidth',1)
         ylabel('\boldmath{$e_{tot} [m]$}','FontSize',font,'Rotation',0)
         xlabel('time [s]','FontSize',font)
-        legend(splittedLabels{3},'zero line','FontSize',stackedfont+2)
+        legend(splittedLabels{3},'zero line','FontSize',stackedfont+4.5)
         ylim([yMin13 yMax13])
         %title('\bf{$e_{tot} = \sqrt{e_{x}^2 + e_{y}^2}$}','FontSize',font)
     nexttile
         plot(timeVec,data(:,4),'Color',colors(4,:)), grid on
         yline(0,'LineStyle','--','Color','k','LineWidth',1)
         ylabel('\boldmath{$e_{\theta} [rad] $}','FontSize',font,'Rotation',0)
-        legend(splittedLabels{4},'zero line','FontSize',stackedfont+2)
+        legend(splittedLabels{4},'zero line','FontSize',stackedfont+4.5)
         xlabel('time [s]','FontSize',font)
         %title('\bf{$e_{\theta}$}','FontSize',font)
 
