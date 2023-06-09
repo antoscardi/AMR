@@ -6,8 +6,17 @@ close all; clc;
 % to compute the new coefficients of the optimal trajectory at the end of the file.
 tic
 %% OPTIMIZATION CYCLE
+
 % Hyperparameters, chosen in this way, to make a scaling to the size we are interested in
-k1 = 1; k2 = 0.4; epochs = 50; h = delta;
+
+%%  FIRST TRAJECTORY WITH NO INTEGRAL ACTION
+%   k1 = 3; k2 = 0.5; epochs = 55; h = delta;
+%%  FIRST TRAJECTORY WITH INTEGRAL ACTION
+%   k1 = 3; k2 = 5; epochs = 55; h = delta;
+%%  SECOND TRAJECTORY WITH NO INTEGRAL ACTION
+%   k1 = 1; k2 = 0.175; epochs = 100; h = delta;
+%%  SECOND TRAJECTORY WITH INTEGRAL ACTION
+%   k1 = 1; k2 = 0.175; epochs = 100; h = delta;
 
 % Initialize loss function
 Loss = zeros(1, epochs);
