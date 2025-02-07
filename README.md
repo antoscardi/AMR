@@ -1,34 +1,34 @@
 # 📈 Trajectory Generation for Minimum Closed-Loop State Sensitivity
 
 ## 📌 Overview
-This is the repository for the project relative to the **Autonomous Mobile Robots (AMR)** course, taught by **Prof. Giuseppe Oriolo** at **La Sapienza University of Rome**. The project is based on the principles and methodologies presented in this [📄 paper](https://ieeexplore.ieee.org/document/8460546).
+This is the repository for the project relative to the **Autonomous Mobile Robots (AMR)** course, taught by **Prof. Giuseppe Oriolo** at **La Sapienza University of Rome**. The project is based on the principles and methodologies presented in this 📄 [paper (P. R. Giordano et al.)](https://ieeexplore.ieee.org/document/8460546).
 
 Our implementation aims to **reduce parametric variation disturbances** affecting a **differential drive unicycle** controlled via **Dynamic Feedback Linearization (DFL)**. By optimizing the robot's trajectory, we minimize both the state and controller sensitivities, leading to more robust control and improved tracking accuracy.
 
 ---
 
 ## 🎯 Project Goals
-This project focuses on implementing a trajectory optimization algorithm that minimizes closed-loop state sensitivity. The approach applies **Dynamic Feedback Linearization (DFL)** to control a differential drive robot and reduces the impact of parametric uncertainties, such as wheel radius and distance variations. Different types of trajectories are compared, both with and without integral action, and the approach is validated using statistical analysis and Monte Carlo simulations.
+This project focuses on implementing a trajectory optimization algorithm that minimizes closed-loop state sensitivity. The approach applies **Dynamic Feedback Linearization (DFL)** to control a differential drive robot and reduces the impact of parametric uncertainties, such as wheel radius and distance variations. Different types of trajectories are compared, both with and without integral action, and the approach is validated using statistical analysis.
 
 ---
 
 ## 🔍 Implementation Details
 ### **1️⃣ Problem Formulation**
 The system dynamics are modeled as a nonlinear state-space system:
-  \[
-  \dot{q} = f(q, u, p)
-  \]
-The control input follows a Dynamic Feedback Linearization (DFL) approach to track a reference trajectory \( r_d(t) \). Sensitivity matrices \( \Pi(t) \) are computed to measure deviations in the system state due to parameter variations. The trajectory coefficients are iteratively updated using **gradient descent** to minimize the sensitivity matrix norm.
+```math
+\dot{q} = f(q, u, p)
+```
+The control input follows a **Dynamic Feedback Linearization (DFL)** approach to track a reference trajectory $r_d(t)$. Sensitivity matrices $\Pi(t)$ are computed to measure deviations in the system state due to parameter variations. The trajectory coefficients are iteratively updated using **gradient descent** to minimize the sensitivity matrix norm.
 
 ### **2️⃣ Optimization Process**
 Polynomial splines with **continuity constraints** are used to generate the trajectory. The **sensitivity dynamics** are integrated numerically, and the **cost function** is defined as:
-  \[
-  	ext{Loss} = rac{1}{2} 	ext{Tr}(\Pi^T(t_f) \Pi(t_f))
-  \]
-The optimization loop adjusts the trajectory coefficients to minimize this cost function, with results evaluated in both **nominal** and **perturbed** scenarios.
+```math
+\text{Loss} = \frac{1}{2} \text{Tr}(\Pi^T(t_f) \Pi(t_f))
+```
+The optimization process adjusts the trajectory coefficients to minimize this cost function, with results evaluated in both **nominal** and **perturbed** scenarios.
 
 ### **3️⃣ Statistical Analysis**
-Monte Carlo simulations evaluate robustness by randomly sampling parameter variations within **\[80\%, 120\%\]** of nominal values. The **mean and standard deviation** of errors are computed across simulations, and optimization performance is assessed based on error reduction.
+Simulations evaluate robustness by randomly sampling parameter variations within **\[80\%, 120\%\]** of nominal values. The **mean and standard deviation** of errors are computed across simulations, and optimization performance is assessed based on error reduction.
 
 ---
 
@@ -46,7 +46,7 @@ A different curvilinear trajectory where integral action reduces steady-state er
 Gradient descent optimization progressively reduces the loss function, stabilizing within **~55 iterations**.
 
 ### **📊 Statistical Performance**
-Monte Carlo results confirm that optimized trajectories outperform unoptimized ones across multiple parameter perturbations. Position error reduction is up to **6.7 times smaller**, with significant improvements in orientation error reduction, particularly in the second trajectory.
+Results confirm that optimized trajectories outperform unoptimized ones across multiple parameter perturbations. Position error reduction is up to **6.7 times smaller**, with significant improvements in orientation error reduction, particularly in the second trajectory.
 
 ---
 
