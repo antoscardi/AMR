@@ -1,7 +1,7 @@
 # 📈 Trajectory Generation for Minimum Closed-Loop State Sensitivity
 
 ## 📌 Overview
-This is the repository for the project relative to the **Autonomous Mobile Robots (AMR)** course, taught by **Prof. Giuseppe Oriolo** at **La Sapienza University of Rome**. The project is based on the principles and methodologies presented in this [📄 paper](https://ieeexplore.ieee.org/document/8460546)
+This is the repository for the project relative to the **Autonomous Mobile Robots (AMR)** course, taught by **Prof. Giuseppe Oriolo** at **La Sapienza University of Rome**. The project is based on the principles and methodologies presented in this [📄 paper](https://ieeexplore.ieee.org/document/8460546).
 
 Our implementation aims to **reduce parametric variation disturbances** affecting a **differential drive unicycle** controlled via **Dynamic Feedback Linearization (DFL)**. By optimizing the robot's trajectory, we minimize both the state and controller sensitivities, leading to more robust control and improved tracking accuracy.
 
