@@ -5,6 +5,10 @@ This is the repository for the project relative to the **Autonomous Mobile Robot
 
 Our implementation aims to **reduce parametric variation disturbances** affecting a **differential drive unicycle** controlled via **Dynamic Feedback Linearization (DFL)**. By optimizing the robot's trajectory, we minimize both the state and controller sensitivities, leading to more robust control and improved tracking accuracy.
 
+<p align="center">
+<img width="250" alt="unicycle" src="https://github.com/user-attachments/assets/105522f9-d786-42dd-81c4-22eb072a7276" />
+</p>
+
 ---
 
 ## 🎯 Project Goals
@@ -34,12 +38,17 @@ Simulations evaluate robustness by randomly sampling parameter variations within
 
 ## 📊 Results
 ### **📌 Trajectory Examples**
-#### **📍 First Trajectory (Without Integral Action)**
-![First Trajectory](images/first_trajectory.png)
+#### **📍 First Trajectory**
+<p align="center">
+<img src='https://github.com/user-attachments/assets/ddf4a7f8-ead7-49f8-ab56-22082a140531' width='50%'>
+</p>
 A beveled trajectory designed to emphasize the optimization effect. The optimization significantly reduces the **position error** in the perturbed case, decreasing from **3.66 cm** to **0.55 cm** (improvement: **3.11 cm**).
 
-#### **📍 Second Trajectory (With Integral Action)**
-![Second Trajectory](images/second_trajectory.png)
+#### **📍 Second Trajectory**
+<p align="center">
+<img src='https://github.com/user-attachments/assets/3a0d2c21-235d-4f44-b44a-c64daaf57c59' width='60%'>
+</p>
+
 A different curvilinear trajectory where integral action reduces steady-state error, further improving robustness. The error is reduced from **4.64 cm** to **3.70 cm** (improvement: **0.94 cm**).
 
 ### **📉 Loss Function Convergence**
@@ -71,9 +80,9 @@ Plots of trajectories, error evolution, and sensitivity matrices are automatical
 ---
 
 ## 🎥 Demonstration Videos
-Check out our **YouTube demonstration videos** showcasing the performance of the optimized trajectories:
+Check out our **YouTube demonstration videos** showcasing the performance of the optimized trajectories, with integral or NOT?????...:
 - **First Trajectory Optimization:** [![YouTube](https://img.shields.io/badge/YouTube-First_Trajectory-red?style=flat&logo=youtube)](https://www.youtube.com/your_video_link_1)
-- **Second Trajectory Optimization:** [![YouTube](https://img.shields.io/badge/YouTube-Second_Trajectory-red?style=flat&logo=youtube)](https://www.youtube.com/your_video_link_2)
+- **Second Trajectory Optimization:** [![Watch the video](https://img.youtube.com/vi/m4e6AeSGSPI/maxresdefault.jpg)](https://youtu.be/m4e6AeSGSPI)
 
 ---
 
