@@ -42,20 +42,19 @@ Simulations evaluate robustness by randomly sampling parameter variations within
 <p align="center">
 <img src='https://github.com/user-attachments/assets/ddf4a7f8-ead7-49f8-ab56-22082a140531' width='50%'>
 </p>
-A beveled trajectory designed to emphasize the optimization effect. The optimization significantly reduces the **position error** in the perturbed case, decreasing from **3.66 cm** to **0.55 cm** (improvement: **3.11 cm**).
-
+A beveled trajectory designed to emphasize the optimization effect.
 #### **📍 Second Trajectory**
 <p align="center">
 <img src='https://github.com/user-attachments/assets/3a0d2c21-235d-4f44-b44a-c64daaf57c59' width='60%'>
 </p>
 
-A different curvilinear trajectory where integral action reduces steady-state error, further improving robustness. The error is reduced from **4.64 cm** to **3.70 cm** (improvement: **0.94 cm**).
+A different curvilinear trajectory where integral action reduces steady-state error, further improving robustness.
 
 ### **📉 Loss Function Convergence**
 Gradient descent optimization progressively reduces the loss function, stabilizing within **~55 iterations**.
 
 ### **📊 Statistical Performance**
-Results confirm that optimized trajectories outperform unoptimized ones across multiple parameter perturbations. Position error reduction is up to **6.7 times smaller**, with significant improvements in orientation error reduction, particularly in the second trajectory.
+Optimized trajectories consistently outperform unoptimized ones, effectively mitigating parameter variations and reducing error. Across multiple simulations with varying perturbations, the optimization maintains a high success rate.
 
 ---
 
