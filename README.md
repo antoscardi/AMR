@@ -54,34 +54,51 @@ A different curvilinear trajectory where integral action reduces steady-state er
 Gradient descent optimization progressively reduces the loss function, stabilizing within **~55 iterations**.
 
 ### **📊 Statistical Performance**
-Optimized trajectories consistently outperform unoptimized ones, effectively mitigating parameter variations and reducing error. Across multiple simulations with varying perturbations, the optimization maintains a high success rate.
+Optimized trajectories consistently outperform unoptimized ones, effectively mitigating parameter variations and reducing error. Across multiple simulations with varying perturbations, the optimization maintains a high success rate regarding the error with respect to the final pose of the robot.
 
 ---
 
-## 🛠️ How to Use
-### **1️⃣ Setup**
-Clone the repository and install required dependencies:
+# 🛠️ How to Use
+
+## **1️⃣ Setup**
+Clone the repository and initialize the required settings:
+
 ```bash
-git clone https://github.com/your-repo/AMR_project.git
-cd AMR_project
-pip install -r requirements.txt  # If applicable
+git clone https://github.com/antoscardi/AMR.git
 ```
 
-### **2️⃣ Running the Simulation**
-Run the MATLAB script to execute the optimization and control simulation:
+Then, open MATLAB and run the setup script:
+
 ```matlab
-run('AMR_simulation.m')
+run('run_once_settings.m')
 ```
 
-### **3️⃣ Visualization**
-Plots of trajectories, error evolution, and sensitivity matrices are automatically generated.
+## **2️⃣ Running the Simulation**
+To execute the optimization and control simulation, run the following MATLAB scripts:
 
+```matlab
+run('c_IDEAL.m')
+```
+
+```matlab
+run('c_PERTURBED_OPTIMIZED.m')
+```
 ---
+
+These scripts simulate the system under ideal and perturbed conditions, respectively.
 
 ## 🎥 Demonstration Videos
-Check out our **YouTube demonstration videos** showcasing the performance of the optimized trajectories, with integral or NOT?????...:
-- **First Trajectory Optimization:** [![YouTube](https://img.shields.io/badge/YouTube-First_Trajectory-red?style=flat&logo=youtube)](https://www.youtube.com/your_video_link_1)
-- **Second Trajectory Optimization:** [![Watch the video](https://img.youtube.com/vi/m4e6AeSGSPI/maxresdefault.jpg)](https://youtu.be/m4e6AeSGSPI)
+Check out our **YouTube demonstration videos** showcasing the performance of the optimized trajectories, with integral action.
+
+- **First Trajectory Optimization:**
+
+![traj_2](https://github.com/user-attachments/assets/c8c478e6-eff3-4e58-8aad-124fe044ad16)
+
+
+- **Second Trajectory Optimization:**
+
+![traj_1](https://github.com/user-attachments/assets/351291e4-eba6-47c7-bb0a-85790ae5df7d)
+
 
 ---
 
