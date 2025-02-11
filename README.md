@@ -43,6 +43,7 @@ Simulations evaluate robustness by randomly sampling parameter variations within
 <img src='https://github.com/user-attachments/assets/ddf4a7f8-ead7-49f8-ab56-22082a140531' width='50%'>
 </p>
 A beveled trajectory designed to emphasize the optimization effect.
+
 #### **📍 Second Trajectory**
 <p align="center">
 <img src='https://github.com/user-attachments/assets/3a0d2c21-235d-4f44-b44a-c64daaf57c59' width='60%'>
